@@ -1,0 +1,70 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"display_name\", \"email_primary.email\", \"phone_primary.phone\", \"address_primary.city\"], \"limit\": 5}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/get"
+      },
+      "response": {
+        "body": {
+          "count": 4,
+          "countFetched": 4,
+          "values": [
+            {
+              "address_primary.city": null,
+              "display_name": "Default Organization",
+              "email_primary.email": null,
+              "id": 1,
+              "phone_primary.phone": null
+            },
+            {
+              "address_primary.city": null,
+              "display_name": "Admin User",
+              "email_primary.email": "admin@example.com",
+              "id": 2,
+              "phone_primary.phone": null
+            },
+            {
+              "address_primary.city": "San Francisco",
+              "display_name": "John Doe",
+              "email_primary.email": "john.doe@example.com",
+              "id": 3,
+              "phone_primary.phone": "+1-415-555-0100"
+            },
+            {
+              "address_primary.city": "New York",
+              "display_name": "Jane Smith",
+              "email_primary.email": "jane.smith@example.com",
+              "id": 4,
+              "phone_primary.phone": "+1-212-555-0200"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Query with joined related fields",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "join_related_fields",
+  "version": "default"
+}

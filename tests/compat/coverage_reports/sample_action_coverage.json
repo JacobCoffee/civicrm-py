@@ -1,0 +1,90 @@
+{
+  "_comment": "Sample action coverage report template showing expected output format",
+  "entity_name": "Contact",
+  "summary": {
+    "available_actions": 15,
+    "implemented_actions": 16,
+    "coverage_percentage": 73.33,
+    "generated_at": "2024-01-15T10:30:00+00:00"
+  },
+  "available": [
+    "checkAccess",
+    "create",
+    "delete",
+    "get",
+    "getActions",
+    "getChecksum",
+    "getFields",
+    "getLinks",
+    "merge",
+    "refresh",
+    "replace",
+    "save",
+    "update",
+    "validateChecksum",
+    "duplicateCheck"
+  ],
+  "implemented": [
+    "all",
+    "bulk_create",
+    "count",
+    "create",
+    "delete",
+    "exclude",
+    "exists",
+    "filter",
+    "get",
+    "get_fields",
+    "get_or_create",
+    "limit",
+    "offset",
+    "order_by",
+    "select",
+    "update",
+    "update_or_create"
+  ],
+  "missing": [
+    {
+      "entity_name": "Contact",
+      "action_name": "checkAccess",
+      "description": "Check if user has access to perform an action",
+      "is_standard": true,
+      "is_custom": false,
+      "notes": "Used for permission checking"
+    },
+    {
+      "entity_name": "Contact",
+      "action_name": "replace",
+      "description": "Replace matching records",
+      "is_standard": true,
+      "is_custom": false,
+      "notes": "Bulk replacement operation"
+    },
+    {
+      "entity_name": "Contact",
+      "action_name": "refresh",
+      "description": "Refresh computed fields",
+      "is_standard": true,
+      "is_custom": false,
+      "notes": "For computed/derived fields"
+    }
+  ],
+  "custom_actions": [
+    {
+      "entity_name": "Contact",
+      "action_name": "merge",
+      "description": "Merge duplicate contacts",
+      "is_standard": false,
+      "is_custom": true,
+      "notes": "Contact-specific merge functionality"
+    },
+    {
+      "entity_name": "Contact",
+      "action_name": "duplicateCheck",
+      "description": "Check for duplicate contacts",
+      "is_standard": false,
+      "is_custom": true,
+      "notes": "Deduplication feature"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# Coverage Reports Directory
+
+This directory stores generated coverage reports from the coverage validation tests.
+
+Files generated here include:
+- coverage_report.json: Combined entity and action coverage report
+- entity_coverage.json: Detailed entity coverage report
+- entity_coverage.txt: Console-formatted entity coverage report
+- actions/: Per-entity action coverage reports
+
+To generate reports, run:
+```python
+from tests.compat.coverage_validator import generate_coverage_reports
+
+async with CiviClient() as client:
+    await generate_coverage_reports(
+        client,
+        output_dir="tests/compat/coverage_reports",
+    )
+```
+
+Note: Generated files are not committed to version control.

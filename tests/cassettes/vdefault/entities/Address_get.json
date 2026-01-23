@@ -1,0 +1,45 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"street_address\", \"city\", \"state_province_id\", \"postal_code\", \"country_id\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Address/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {"city": "San Francisco", "contact_id": 3, "country_id": 1228, "id": 1, "postal_code": "94102", "state_province_id": 1004, "street_address": "123 Main Street"},
+            {"city": "New York", "contact_id": 4, "country_id": 1228, "id": 2, "postal_code": "10001", "state_province_id": 1031, "street_address": "456 Broadway"},
+            {"city": "Los Angeles", "contact_id": 5, "country_id": 1228, "id": 3, "postal_code": "90001", "state_province_id": 1004, "street_address": "789 Hollywood Blvd"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Address get",
+    "entity": "Address",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Address_get",
+  "version": "default"
+}

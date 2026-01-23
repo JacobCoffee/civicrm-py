@@ -1,0 +1,45 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"phone\", \"phone_type_id\", \"location_type_id\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Phone/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {"contact_id": 3, "id": 1, "location_type_id": 1, "phone": "+1-415-555-0100", "phone_type_id": 1},
+            {"contact_id": 3, "id": 2, "location_type_id": 2, "phone": "+1-415-555-0101", "phone_type_id": 2},
+            {"contact_id": 4, "id": 3, "location_type_id": 1, "phone": "+1-212-555-0200", "phone_type_id": 1}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Phone get",
+    "entity": "Phone",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Phone_get",
+  "version": "default"
+}

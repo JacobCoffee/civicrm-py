@@ -1,0 +1,42 @@
+{% extends "webui_base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>{{ entity }} #{{ entity_id }}</h1>
+    <a href="{{ webui_url('entity_list', entity=entity) }}" class="btn btn-secondary">Back to List</a>
+</div>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if item %}
+<div class="card">
+    <h2>Details</h2>
+    <table>
+        <tbody>
+            {% for key, value in item.items() %}
+            <tr>
+                <th style="width: 200px;">{{ key }}</th>
+                <td>
+                    {% if value is none %}
+                    <span style="color: var(--text-secondary);">null</span>
+                    {% elif value is sameas true %}
+                    <span style="color: var(--success-color);">true</span>
+                    {% elif value is sameas false %}
+                    <span style="color: var(--error-color);">false</span>
+                    {% elif value is mapping %}
+                    <pre style="margin: 0;">{{ value|tojson(indent=2) }}</pre>
+                    {% elif value is iterable and value is not string %}
+                    <pre style="margin: 0;">{{ value|tojson(indent=2) }}</pre>
+                    {% else %}
+                    {{ value }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"records\": [{\"id\": 100, \"job_title\": \"Test Engineer\"}]}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/save"
+      },
+      "response": {
+        "body": {
+          "count": 1,
+          "countFetched": 1,
+          "values": [
+            {
+              "contact_type": "Individual",
+              "display_name": "Test Recording",
+              "first_name": "Test",
+              "id": 100,
+              "job_title": "Test Engineer",
+              "last_name": "Recording",
+              "modified_date": "2024-01-22T10:02:00+00:00"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "save",
+    "civicrm_version": "default",
+    "description": "Save (upsert) contact record",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contact_save",
+  "version": "default"
+}

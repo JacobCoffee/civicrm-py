@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ contact.display_name }}</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('contact_edit', contact_id=contact.id) }}" class="btn btn-secondary">Edit</a>
+        <a href="{{ url_for('contact_delete', contact_id=contact.id) }}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
+
+<!-- Contact Details -->
+<div class="card">
+    <div class="card-header">
+        <h3>Contact Information</h3>
+    </div>
+    <div class="card-body">
+        <dl class="detail-list">
+            <dt>ID</dt>
+            <dd>{{ contact.id }}</dd>
+
+            <dt>Contact Type</dt>
+            <dd>
+                <span class="badge {% if contact.contact_type == 'Individual' %}badge-primary{% elif contact.contact_type == 'Organization' %}badge-success{% else %}badge-secondary{% endif %}">
+                    {{ contact.contact_type }}
+                </span>
+            </dd>
+
+            {% if contact.first_name or contact.last_name %}
+            <dt>Name</dt>
+            <dd>{{ contact.first_name or '' }} {% if contact.middle_name %}{{ contact.middle_name }} {% endif %}{{ contact.last_name or '' }}</dd>
+            {% endif %}
+
+            <dt>Email</dt>
+            <dd>
+                {% set email = contact|get_attr('email_primary.email') %}
+                {% if email %}
+                <a href="mailto:{{ email }}">{{ email }}</a>
+                {% else %}
+                -
+                {% endif %}
+            </dd>
+
+            <dt>Phone</dt>
+            <dd>{{ contact|get_attr('phone_primary.phone', '-') }}</dd>
+
+            {% if contact.job_title %}
+            <dt>Job Title</dt>
+            <dd>{{ contact.job_title }}</dd>
+            {% endif %}
+
+            {% if contact|get_attr('employer_id.display_name') %}
+            <dt>Employer</dt>
+            <dd>{{ contact|get_attr('employer_id.display_name') }}</dd>
+            {% endif %}
+
+            {% if contact|get_attr('address_primary.street_address') %}
+            <dt>Address</dt>
+            <dd>
+                {{ contact|get_attr('address_primary.street_address') }}<br>
+                {{ contact|get_attr('address_primary.city', '') }}{% if contact|get_attr('address_primary.state_province_id:label') %}, {{ contact|get_attr('address_primary.state_province_id:label') }}{% endif %}
+                {{ contact|get_attr('address_primary.postal_code', '') }}<br>
+                {{ contact|get_attr('address_primary.country_id:label', '') }}
+            </dd>
+            {% endif %}
+
+            <dt>Created</dt>
+            <dd>{{ contact.created_date or '-' }}</dd>
+
+            <dt>Modified</dt>
+            <dd>{{ contact.modified_date or '-' }}</dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Related Activities -->
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Activities</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        {% if activities.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities.items %}
+                <tr>
+                    <td><a href="{{ url_for('activity_detail', activity_id=activity.id) }}">{{ activity.subject or "(No subject)" }}</a></td>
+                    <td>{{ activity|get_attr('activity_type_id:label', '-') }}</td>
+                    <td>
+                        {% set status = activity|get_attr('status_id:label', '-') %}
+                        <span class="badge {% if status == 'Completed' %}badge-success{% else %}badge-warning{% endif %}">
+                            {{ status }}
+                        </span>
+                    </td>
+                    <td>{{ activity.activity_date_time or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No activities for this contact.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Related Contributions -->
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Contributions</h3>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        {% if contributions.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contribution in contributions.items %}
+                <tr>
+                    <td><a href="{{ url_for('contribution_detail', contribution_id=contribution.id) }}">{{ contribution.currency or 'USD' }} {{ contribution.total_amount }}</a></td>
+                    <td>{{ contribution|get_attr('financial_type_id:label', '-') }}</td>
+                    <td>
+                        {% set status = contribution|get_attr('contribution_status_id:label', '-') %}
+                        <span class="badge {% if status == 'Completed' %}badge-success{% else %}badge-warning{% endif %}">
+                            {{ status }}
+                        </span>
+                    </td>
+                    <td>{{ contribution.receive_date or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No contributions from this contact.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-2">
+    <a href="{{ url_for('contact_list') }}" class="btn btn-outline">Back to Contacts</a>
+</div>
+{% endblock %}

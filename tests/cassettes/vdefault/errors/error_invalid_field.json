@@ -1,0 +1,40 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"nonexistent_field_xyz\"]}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/get"
+      },
+      "response": {
+        "body": {
+          "error_code": "invalid_field",
+          "error_message": "Unknown field 'nonexistent_field_xyz' for entity 'Contact'"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 400
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Query with invalid field name",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "error_invalid_field",
+  "version": "default"
+}

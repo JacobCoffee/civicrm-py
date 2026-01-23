@@ -1,0 +1,47 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"display_name\", \"contact_type\"], \"where\": [[\"contact_type\", \"IN\", [\"Individual\", \"Organization\"]]], \"limit\": 5}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/get"
+      },
+      "response": {
+        "body": {
+          "count": 5,
+          "countFetched": 5,
+          "values": [
+            {"contact_type": "Organization", "display_name": "Default Organization", "id": 1},
+            {"contact_type": "Individual", "display_name": "Admin User", "id": 2},
+            {"contact_type": "Individual", "display_name": "John Doe", "id": 3},
+            {"contact_type": "Individual", "display_name": "Jane Smith", "id": 4},
+            {"contact_type": "Organization", "display_name": "Test Corporation", "id": 5}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Query with IN operator",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "in_operator",
+  "version": "default"
+}

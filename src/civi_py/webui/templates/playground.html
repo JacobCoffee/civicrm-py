@@ -1,0 +1,133 @@
+{% extends "webui_base.html" %}
+
+{% block content %}
+<h1>API Playground</h1>
+<p style="color: var(--text-secondary); margin-bottom: 2rem;">
+    Test CiviCRM API queries interactively.
+</p>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="card">
+        <h2>Query Builder</h2>
+        <form id="query-form">
+            <div class="form-group">
+                <label for="entity">Entity</label>
+                <select id="entity" name="entity">
+                    {% for e in entities %}
+                    <option value="{{ e }}">{{ e }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="action">Action</label>
+                <select id="action" name="action">
+                    <option value="get">get</option>
+                    <option value="getFields">getFields</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="select">Select (comma-separated)</label>
+                <input type="text" id="select" name="select" placeholder="id, display_name, email">
+            </div>
+
+            <div class="form-group">
+                <label for="where">Where (JSON array)</label>
+                <textarea id="where" name="where" rows="3" placeholder='[["is_deleted", "=", false]]'></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="limit">Limit</label>
+                <input type="number" id="limit" name="limit" value="25" min="1" max="100">
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">Execute Query</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Results</h2>
+        <div id="results">
+            <p style="color: var(--text-secondary);">Execute a query to see results.</p>
+        </div>
+    </div>
+</div>
+
+{% if enable_history %}
+<div class="card">
+    <h2>Query History</h2>
+    <div id="history">
+        <p style="color: var(--text-secondary);">No queries executed yet.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const executeUrl = '{{ webui_url("execute") }}';
+    const history = [];
+
+    document.getElementById('query-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<p style="color: var(--text-secondary);">Loading...</p>';
+
+        const formData = new FormData(e.target);
+        const params = new URLSearchParams();
+
+        params.append('entity', formData.get('entity'));
+        params.append('action', formData.get('action'));
+        if (formData.get('select')) params.append('select', formData.get('select'));
+        if (formData.get('where')) params.append('where', formData.get('where'));
+        params.append('limit', formData.get('limit') || '25');
+
+        try {
+            const response = await fetch(`${executeUrl}?${params}`);
+            const data = await response.json();
+
+            if (data.error) {
+                resultsDiv.innerHTML = `<div class="error">${data.error}</div>`;
+            } else {
+                const count = data.count || (data.values ? data.values.length : 0);
+                resultsDiv.innerHTML = `
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        ${count} result(s)
+                    </p>
+                    <pre style="max-height: 400px; overflow: auto;">${JSON.stringify(data.values || data, null, 2)}</pre>
+                `;
+
+                // Add to history
+                history.unshift({
+                    entity: formData.get('entity'),
+                    action: formData.get('action'),
+                    count: count,
+                    timestamp: new Date().toLocaleTimeString()
+                });
+                updateHistory();
+            }
+        } catch (err) {
+            resultsDiv.innerHTML = `<div class="error">Request failed: ${err.message}</div>`;
+        }
+    });
+
+    function updateHistory() {
+        const historyDiv = document.getElementById('history');
+        if (!historyDiv) return;
+
+        if (history.length === 0) {
+            historyDiv.innerHTML = '<p style="color: var(--text-secondary);">No queries executed yet.</p>';
+            return;
+        }
+
+        historyDiv.innerHTML = history.slice(0, 10).map(h => `
+            <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                <code>${h.entity}.${h.action}</code>
+                <span style="color: var(--text-secondary); margin-left: 0.5rem;">${h.count} results</span>
+                <span style="color: var(--text-secondary); float: right;">${h.timestamp}</span>
+            </div>
+        `).join('');
+    }
+</script>
+{% endblock %}

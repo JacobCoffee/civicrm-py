@@ -1,0 +1,45 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"event_id\", \"status_id\", \"role_id\", \"register_date\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Participant/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {"contact_id": 3, "event_id": 1, "id": 1, "register_date": "2024-01-10", "role_id": 1, "status_id": 1},
+            {"contact_id": 4, "event_id": 1, "id": 2, "register_date": "2024-01-12", "role_id": 1, "status_id": 1},
+            {"contact_id": 5, "event_id": 2, "id": 3, "register_date": "2024-01-15", "role_id": 2, "status_id": 2}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Participant get",
+    "entity": "Participant",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Participant_get",
+  "version": "default"
+}

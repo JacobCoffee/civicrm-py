@@ -1,0 +1,46 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"name\", \"description\", \"is_selectable\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Tag/get"
+      },
+      "response": {
+        "body": {
+          "count": 4,
+          "countFetched": 4,
+          "values": [
+            {"description": "Major donor", "id": 1, "is_selectable": true, "name": "Major Donor"},
+            {"description": "Non-profit organization", "id": 2, "is_selectable": true, "name": "Non-Profit"},
+            {"description": "Corporate partner", "id": 3, "is_selectable": true, "name": "Corporate"},
+            {"description": "Volunteer", "id": 4, "is_selectable": true, "name": "Volunteer"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Tag get",
+    "entity": "Tag",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Tag_get",
+  "version": "default"
+}

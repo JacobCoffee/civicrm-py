@@ -1,0 +1,513 @@
+[build-system]
+requires = ["uv_build>=0.7,<0.8"]
+build-backend = "uv_build"
+
+[project]
+name = "civi-py"
+version = "0.1.0"
+description = "Modern Python client for CiviCRM API v4 with web framework integration"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Jacob Coffee", email = "jacob@tomodachi.dev" }]
+maintainers = [{ name = "Jacob Coffee", email = "jacob@tomodachi.dev" }]
+keywords = ["civicrm", "api", "client", "crm", "nonprofit", "async", "msgspec"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = ["httpx>=0.28.0", "msgspec>=0.19.0"]
+
+[project.urls]
+Homepage = "https://github.com/JacobCoffee/civi-py"
+Documentation = "https://civi.scriptr.dev"
+Repository = "https://github.com/JacobCoffee/civi-py"
+Issues = "https://github.com/JacobCoffee/civi-py/issues"
+Changelog = "https://github.com/JacobCoffee/civi-py/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+django = ["django>=4.2"]
+flask = ["flask>=2.0"]
+litestar = ["litestar>=2.0"]
+fastapi = ["fastapi>=0.115.0"]
+starlette = ["starlette>=0.27.0"]
+workflows = ["litestar-workflows>=0.1.0"]
+sqlspec = ["sqlspec[asyncpg,aiosqlite]>=0.1.0"]
+
+[dependency-groups]
+dev = [
+    "ipython>=8.30.0",
+    "python-dotenv>=1.0.0", # Load .env files for local development
+]
+docs = [
+    "sphinx>=8.1.0",
+    "shibuya>=2024.12.0",
+    "sphinx-autobuild>=2024.10.0",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx-design>=0.6.0",
+    "sphinxcontrib-mermaid>=1.0.0",
+    "myst-parser>=4.0.0",
+]
+lint = ["ruff>=0.9.0", "ty>=0.0.1a6"]
+test = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-httpx>=0.35.0",
+    "pytest-sugar>=1.0.0",
+    "pytest-databases[postgres]>=0.10.0",
+    "respx>=0.22.0",
+    "coverage[toml]>=7.6.0",
+    "typing_extensions>=4.0.0",
+]
+
+[tool.uv]
+default-groups = ["dev", "lint", "test"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "A003",    # Class attribute shadowing builtin
+    "COM812",  # Conflicts with formatter
+    "D100",    # Missing docstring in public module
+    "D104",    # Missing docstring in public package
+    "D107",    # Missing docstring in __init__
+    "D203",    # 1 blank line required before class docstring
+    "D212",    # Multi-line docstring summary should start at the first line
+    "E501",    # Line too long (handled by formatter)
+    "ISC001",  # Conflicts with formatter
+    "PLR0913", # Too many arguments
+    "RUF012",  # Mutable class attributes should be annotated with ClassVar
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = [
+    "ANN",     # Type annotations not required in tests
+    "ARG",     # Unused arguments in fixtures
+    "D",       # Docstrings not required in tests
+    "E721",    # Type comparisons OK in tests
+    "EM101",   # String literals in exceptions OK in tests
+    "EM102",   # f-string literals in exceptions OK in tests
+    "F841",    # Unused variables OK in tests (verifying side effects)
+    "FBT001",  # Boolean positional args OK in tests
+    "FBT002",  # Boolean default positional args OK in tests
+    "FBT003",  # Boolean positional values OK in tests
+    "N806",    # Variable naming OK in tests (TestEntity for dynamic classes)
+    "PLC0415", # Imports inside functions OK for testing isolated modules
+    "PLR0913", # Too many arguments OK in tests
+    "PLR2004", # Magic values
+    "PT011",   # pytest.raises too broad OK in tests
+    "S101",    # Assert usage
+    "S105",    # Hardcoded passwords OK in tests
+    "SIM117",  # Nested with OK for test clarity
+    "SLF001",  # Private member access
+    "T201",    # Print statements OK for debugging in tests
+    "TC001",   # Type-checking imports used at runtime via fixtures
+    "TC003",   # Type-checking imports used at runtime in tests
+    "TRY003",  # Long exception messages OK in tests
+    "TRY300",  # try/except/return pattern OK in tests
+    "BLE001",  # Blind exception catching OK in tests
+    "E402",    # Import order OK in tests (after pytest markers)
+    "PT012",   # pytest.raises block complexity OK in tests
+    "PT017",   # Assertion on exception in except block OK in tests
+    "PLR0124", # Self-comparison intentional for identity tests
+    "RUF100",  # Unused noqa directives OK (may be in subagent code)
+    "S106",    # Hardcoded passwords OK in tests (test credentials)
+]
+"src/civi_py/contrib/**/*" = [
+    "INP001", # Implicit namespace packages for contrib
+]
+"examples/**/*" = [
+    "D",       # Docstrings relaxed for examples
+    "E402",    # Module imports not at top OK for dotenv loading
+    "EM101",   # String literals in exceptions OK for examples
+    "EXE001",  # Shebang without executable bit OK
+    "INP001",  # Examples are standalone scripts, not packages
+    "PLC0415", # Import inside function OK for Django manage.py
+    "T201",    # Print statements OK in examples
+    "TRY003",  # Long exception messages OK for examples
+]
+"src/civi_py/query/manager.py" = [
+    "ANN401",  # Any in **kwargs is necessary for Django-style lookups
+    "PLC0415", # Import inside function to avoid circular imports
+    "TRY300",  # Return in try block is valid for get_or_create pattern
+]
+"src/civi_py/contrib/integration.py" = [
+    "PLC0415", # Import inside function to avoid circular imports
+]
+"src/civi_py/contrib/django/*.py" = [
+    "ANN401",  # Any types required for Django admin compatibility (formfield, etc.)
+    "ARG001",  # Unused args allowed - some functions are stubs for when Django unavailable
+    "ARG002",  # Unused args in methods required by Django admin interface
+    "BLE001",  # Catch Exception needed for graceful fallbacks
+    "C901",    # Complex functions - Django admin has inherently complex logic
+    "EM102",   # f-string in exceptions - OK for Http404 messages
+    "FBT001",  # Boolean positional args required by Django admin interface
+    "FBT002",  # Boolean defaults required by Django admin interface
+    "N806",    # Class naming - Django form pattern uses CamelCase for dynamic classes
+    "PLC0415", # Import inside try/except for graceful Django unavailability
+    "PLR0904", # Too many public methods - Django admin has many
+    "PLR0911", # Too many return statements - complex admin logic
+    "PLR0912", # Too many branches - Django admin complexity
+    "PLR0915", # Too many statements - Django admin complexity
+    "PLR6301", # Methods could be function - maintaining Django interface
+    "SIM105",  # try-except-pass is intentional for optional imports
+    "SLF001",  # Access to _search needed for queryset operations
+    "TRY003",  # Long exception messages - OK for user-facing Http404
+    "UP031",   # % formatting matches Django admin patterns
+    "UP038",   # isinstance tuple style matches Django patterns
+]
+"src/civi_py/contrib/django/management/commands/*.py" = [
+    "ANN401",  # Any type hints necessary for Django's handle() signature
+    "ARG002",  # Unused *args required by Django's BaseCommand signature
+    "C901",    # Complex functions acceptable for management commands
+    "FBT001",  # Boolean positional args required for internal methods
+    "PLR0912", # Many branches acceptable for CLI parsing/validation
+    "PLR0915", # Many statements acceptable for setup/initialization functions
+    "PLR2004", # Magic values acceptable for display formatting
+    "SIM108",  # if-else blocks more readable for complex default logic
+]
+"src/civi_py/contrib/bottle/*.py" = [
+    "ANN401",  # Any types required for stub classes and flexible interfaces
+    "ARG001",  # Unused args in stub __init__ methods
+    "ARG002",  # Unused args in stub __init__ methods
+    "EM101",   # String literals in ImportError for stub classes
+    "PLC0415", # Import inside function for optional dependency checking
+    "PLR5501", # else/if pattern used for TYPE_CHECKING conditional imports
+    "RUF022",  # __all__ sorting not required
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/falcon/*.py" = [
+    "ANN401",  # Any types required for Falcon's middleware interface
+    "ARG002",  # Unused args required by Falcon's middleware interface (resp, resource, etc.)
+    "FBT001",  # Boolean positional args required by Falcon's middleware interface (req_succeeded)
+]
+"src/civi_py/contrib/fastapi/*.py" = [
+    "EM101",   # String literals in ImportError
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/flask/*.py" = [
+    "ANN401",  # Any types required for stub classes
+    "ARG002",  # Unused args in stub methods
+    "EM101",   # String literals in ImportError for stubs
+    "FBT001",  # Boolean keyword-only arg with default is acceptable for config functions
+    "PLC0415", # Import inside function for lazy loading
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/quart/*.py" = [
+    "ANN401",  # Any types required for stub classes and flexible interfaces
+    "ARG001",  # Unused args in stub __init__ methods
+    "ARG002",  # Unused args in stub __init__ methods
+    "EM101",   # String literals in ImportError for stub classes
+    "PLC0415", # Import inside function for optional dependency checking
+    "PLR5501", # else/if pattern used for TYPE_CHECKING conditional imports
+    "RUF022",  # __all__ sorting not required
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/sanic/*.py" = [
+    "ANN401",  # Any types required for stub classes and flexible interfaces
+    "ARG001",  # Unused args in stub __init__ methods
+    "ARG002",  # Unused args in stub __init__ methods
+    "EM101",   # String literals in ImportError for stub classes
+    "PLC0415", # Import inside function for optional dependency checking
+    "RUF022",  # __all__ sorting not required
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/starlette/*.py" = [
+    "ANN401",  # Any types for stub classes
+    "ARG002",  # Unused args in stub __init__ methods
+    "EM101",   # String literals in ImportError for stub classes
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/core/exceptions.py" = [
+    "N818", # DoesNotExist/MultipleObjectsReturned follow Django naming convention
+]
+"src/civi_py/entities/base.py" = [
+    "N804",    # Metaclass uses `mcs` by convention
+    "PLC0415", # Import inside function to avoid circular imports
+]
+"src/civi_py/entities/email.py" = [
+    "A005",  # Module name intentional - mirrors CiviCRM entity
+]
+"src/civi_py/entities/relationships.py" = [
+    "PLC0415", # Import inside function to avoid circular imports
+]
+"src/civi_py/contrib/litestar/cli.py" = [
+    "BLE001",  # Catch Exception needed for CLI error handling
+    "C901",    # Complex functions acceptable for CLI commands
+    "FBT001",  # Boolean positional args required by Click decorators
+    "PLC0415", # Import inside function to avoid circular imports
+    "PLR0911", # Many return statements acceptable for CLI commands
+    "PLR0912", # Many branches acceptable for CLI validation
+    "PLR0915", # Many statements acceptable for CLI commands
+    "PLR2004", # Magic values acceptable for display formatting
+    "SIM108",  # if-else blocks more readable for CLI logic
+    "TC001",   # SyncCiviClient used at runtime
+]
+"src/civi_py/contrib/litestar/plugin.py" = [
+    "C901",    # Complex on_app_init method handles multiple integrations
+    "PLC0415", # Import inside function to avoid circular imports
+    "PLR0912", # Many branches for optional feature configuration
+    "PLR0915", # Many statements for plugin initialization
+    "S101",    # Assert used for type narrowing after None checks
+    "UP038",   # isinstance tuple style for Path union types
+]
+"src/civi_py/contrib/litestar/webui/*.py" = [
+    "ANN401",  # Any types required for Litestar Controller's owner parameter
+    "ARG002",  # Unused request arg required by Litestar handler signature
+    "BLE001",  # Catch Exception needed for API error handling
+    "PLC0415", # Import inside function to avoid circular imports
+    "PLR0911", # Many return statements for URL routing
+    "SIM102",  # Nested if for debug logging clarity
+    "TRY300",  # Return in try block needed for action dispatch
+]
+"src/civi_py/contrib/django/webui/*.py" = [
+    "ANN401",  # Any types for flexible view initialization
+    "BLE001",  # Catch Exception needed for API error handling
+    "PLC0415", # Import inside function for async event loop
+]
+"src/civi_py/contrib/django/templatetags/*.py" = [
+    "ARG001",  # Unused args OK for template tag interfaces
+    "S308",    # mark_safe intentional for static HTML snippets
+    "UP038",   # isinstance tuple style matches Django patterns
+]
+"src/civi_py/contrib/workflows/*.py" = [
+    "ANN401",  # Any types for stub classes
+    "ARG002",  # Unused args in stub __init__ methods
+    "C901",    # Complex workflow steps handle multiple scenarios
+    "EM101",   # String literals in ImportError for stub classes
+    "PLC0415", # Import inside try/except for graceful litestar-workflows unavailability
+    "PLR0912", # Many branches for workflow logic
+    "PLR0915", # Many statements for workflow definitions
+    "TRY003",  # Long exception messages OK for import errors
+]
+"src/civi_py/contrib/sqlspec/*.py" = [
+    "ANN401",  # Any types for stub methods
+    "ARG002",  # Unused method args in stubs
+    "ARG004",  # Unused static method args in stubs
+    "C901",    # Complex migration/repository functions
+    "N801",    # click stub class lowercase intentional
+    "PLC0415", # Import inside try/except for graceful sqlspec unavailability
+    "PLR0912", # Many branches for database operations
+    "PLR0915", # Many statements for migration logic
+    "S608",    # SQL injection - table names are from config, not user input
+    "TC004",   # TYPE_CHECKING imports used in __all__ exports
+]
+"src/civi_py/contrib/registry.py" = [
+    "PLC0415", # Import inside function to avoid circular imports
+    "SLF001",  # Private member access in singleton __new__
+]
+"src/civi_py/contrib/litestar/dependencies.py" = [
+    "PLC0415", # Import inside function for lazy loading
+]
+"src/civi_py/contrib/litestar/routes.py" = [
+    "PLC0415", # Import inside function for lazy loading
+]
+"src/civi_py/contrib/litestar/sqlspec_integration.py" = [
+    "PLC0415", # Import inside function for optional dependency
+]
+"src/civi_py/contrib/litestar/workflows_integration.py" = [
+    "C901",    # Complex controller methods
+    "PLC0415", # Import inside function for optional dependency
+    "PLR0912", # Many branches for workflow routing
+    "PLR0915", # Many statements for controller logic
+    "S101",    # Assert used for type narrowing
+    "SLF001",  # Private member access for registry introspection
+]
+"scripts/**/*.py" = [
+    "BLE001",  # Catch Exception needed for resilient recording
+    "COM812",  # Trailing commas in multi-line dicts optional
+    "D",       # Docstrings relaxed for scripts
+    "INP001",  # Scripts are standalone, not packages
+    "PLR0912", # Many branches acceptable for CLI scripts
+    "PLR0915", # Many statements acceptable for recording logic
+    "PLR2004", # Magic values acceptable in scripts
+    "T201",    # Print statements OK in CLI scripts
+    "TRY003",  # Long exception messages OK for user feedback
+    "TRY300",  # Return in try block OK for CLI exit codes
+    "TRY400",  # logger.error with exception OK for CLI output
+    "TRY401",  # Exception in logging.exception OK for debugging
+]
+"docs/**/*.py" = [
+    "A001",    # copyright shadows builtin - standard Sphinx config
+    "D",       # Docstrings relaxed for docs config
+    "DTZ005",  # datetime.now() without timezone OK for copyright year
+    "FIX002",  # TODO comments OK in docs
+    "INP001",  # docs is not a package
+    "PTH100",  # os.path.abspath is idiomatic for Sphinx
+    "TD002",   # TODO without author OK
+    "TD003",   # TODO without issue OK
+    "TD004",   # TODO without colon OK
+]
+"examples/**/*.py" = [
+    "A002",    # Shadowing builtins OK in examples (type param)
+    "ANN401",  # Any types needed for FastAPI dependency injection
+    "ARG001",  # Unused function args OK (framework interfaces)
+    "ARG002",  # Unused method args OK (framework interfaces)
+    "BLE001",  # Catch Exception needed for example error handling
+    "C901",    # Complexity acceptable in examples for clarity
+    "DTZ005",  # datetime.now() without timezone OK for demo data
+    "ERA001",  # Commented code OK in examples for teaching
+    "FBT001",  # Boolean positional args OK in examples
+    "FBT002",  # Boolean defaults acceptable for example query params
+    "INP001",  # Examples are standalone applications
+    "PLR0915", # Many statements acceptable for complete examples
+    "S311",    # Pseudo-random OK for demo data generation
+    "TRY300",  # Return in try block OK for example patterns
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["civi_py"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
+
+[tool.ty.environment]
+python-version = "3.11"
+extra-paths = ["src"]
+
+[tool.ty.src]
+# Exclude non-library code from type checking
+exclude = [
+    "tests/**",
+    "docs/**",
+    "scripts/**",
+    "examples/**",
+    # Framework integrations with optional dependencies
+    # These use try/except ImportError patterns that ty doesn't understand
+    "src/civi_py/contrib/bottle/**",
+    "src/civi_py/contrib/django/**",
+    "src/civi_py/contrib/falcon/**",
+    "src/civi_py/contrib/fastapi/**",
+    "src/civi_py/contrib/flask/**",
+    "src/civi_py/contrib/litestar/**",
+    "src/civi_py/contrib/quart/**",
+    "src/civi_py/contrib/sanic/**",
+    "src/civi_py/contrib/sqlspec/**",
+    "src/civi_py/contrib/starlette/**",
+    "src/civi_py/contrib/workflows/**",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+    "-p", "no:pastebin",  # Disable unused builtin plugins for speed
+    "-p", "no:nose",
+    "-p", "no:doctest",
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+norecursedirs = ["docs", "*.egg-info", ".git", ".tox", ".venv", "__pycache__"]
+filterwarnings = ["error", "ignore::DeprecationWarning:httpx.*:"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests requiring live CiviCRM instance",
+    "db: marks tests requiring database fixtures (requires Docker)",
+    "cassette(name): use a specific cassette for HTTP recording/replay",
+    "record: force cassette recording mode for this test",
+    "replay: force cassette replay mode (CI-safe, no network)",
+    "compat: version compatibility tests with cassettes",
+    "benchmark: performance benchmark tests",
+    "min_version(version): skip if CiviCRM version < specified",
+    "max_version(version): skip if CiviCRM version >= specified",
+    "version_specific(version): only run on specific CiviCRM version",
+    "version_range(min, max): run only within version range",
+    "requires_feature(feature): skip if feature unavailable in current version",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/civi_py"]
+omit = ["*/contrib/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+    "@overload",
+    "@typing.overload",
+    "raise NotImplementedError",
+    "class .*\\bProtocol\\):",
+    "def __repr__",
+]
+show_missing = true
+fail_under = 80
+
+[tool.coverage.paths]
+source = ["src/civi_py", "*/site-packages/civi_py"]
+
+[tool.git-cliff.changelog]
+header = """
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+"""
+body = """
+{% if version %}\
+    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## [Unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}**{{ commit.scope }}:** {% endif %}\
+            {{ commit.message | upper_first }}\
+            {% if commit.github.username %} by @{{ commit.github.username }}{%- endif %}\
+            {% if commit.github.pr_number %} in #{{ commit.github.pr_number }}{%- endif %}\
+    {% endfor %}
+{% endfor %}
+"""
+footer = """
+civi-py Changelog
+"""
+trim = true
+
+[tool.git-cliff.git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Features" },
+    { message = "^fix", group = "Bug Fixes" },
+    { message = "^doc", group = "Documentation" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Refactoring" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^chore\\(deps.*\\)", skip = true },
+    { message = "^chore|^ci", group = "Miscellaneous" },
+    { body = ".*security", group = "Security" },
+]
+protect_breaking_commits = false
+filter_commits = false
+topo_order = false
+sort_commits = "oldest"

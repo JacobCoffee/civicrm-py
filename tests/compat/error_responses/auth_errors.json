@@ -1,0 +1,50 @@
+{
+  "invalid_api_key": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "API key is invalid"
+    },
+    "description": "Invalid API key provided"
+  },
+  "expired_jwt": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "JWT token has expired"
+    },
+    "description": "JWT token is expired"
+  },
+  "missing_api_key": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "API key is required"
+    },
+    "description": "No API key provided"
+  },
+  "invalid_site_key": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "Site key is invalid"
+    },
+    "description": "Invalid site key provided"
+  },
+  "malformed_jwt": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "JWT token is malformed"
+    },
+    "description": "JWT token has invalid format"
+  },
+  "revoked_api_key": {
+    "status_code": 401,
+    "body": {
+      "error_code": "unauthorized",
+      "error_message": "API key has been revoked"
+    },
+    "description": "API key was revoked by administrator"
+  }
+}

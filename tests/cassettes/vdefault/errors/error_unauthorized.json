@@ -1,0 +1,39 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer invalid-api-key",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/get"
+      },
+      "response": {
+        "body": {
+          "error_code": "unauthorized",
+          "error_message": "Authorization failed"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 401
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Request with invalid API key (401 Unauthorized)",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "error_unauthorized",
+  "version": "default"
+}

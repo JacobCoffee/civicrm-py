@@ -1,0 +1,102 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/getActions"
+      },
+      "response": {
+        "body": {
+          "count": 12,
+          "countFetched": 12,
+          "values": [
+            {
+              "description": "Get one or more Contact records",
+              "name": "get",
+              "params": ["select", "where", "orderBy", "limit", "offset"]
+            },
+            {
+              "description": "Create a new Contact record",
+              "name": "create",
+              "params": ["values"]
+            },
+            {
+              "description": "Update one or more Contact records",
+              "name": "update",
+              "params": ["values", "where"]
+            },
+            {
+              "description": "Delete one or more Contact records",
+              "name": "delete",
+              "params": ["where"]
+            },
+            {
+              "description": "Create or update Contact records",
+              "name": "save",
+              "params": ["records", "match"]
+            },
+            {
+              "description": "Get field definitions for Contact",
+              "name": "getFields",
+              "params": ["loadOptions", "action"]
+            },
+            {
+              "description": "Get available actions for Contact",
+              "name": "getActions",
+              "params": []
+            },
+            {
+              "description": "Replace all related records",
+              "name": "replace",
+              "params": ["records", "where"]
+            },
+            {
+              "description": "Get count of Contact records",
+              "name": "getCount",
+              "params": ["where"]
+            },
+            {
+              "description": "Check if Contact records exist",
+              "name": "checkAccess",
+              "params": ["action", "values"]
+            },
+            {
+              "description": "Get links for Contact records",
+              "name": "getLinks",
+              "params": []
+            },
+            {
+              "description": "Autocomplete Contact search",
+              "name": "autocomplete",
+              "params": ["input", "formName", "fieldName"]
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getActions",
+    "civicrm_version": "default",
+    "description": "Available Contact actions",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contact_getActions",
+  "version": "default"
+}

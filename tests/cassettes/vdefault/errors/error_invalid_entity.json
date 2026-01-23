@@ -1,0 +1,40 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/NonExistentEntity/get"
+      },
+      "response": {
+        "body": {
+          "error_code": "not-found",
+          "error_message": "API (NonExistentEntity, get) does not exist (missing entity or missing file)"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 404
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Request to non-existent entity type",
+    "entity": "NonExistentEntity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "error_invalid_entity",
+  "version": "default"
+}

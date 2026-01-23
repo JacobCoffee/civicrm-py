@@ -1,0 +1,40 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"values\": {}}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/create"
+      },
+      "response": {
+        "body": {
+          "error_code": "mandatory_missing",
+          "error_message": "Mandatory values missing from Api4 Contact::create: contact_type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 400
+      }
+    }
+  ],
+  "metadata": {
+    "action": "create",
+    "civicrm_version": "default",
+    "description": "Create entity with missing required field",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "error_missing_required_field",
+  "version": "default"
+}

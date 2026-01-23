@@ -1,0 +1,40 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"where\": [[\"id\", \"=\", 1]]}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Setting/get"
+      },
+      "response": {
+        "body": {
+          "error_code": "authorization_failed",
+          "error_message": "Authorization failed for Setting::get"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 403
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Request to protected resource (403 Forbidden)",
+    "entity": "Setting",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "error_forbidden",
+  "version": "default"
+}

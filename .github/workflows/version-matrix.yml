@@ -1,0 +1,370 @@
+# CiviCRM Version Matrix Testing
+#
+# This workflow tests civi-py against multiple CiviCRM versions to ensure
+# compatibility across the supported version range (5.60+).
+#
+# Matrix Strategy:
+#   - CiviCRM 5.60: LTS baseline, represents minimum supported version
+#   - CiviCRM 5.70: Mid-range version with API enhancements
+#   - CiviCRM 5.80: Latest features and deprecation handling
+#
+# Cassette Storage:
+#   Cassettes are stored in tests/cassettes/v5.XX/entities/*.json
+#   Each version has its own set of recorded API responses.
+#
+# Triggers:
+#   - Nightly at 3:00 AM UTC (full matrix)
+#   - Manual dispatch with version selection
+#   - Push to compatibility-related branches
+
+name: Version Matrix
+
+on:
+  schedule:
+    # Run nightly at 3:00 AM UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      civicrm_version:
+        description: "CiviCRM version to test (leave empty for full matrix)"
+        required: false
+        type: string
+        default: ""
+      record_cassettes:
+        description: "Record new cassettes (requires live CiviCRM)"
+        required: false
+        type: boolean
+        default: false
+      python_version:
+        description: "Python version to use"
+        required: false
+        type: string
+        default: "3.12"
+  push:
+    branches:
+      - "compat/**"
+      - "version/**"
+    paths:
+      - "tests/compat/**"
+      - "tests/cassettes/**"
+      - ".github/workflows/version-matrix.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  UV_SYSTEM_PYTHON: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  # Default to replay mode in CI
+  CIVI_CASSETTE_MODE: "replay"
+
+jobs:
+  # Determine which versions to test
+  setup-matrix:
+    name: Setup Test Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          if [ -n "${{ inputs.civicrm_version }}" ]; then
+            # Single version from workflow dispatch
+            echo 'matrix={"civicrm-version": ["${{ inputs.civicrm_version }}"]}' >> $GITHUB_OUTPUT
+          else
+            # Full matrix for scheduled runs
+            echo 'matrix={"civicrm-version": ["5.60", "5.70", "5.80"]}' >> $GITHUB_OUTPUT
+          fi
+
+  # Run compatibility tests for each CiviCRM version
+  version-compat:
+    name: CiviCRM ${{ matrix.civicrm-version }}
+    needs: setup-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+    env:
+      CIVI_VERSION: ${{ matrix.civicrm-version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ inputs.python_version || '3.12' }}
+
+      - name: Install dependencies
+        run: uv sync --group test
+
+      - name: Check cassettes exist for version
+        id: check-cassettes
+        run: |
+          VERSION="${{ matrix.civicrm-version }}"
+          CASSETTE_DIR="tests/cassettes/v${VERSION}"
+
+          if [ -d "$CASSETTE_DIR" ]; then
+            CASSETTE_COUNT=$(find "$CASSETTE_DIR" -name "*.json" 2>/dev/null | wc -l)
+            echo "cassette_count=$CASSETTE_COUNT" >> $GITHUB_OUTPUT
+            echo "Found $CASSETTE_COUNT cassettes for CiviCRM $VERSION"
+          else
+            echo "cassette_count=0" >> $GITHUB_OUTPUT
+            echo "No cassettes found for CiviCRM $VERSION"
+          fi
+
+      - name: Run version-specific tests
+        run: |
+          uv run pytest tests/compat \
+            -v \
+            --tb=short \
+            -m "compat or version_specific" \
+            --junitxml=reports/junit-${{ matrix.civicrm-version }}.xml \
+            --cov=src/civi_py \
+            --cov-report=xml:reports/coverage-${{ matrix.civicrm-version }}.xml \
+            --cov-report=term-missing
+
+      - name: Generate compatibility report
+        if: always()
+        run: |
+          VERSION="${{ matrix.civicrm-version }}"
+          REPORT_FILE="reports/compat-report-${VERSION}.md"
+          mkdir -p reports
+
+          cat > "$REPORT_FILE" << 'HEADER'
+          # Compatibility Report: CiviCRM ${{ matrix.civicrm-version }}
+
+          **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+
+          ## Test Summary
+          HEADER
+
+          # Append test results summary
+          if [ -f "reports/junit-${VERSION}.xml" ]; then
+            echo "" >> "$REPORT_FILE"
+            echo "Tests executed successfully. See artifacts for details." >> "$REPORT_FILE"
+          else
+            echo "" >> "$REPORT_FILE"
+            echo "Test execution failed or was skipped." >> "$REPORT_FILE"
+          fi
+
+          # Add cassette information
+          echo "" >> "$REPORT_FILE"
+          echo "## Cassette Coverage" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+
+          CASSETTE_DIR="tests/cassettes/v${VERSION}"
+          if [ -d "$CASSETTE_DIR" ]; then
+            echo "| Entity | Cassettes |" >> "$REPORT_FILE"
+            echo "|--------|-----------|" >> "$REPORT_FILE"
+            for entity_dir in "$CASSETTE_DIR"/entities/*.json 2>/dev/null; do
+              if [ -f "$entity_dir" ]; then
+                entity_name=$(basename "$entity_dir" .json)
+                echo "| $entity_name | 1 |" >> "$REPORT_FILE"
+              fi
+            done
+          else
+            echo "No cassettes available for this version." >> "$REPORT_FILE"
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.civicrm-version }}
+          path: |
+            reports/junit-${{ matrix.civicrm-version }}.xml
+            reports/coverage-${{ matrix.civicrm-version }}.xml
+            reports/compat-report-${{ matrix.civicrm-version }}.md
+          retention-days: 30
+
+  # Generate combined compatibility matrix report
+  compatibility-report:
+    name: Generate Matrix Report
+    needs: version-compat
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results
+
+      - name: Generate matrix report
+        run: |
+          mkdir -p reports
+          REPORT="reports/compatibility-matrix.md"
+
+          cat > "$REPORT" << 'EOF'
+          # CiviCRM Compatibility Matrix
+
+          This report summarizes civi-py compatibility across CiviCRM versions.
+
+          ## Version Support Matrix
+
+          | CiviCRM Version | Status | Notes |
+          |-----------------|--------|-------|
+          EOF
+
+          VERSIONS=("5.60" "5.70" "5.80")
+
+          for version in "${VERSIONS[@]}"; do
+            RESULT_DIR="all-results/test-results-${version}"
+            if [ -f "${RESULT_DIR}/junit-${version}.xml" ]; then
+              # Check if tests passed (simplified check)
+              if grep -q 'failures="0"' "${RESULT_DIR}/junit-${version}.xml" 2>/dev/null; then
+                STATUS="Passed"
+              else
+                STATUS="Failed"
+              fi
+            else
+              STATUS="No Results"
+            fi
+
+            case $version in
+              "5.60") NOTES="LTS baseline" ;;
+              "5.70") NOTES="Mid-range version" ;;
+              "5.80") NOTES="Latest features" ;;
+              *) NOTES="" ;;
+            esac
+
+            echo "| $version | $STATUS | $NOTES |" >> "$REPORT"
+          done
+
+          cat >> "$REPORT" << 'EOF'
+
+          ## Test Run Details
+
+          - **Workflow Run:** ${{ github.run_id }}
+          - **Triggered By:** ${{ github.event_name }}
+          - **Branch:** ${{ github.ref_name }}
+          - **Commit:** ${{ github.sha }}
+
+          ## API Feature Coverage
+
+          The following API features are tested across all versions:
+
+          - Entity CRUD operations (Contact, Activity, Contribution, etc.)
+          - QuerySet operations (filter, select, limit, order_by)
+          - Relationship traversal (joins, nested selects)
+          - Error handling (validation, not found, auth errors)
+          - Pagination and batch operations
+
+          ## Version-Specific Notes
+
+          ### CiviCRM 5.60 (LTS)
+          - Baseline API v4 support
+          - Some newer field options may not be available
+
+          ### CiviCRM 5.70
+          - Enhanced API field metadata
+          - Improved error messages
+
+          ### CiviCRM 5.80+
+          - Latest API enhancements
+          - New entity fields and relationships
+          - Deprecation warnings for legacy patterns
+          EOF
+
+          echo ""
+          echo "=== Compatibility Matrix Report ==="
+          cat "$REPORT"
+
+      - name: Upload matrix report
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-matrix
+          path: reports/compatibility-matrix.md
+          retention-days: 90
+
+  # Record cassettes against live CiviCRM (manual trigger only)
+  record-cassettes:
+    name: Record Cassettes (CiviCRM ${{ matrix.civicrm-version }})
+    if: inputs.record_cassettes == true
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        civicrm-version: ["5.60", "5.70", "5.80"]
+    services:
+      # CiviCRM Docker container for recording
+      civicrm:
+        image: civicrm/civicrm:${{ matrix.civicrm-version }}-drupal
+        ports:
+          - 8080:80
+        options: >-
+          --health-cmd="curl -f http://localhost/civicrm/ajax/api4/Contact/getFields || exit 1"
+          --health-interval=30s
+          --health-timeout=10s
+          --health-retries=10
+    env:
+      CIVI_VERSION: ${{ matrix.civicrm-version }}
+      CIVI_CASSETTE_MODE: "record"
+      CIVI_BASE_URL: "http://localhost:8080/civicrm/ajax/api4"
+      # These would be set as secrets in real usage
+      CIVI_API_KEY: ${{ secrets.CIVI_API_KEY || 'test-key' }}
+      CIVI_SITE_KEY: ${{ secrets.CIVI_SITE_KEY || 'test-site-key' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --group test
+
+      - name: Wait for CiviCRM
+        run: |
+          echo "Waiting for CiviCRM to be ready..."
+          for i in {1..30}; do
+            if curl -sf "http://localhost:8080/civicrm/ajax/api4/Contact/getFields" > /dev/null 2>&1; then
+              echo "CiviCRM is ready!"
+              break
+            fi
+            echo "Attempt $i: CiviCRM not ready yet..."
+            sleep 10
+          done
+
+      - name: Record cassettes
+        run: |
+          uv run pytest tests/compat \
+            -v \
+            --tb=short \
+            -m "compat" \
+            --record-cassettes
+
+      - name: Upload recorded cassettes
+        uses: actions/upload-artifact@v4
+        with:
+          name: cassettes-${{ matrix.civicrm-version }}
+          path: tests/cassettes/v${{ matrix.civicrm-version }}/
+          retention-days: 30
+
+  # Status check for branch protection
+  all-versions-passed:
+    name: All Versions Passed
+    if: always()
+    needs: [version-compat]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all versions passed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

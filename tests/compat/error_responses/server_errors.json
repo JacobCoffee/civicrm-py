@@ -1,0 +1,81 @@
+{
+  "internal_server_error": {
+    "status_code": 500,
+    "body": {
+      "error_code": "internal_error",
+      "error_message": "An unexpected error occurred"
+    },
+    "description": "Generic HTTP 500 error"
+  },
+  "database_error": {
+    "status_code": 200,
+    "body": {
+      "error_code": "db_error",
+      "error_message": "Database error: Connection to database server lost"
+    },
+    "description": "Database connection error"
+  },
+  "database_timeout": {
+    "status_code": 200,
+    "body": {
+      "error_code": "db_error",
+      "error_message": "Database query timeout exceeded"
+    },
+    "description": "Database query took too long"
+  },
+  "service_unavailable": {
+    "status_code": 503,
+    "body": {
+      "error_code": "service_unavailable",
+      "error_message": "Service temporarily unavailable"
+    },
+    "description": "HTTP 503 Service Unavailable"
+  },
+  "bad_gateway": {
+    "status_code": 502,
+    "body": {
+      "error_code": "bad_gateway",
+      "error_message": "Bad gateway"
+    },
+    "description": "HTTP 502 Bad Gateway"
+  },
+  "gateway_timeout": {
+    "status_code": 504,
+    "body": {
+      "error_code": "gateway_timeout",
+      "error_message": "Gateway timeout"
+    },
+    "description": "HTTP 504 Gateway Timeout"
+  },
+  "rate_limited": {
+    "status_code": 429,
+    "body": {
+      "error_code": "rate_limit",
+      "error_message": "Rate limit exceeded. Please try again later."
+    },
+    "description": "Too many requests"
+  },
+  "maintenance_mode": {
+    "status_code": 503,
+    "body": {
+      "error_code": "maintenance",
+      "error_message": "CiviCRM is in maintenance mode"
+    },
+    "description": "System is under maintenance"
+  },
+  "php_fatal_error": {
+    "status_code": 500,
+    "body": "<html><body>Fatal error: Allowed memory size exhausted</body></html>",
+    "description": "PHP fatal error returns HTML instead of JSON"
+  },
+  "empty_response": {
+    "status_code": 200,
+    "body": "",
+    "description": "Empty response body"
+  },
+  "malformed_json_response": {
+    "status_code": 200,
+    "body": "{invalid json",
+    "description": "Response contains malformed JSON"
+  }
+}

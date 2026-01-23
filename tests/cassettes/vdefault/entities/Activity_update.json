@@ -1,0 +1,50 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"values\": {\"subject\": \"Updated Activity Subject\"}, \"where\": [[\"id\", \"=\", 100]]}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Activity/update"
+      },
+      "response": {
+        "body": {
+          "count": 1,
+          "countFetched": 1,
+          "values": [
+            {
+              "activity_date_time": "2024-01-22T10:00:00+00:00",
+              "activity_type_id": 1,
+              "id": 100,
+              "modified_date": "2024-01-22T10:01:00+00:00",
+              "status_id": 1,
+              "subject": "Updated Activity Subject"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "update",
+    "civicrm_version": "default",
+    "description": "Update Activity subject",
+    "entity": "Activity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Activity_update",
+  "version": "default"
+}

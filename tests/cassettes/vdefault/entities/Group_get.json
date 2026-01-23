@@ -1,0 +1,45 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"title\", \"group_type\", \"is_active\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Group/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {"group_type": ["2"], "id": 1, "is_active": true, "title": "Administrators"},
+            {"group_type": ["1"], "id": 2, "is_active": true, "title": "Newsletter Subscribers"},
+            {"group_type": ["1"], "id": 3, "is_active": true, "title": "Volunteers"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Group get",
+    "entity": "Group",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Group_get",
+  "version": "default"
+}

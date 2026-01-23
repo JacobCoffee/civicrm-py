@@ -1,0 +1,55 @@
+{% extends "webui_base.html" %}
+
+{% block content %}
+<h1>{{ title }} API Explorer</h1>
+<p style="color: var(--text-secondary); margin-bottom: 2rem;">
+    Browse entities, test queries, and explore the CiviCRM API.
+</p>
+
+<div class="grid">
+    {% if enable_entity_browser %}
+    <div class="card">
+        <h2>Entity Browser</h2>
+        <p style="color: var(--text-secondary);">
+            Browse and search CiviCRM entities with pagination and filtering.
+        </p>
+        <a href="{{ webui_url('entities') }}" class="btn">Browse Entities</a>
+    </div>
+    {% endif %}
+
+    {% if enable_playground %}
+    <div class="card">
+        <h2>API Playground</h2>
+        <p style="color: var(--text-secondary);">
+            Test API queries interactively with a live query builder.
+        </p>
+        <a href="{{ webui_url('playground') }}" class="btn">Open Playground</a>
+    </div>
+    {% endif %}
+</div>
+
+{% if entities %}
+<div class="card">
+    <h2>Available Entities</h2>
+    <div class="grid">
+        {% for entity in entities %}
+        <a href="{{ webui_url('entity_list', entity=entity) }}" class="btn btn-secondary" style="text-align: center;">
+            {{ entity }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Quick Reference</h2>
+    <p style="color: var(--text-secondary);">Common API operations:</p>
+    <ul style="color: var(--text-secondary); line-height: 1.8;">
+        <li><code>GET</code> - Retrieve entities with filtering and pagination</li>
+        <li><code>CREATE</code> - Create new entities</li>
+        <li><code>UPDATE</code> - Update existing entities</li>
+        <li><code>DELETE</code> - Remove entities</li>
+        <li><code>getFields</code> - Get field metadata for an entity</li>
+    </ul>
+</div>
+{% endblock %}

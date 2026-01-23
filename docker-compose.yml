@@ -1,0 +1,82 @@
+# CiviCRM Standalone Development Infrastructure
+# Usage: make infra-up / make infra-down
+#
+# CiviCRM Standalone - no CMS required!
+# https://docs.civicrm.org/installation/en/latest/standalone/
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: civi-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: civiroot
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - civi_db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - civi-network
+
+  civicrm:
+    image: civicrm/civicrm:latest
+    container_name: civi-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Database connection
+      CIVICRM_DB_HOST: db
+      CIVICRM_DB_PORT: 3306
+      CIVICRM_DB_NAME: civicrm
+      CIVICRM_DB_USER: civicrm
+      CIVICRM_DB_PASSWORD: civicrm
+      # Site URL
+      CIVICRM_UF_BASEURL: http://localhost:8080
+    volumes:
+      - civi_files:/var/www/html/web/upload
+      - civi_private:/var/www/html/private
+    ports:
+      - "8080:80"
+    networks:
+      - civi-network
+
+  # Optional: phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: civi-phpmyadmin
+    restart: unless-stopped
+    profiles:
+      - tools
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: civicrm
+      PMA_PASSWORD: civicrm
+    ports:
+      - "8081:80"
+    networks:
+      - civi-network
+
+volumes:
+  civi_db_data:
+    name: civi-py-db-data
+  civi_files:
+    name: civi-py-files
+  civi_private:
+    name: civi-py-private
+
+networks:
+  civi-network:
+    name: civi-py-network

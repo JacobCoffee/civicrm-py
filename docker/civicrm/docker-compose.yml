@@ -1,0 +1,140 @@
+# Docker Compose for CiviCRM Version Compatibility Testing
+#
+# This configuration supports testing civi-py against multiple CiviCRM versions.
+# Each service runs a specific CiviCRM version for recording cassettes.
+#
+# Usage:
+#   # Start a specific version
+#   docker compose -f docker/civicrm/docker-compose.yml up civicrm-5.76 -d
+#
+#   # Record cassettes for that version
+#   CIVI_VERSION=5.76 CIVI_BASE_URL=http://localhost:8576/civicrm/ajax/api4 \
+#   CIVI_API_KEY=admin CIVI_CASSETTE_MODE=record \
+#   pytest tests/compat/ -k "test_contact"
+#
+#   # Stop all services
+#   docker compose -f docker/civicrm/docker-compose.yml down
+#
+# Available versions:
+#   - civicrm-5.60: CiviCRM 5.60 LTS (PHP 7.4-8.1)
+#   - civicrm-5.68: CiviCRM 5.68 LTS (PHP 8.0-8.2)
+#   - civicrm-5.76: CiviCRM 5.76 LTS (PHP 8.1-8.3)
+#   - civicrm-latest: Latest CiviCRM (PHP 8.1+)
+
+services:
+  # CiviCRM 5.60 LTS (older LTS, PHP 7.4-8.1)
+  civicrm-5.60:
+    image: civicrm/civicrm:5.60
+    container_name: civi-py-test-5.60
+    ports:
+      - "8560:80"
+    environment:
+      CIVICRM_ADMIN_EMAIL: admin@example.org
+      CIVICRM_ADMIN_PASS: admin
+      CIVICRM_API_KEY: admin-api-key-5.60
+      CIVICRM_SITE_KEY: site-key-5.60
+      MYSQL_ROOT_PASSWORD: civicrm
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - civi-5.60-data:/var/www/html/sites/default/files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/civicrm/ajax/api4/Contact/get"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    profiles:
+      - "5.60"
+      - all
+
+  # CiviCRM 5.68 LTS (PHP 8.0-8.2)
+  civicrm-5.68:
+    image: civicrm/civicrm:5.68-latest
+    container_name: civi-py-test-5.68
+    ports:
+      - "8568:80"
+    environment:
+      CIVICRM_ADMIN_EMAIL: admin@example.org
+      CIVICRM_ADMIN_PASS: admin
+      CIVICRM_API_KEY: admin-api-key-5.68
+      CIVICRM_SITE_KEY: site-key-5.68
+      MYSQL_ROOT_PASSWORD: civicrm
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - civi-5.68-data:/var/www/html/sites/default/files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/civicrm/ajax/api4/Contact/get"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    profiles:
+      - "5.68"
+      - lts
+      - all
+
+  # CiviCRM 5.76 LTS (current LTS, PHP 8.1-8.3)
+  civicrm-5.76:
+    image: civicrm/civicrm:5.76-latest
+    container_name: civi-py-test-5.76
+    ports:
+      - "8576:80"
+    environment:
+      CIVICRM_ADMIN_EMAIL: admin@example.org
+      CIVICRM_ADMIN_PASS: admin
+      CIVICRM_API_KEY: admin-api-key-5.76
+      CIVICRM_SITE_KEY: site-key-5.76
+      MYSQL_ROOT_PASSWORD: civicrm
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - civi-5.76-data:/var/www/html/sites/default/files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/civicrm/ajax/api4/Contact/get"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    profiles:
+      - "5.76"
+      - lts
+      - default
+      - all
+
+  # CiviCRM Latest (bleeding edge)
+  civicrm-latest:
+    image: civicrm/civicrm:latest
+    container_name: civi-py-test-latest
+    ports:
+      - "8580:80"
+    environment:
+      CIVICRM_ADMIN_EMAIL: admin@example.org
+      CIVICRM_ADMIN_PASS: admin
+      CIVICRM_API_KEY: admin-api-key-latest
+      CIVICRM_SITE_KEY: site-key-latest
+      MYSQL_ROOT_PASSWORD: civicrm
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - civi-latest-data:/var/www/html/sites/default/files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/civicrm/ajax/api4/Contact/get"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    profiles:
+      - latest
+      - all
+
+volumes:
+  civi-5.60-data:
+  civi-5.68-data:
+  civi-5.76-data:
+  civi-latest-data:

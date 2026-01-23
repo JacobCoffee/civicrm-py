@@ -1,0 +1,269 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"loadOptions\": true}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/getFields"
+      },
+      "response": {
+        "body": {
+          "count": 25,
+          "countFetched": 25,
+          "values": [
+            {
+              "data_type": "Integer",
+              "description": "Unique Contact ID",
+              "name": "id",
+              "readonly": true,
+              "required": false,
+              "title": "Contact ID",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Type of Contact",
+              "name": "contact_type",
+              "options": [
+                {"id": "Individual", "label": "Individual", "name": "Individual"},
+                {"id": "Organization", "label": "Organization", "name": "Organization"},
+                {"id": "Household", "label": "Household", "name": "Household"}
+              ],
+              "required": true,
+              "title": "Contact Type",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Formatted name of the contact",
+              "name": "display_name",
+              "readonly": true,
+              "required": false,
+              "title": "Display Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "First name of the contact",
+              "name": "first_name",
+              "required": false,
+              "title": "First Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Last name of the contact",
+              "name": "last_name",
+              "required": false,
+              "title": "Last Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Middle name of the contact",
+              "name": "middle_name",
+              "required": false,
+              "title": "Middle Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Nickname of the contact",
+              "name": "nick_name",
+              "required": false,
+              "title": "Nickname",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Prefix/Title for name",
+              "name": "prefix_id",
+              "options": [
+                {"id": 1, "label": "Mrs.", "name": "Mrs."},
+                {"id": 2, "label": "Ms.", "name": "Ms."},
+                {"id": 3, "label": "Mr.", "name": "Mr."},
+                {"id": 4, "label": "Dr.", "name": "Dr."}
+              ],
+              "required": false,
+              "title": "Individual Prefix",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Suffix for name",
+              "name": "suffix_id",
+              "options": [
+                {"id": 1, "label": "Jr.", "name": "Jr."},
+                {"id": 2, "label": "Sr.", "name": "Sr."},
+                {"id": 3, "label": "II", "name": "II"},
+                {"id": 4, "label": "III", "name": "III"}
+              ],
+              "required": false,
+              "title": "Individual Suffix",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Job title",
+              "name": "job_title",
+              "required": false,
+              "title": "Job Title",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Gender of the contact",
+              "name": "gender_id",
+              "options": [
+                {"id": 1, "label": "Female", "name": "Female"},
+                {"id": 2, "label": "Male", "name": "Male"},
+                {"id": 3, "label": "Other", "name": "Other"}
+              ],
+              "required": false,
+              "title": "Gender",
+              "type": "Field"
+            },
+            {
+              "data_type": "Date",
+              "description": "Date of birth",
+              "name": "birth_date",
+              "required": false,
+              "title": "Birth Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Is this contact deceased?",
+              "name": "is_deceased",
+              "required": false,
+              "title": "Deceased",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Organization name",
+              "name": "organization_name",
+              "required": false,
+              "title": "Organization Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Legal name of organization",
+              "name": "legal_name",
+              "required": false,
+              "title": "Legal Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Do not email this contact",
+              "name": "do_not_email",
+              "required": false,
+              "title": "Do Not Email",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Do not phone this contact",
+              "name": "do_not_phone",
+              "required": false,
+              "title": "Do Not Phone",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Do not mail this contact",
+              "name": "do_not_mail",
+              "required": false,
+              "title": "Do Not Mail",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Contact has opted out of communications",
+              "name": "is_opt_out",
+              "required": false,
+              "title": "Opt Out",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Is this contact deleted?",
+              "name": "is_deleted",
+              "required": false,
+              "title": "Deleted",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Preferred language",
+              "name": "preferred_language",
+              "required": false,
+              "title": "Preferred Language",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "External identifier",
+              "name": "external_identifier",
+              "required": false,
+              "title": "External Identifier",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Sortable name",
+              "name": "sort_name",
+              "readonly": true,
+              "required": false,
+              "title": "Sort Name",
+              "type": "Field"
+            },
+            {
+              "data_type": "Timestamp",
+              "description": "When the contact was created",
+              "name": "created_date",
+              "readonly": true,
+              "required": false,
+              "title": "Created Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Timestamp",
+              "description": "When the contact was last modified",
+              "name": "modified_date",
+              "readonly": true,
+              "required": false,
+              "title": "Modified Date",
+              "type": "Field"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getFields",
+    "civicrm_version": "default",
+    "description": "Contact field metadata with options",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contact_getFields",
+  "version": "default"
+}

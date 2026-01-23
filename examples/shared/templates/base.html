@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CiviCRM Demo{% endblock %}</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #64748b;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-brand span {
+            color: #0ea5e9;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #334155;
+            color: #fff;
+        }
+
+        .sidebar-section {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin: 1.5rem 0 0.5rem;
+            padding-left: 1rem;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+
+        .page-header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-header h2, .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: var(--secondary); color: #fff; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: #f1f5f9; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+
+        /* Tables */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); background: #f8fafc; }
+        tbody tr:hover { background: #f8fafc; }
+
+        /* Alerts */
+        .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .alert-warning { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; }
+        .alert-danger { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+        .alert-success { background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; }
+        .alert-info { background: #dbeafe; border: 1px solid #93c5fd; color: #1e40af; }
+
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; border-radius: 9999px; }
+        .badge-primary { background: #dbeafe; color: #1e40af; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-secondary { background: #e2e8f0; color: #475569; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; box-shadow: var(--shadow); }
+        .stat-card-label { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .stat-card-value { font-size: 2rem; font-weight: 600; color: var(--text); }
+
+        /* Pagination */
+        .pagination { display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; }
+        .pagination a, .pagination span { padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.875rem; }
+        .pagination a:hover { background: #f1f5f9; }
+        .pagination .active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .pagination .disabled { color: var(--text-muted); pointer-events: none; }
+        .pagination-info { margin-left: auto; font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Forms */
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1); }
+        .form-inline { display: flex; gap: 0.5rem; align-items: center; }
+        .form-inline .form-control { flex: 1; }
+
+        /* Utilities */
+        .text-muted { color: var(--text-muted); }
+        .text-danger { color: var(--danger); }
+        .text-success { color: var(--success); }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .d-flex { display: flex; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+
+        /* Detail lists */
+        .detail-list {
+            display: grid;
+            grid-template-columns: minmax(120px, auto) 1fr;
+            gap: 0.75rem 1rem;
+            margin: 0;
+        }
+        .detail-list dt {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        .detail-list dd {
+            margin: 0;
+            color: var(--text);
+        }
+        .detail-list dd a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .detail-list dd a:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <a href="{{ url_for('index') }}" class="sidebar-brand">
+                Civi<span>CRM</span> Demo
+            </a>
+
+            {% set current_path = get_request_path(request) %}
+            <ul class="sidebar-nav">
+                <li><a href="{{ url_for('index') }}" {% if current_path == '/' %}class="active"{% endif %}>Dashboard</a></li>
+            </ul>
+
+            <div class="sidebar-section">Entities</div>
+            <ul class="sidebar-nav">
+                <li><a href="{{ url_for('contact_list') }}" {% if '/contacts' in current_path %}class="active"{% endif %}>Contacts</a></li>
+                <li><a href="{{ url_for('activity_list') }}" {% if '/activities' in current_path %}class="active"{% endif %}>Activities</a></li>
+                <li><a href="{{ url_for('contribution_list') }}" {% if '/contributions' in current_path %}class="active"{% endif %}>Contributions</a></li>
+                <li><a href="{{ url_for('event_list') }}" {% if '/events' in current_path %}class="active"{% endif %}>Events</a></li>
+            </ul>
+
+            <div class="sidebar-section">Tools</div>
+            <ul class="sidebar-nav">
+                <li><a href="{{ url_for('generate_data') }}" {% if '/generate-data' in current_path %}class="active"{% endif %}>Generate Data</a></li>
+                <li><a href="/explorer/" {% if '/explorer' in current_path %}class="active"{% endif %}>API Explorer</a></li>
+            </ul>
+
+            {% if framework == 'django' %}
+            <div class="sidebar-section">Administration</div>
+            <ul class="sidebar-nav">
+                <li><a href="/admin/" {% if '/admin' in current_path %}class="active"{% endif %}>Django Admin</a></li>
+            </ul>
+            {% endif %}
+
+            {% if framework == 'litestar' %}
+            <div class="sidebar-section">API Docs</div>
+            <ul class="sidebar-nav">
+                <li><a href="/docs/scalar">Scalar API Docs</a></li>
+                <li><a href="/docs/swagger">Swagger UI</a></li>
+            </ul>
+            {% endif %}
+
+            <div class="sidebar-section">API Endpoints</div>
+            <ul class="sidebar-nav">
+                <li><a href="/api/contacts">Contacts API</a></li>
+                <li><a href="/api/activities">Activities API</a></li>
+                <li><a href="/api/contributions">Contributions API</a></li>
+                <li><a href="/api/events">Events API</a></li>
+            </ul>
+
+            {% if framework == 'litestar' %}
+            <div class="sidebar-section">Auto-Generated</div>
+            <ul class="sidebar-nav">
+                <li><a href="/api/civi/Contact">Contact (CiviPlugin)</a></li>
+                <li><a href="/api/civi/Activity">Activity (CiviPlugin)</a></li>
+            </ul>
+            {% endif %}
+        </nav>
+
+        <main class="main">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"email\", \"location_type_id\", \"is_primary\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Email/get"
+      },
+      "response": {
+        "body": {
+          "count": 4,
+          "countFetched": 4,
+          "values": [
+            {"contact_id": 2, "email": "admin@example.com", "id": 1, "is_primary": true, "location_type_id": 1},
+            {"contact_id": 3, "email": "john.doe@example.com", "id": 2, "is_primary": true, "location_type_id": 1},
+            {"contact_id": 3, "email": "john.work@company.com", "id": 3, "is_primary": false, "location_type_id": 2},
+            {"contact_id": 4, "email": "jane.smith@example.com", "id": 4, "is_primary": true, "location_type_id": 1}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Email get",
+    "entity": "Email",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Email_get",
+  "version": "default"
+}

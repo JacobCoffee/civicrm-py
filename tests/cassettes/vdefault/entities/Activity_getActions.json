@@ -1,0 +1,52 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Activity/getActions"
+      },
+      "response": {
+        "body": {
+          "count": 10,
+          "countFetched": 10,
+          "values": [
+            {"description": "Get one or more Activity records", "name": "get"},
+            {"description": "Create a new Activity record", "name": "create"},
+            {"description": "Update one or more Activity records", "name": "update"},
+            {"description": "Delete one or more Activity records", "name": "delete"},
+            {"description": "Create or update Activity records", "name": "save"},
+            {"description": "Get field definitions for Activity", "name": "getFields"},
+            {"description": "Get available actions for Activity", "name": "getActions"},
+            {"description": "Replace all related records", "name": "replace"},
+            {"description": "Get count of Activity records", "name": "getCount"},
+            {"description": "Check permissions for action", "name": "checkAccess"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getActions",
+    "civicrm_version": "default",
+    "description": "Available Activity actions",
+    "entity": "Activity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Activity_getActions",
+  "version": "default"
+}

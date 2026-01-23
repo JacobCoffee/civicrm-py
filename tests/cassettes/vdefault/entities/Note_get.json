@@ -1,0 +1,44 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"entity_table\", \"entity_id\", \"note\", \"subject\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Note/get"
+      },
+      "response": {
+        "body": {
+          "count": 2,
+          "countFetched": 2,
+          "values": [
+            {"entity_id": 3, "entity_table": "civicrm_contact", "id": 1, "note": "Important stakeholder, handle with care.", "subject": "VIP Contact"},
+            {"entity_id": 5, "entity_table": "civicrm_contact", "id": 2, "note": "Prefers email communication only.", "subject": "Communication Preference"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Note get",
+    "entity": "Note",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Note_get",
+  "version": "default"
+}

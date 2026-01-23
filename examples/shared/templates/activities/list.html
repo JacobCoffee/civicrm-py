@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('activity_create') }}" class="btn btn-primary">Add Activity</a>
+    </div>
+</div>
+
+{% if result.error %}
+<div class="alert alert-warning">
+    <strong>Warning:</strong> {{ result.error }}
+</div>
+{% endif %}
+
+<!-- Search -->
+<div class="card">
+    <div class="card-body">
+        <form method="get" class="form-inline">
+            <input type="text" name="q" value="{{ search }}" placeholder="Search activities..." class="form-control" style="max-width: 300px;">
+            <button type="submit" class="btn btn-secondary">Search</button>
+            {% if search %}
+            <a href="{{ url_for('activity_list') }}" class="btn btn-outline">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Activities Table -->
+<div class="card">
+    <div class="table-container">
+        {% if result.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in result.items %}
+                <tr>
+                    <td>{{ activity.id }}</td>
+                    <td>
+                        <a href="{{ url_for('activity_detail', activity_id=activity.id) }}">
+                            <strong>{{ activity.subject or "(No subject)" }}</strong>
+                        </a>
+                    </td>
+                    <td>{{ activity|get_attr('activity_type_id:label', '-') }}</td>
+                    <td>
+                        {% set status = activity|get_attr('status_id:label', '-') %}
+                        <span class="badge {% if status == 'Completed' %}badge-success{% elif status == 'Scheduled' %}badge-primary{% else %}badge-warning{% endif %}">
+                            {{ status }}
+                        </span>
+                    </td>
+                    <td>{{ activity.activity_date_time or '-' }}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url_for('activity_detail', activity_id=activity.id) }}" class="btn btn-outline btn-sm">View</a>
+                            <a href="{{ url_for('activity_delete', activity_id=activity.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No activities found.</p>
+            {% if search %}
+            <p class="mt-1">Try adjusting your search criteria.</p>
+            {% else %}
+            <a href="{{ url_for('activity_create') }}" class="btn btn-primary mt-1">Add Your First Activity</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if result.pages > 1 %}
+<div class="pagination">
+    {% if result.has_prev %}
+    <a href="?page={{ result.page - 1 }}{% if search %}&q={{ search }}{% endif %}">Previous</a>
+    {% else %}
+    <span class="disabled">Previous</span>
+    {% endif %}
+
+    {% for p in range(1, result.pages + 1) %}
+    {% if p == result.page %}
+    <span class="active">{{ p }}</span>
+    {% else %}
+    <a href="?page={{ p }}{% if search %}&q={{ search }}{% endif %}">{{ p }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if result.has_next %}
+    <a href="?page={{ result.page + 1 }}{% if search %}&q={{ search }}{% endif %}">Next</a>
+    {% else %}
+    <span class="disabled">Next</span>
+    {% endif %}
+
+    <span class="pagination-info">
+        Showing {{ result.items|length }} of {{ result.total }} activities
+    </span>
+</div>
+{% endif %}
+{% endblock %}

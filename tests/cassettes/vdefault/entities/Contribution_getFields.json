@@ -1,0 +1,187 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"loadOptions\": true}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contribution/getFields"
+      },
+      "response": {
+        "body": {
+          "count": 20,
+          "countFetched": 20,
+          "values": [
+            {
+              "data_type": "Integer",
+              "name": "id",
+              "readonly": true,
+              "title": "Contribution ID",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "name": "contact_id",
+              "required": true,
+              "title": "Contact ID",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "name": "financial_type_id",
+              "options": [
+                {"id": 1, "label": "Donation", "name": "Donation"},
+                {"id": 2, "label": "Member Dues", "name": "Member Dues"},
+                {"id": 3, "label": "Campaign Contribution", "name": "Campaign Contribution"},
+                {"id": 4, "label": "Event Fee", "name": "Event Fee"}
+              ],
+              "required": true,
+              "title": "Financial Type",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "name": "contribution_page_id",
+              "title": "Contribution Page",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "name": "payment_instrument_id",
+              "options": [
+                {"id": 1, "label": "Credit Card", "name": "Credit Card"},
+                {"id": 2, "label": "Debit Card", "name": "Debit Card"},
+                {"id": 3, "label": "Cash", "name": "Cash"},
+                {"id": 4, "label": "Check", "name": "Check"},
+                {"id": 5, "label": "EFT", "name": "EFT"}
+              ],
+              "title": "Payment Method",
+              "type": "Field"
+            },
+            {
+              "data_type": "Date",
+              "name": "receive_date",
+              "title": "Receive Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Money",
+              "name": "total_amount",
+              "required": true,
+              "title": "Total Amount",
+              "type": "Field"
+            },
+            {
+              "data_type": "Money",
+              "name": "fee_amount",
+              "title": "Fee Amount",
+              "type": "Field"
+            },
+            {
+              "data_type": "Money",
+              "name": "net_amount",
+              "title": "Net Amount",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "trxn_id",
+              "title": "Transaction ID",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "invoice_id",
+              "title": "Invoice Reference",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "invoice_number",
+              "title": "Invoice Number",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "currency",
+              "title": "Currency",
+              "type": "Field"
+            },
+            {
+              "data_type": "Date",
+              "name": "cancel_date",
+              "title": "Cancelled Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "cancel_reason",
+              "title": "Cancellation Reason",
+              "type": "Field"
+            },
+            {
+              "data_type": "Date",
+              "name": "receipt_date",
+              "title": "Receipt Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Date",
+              "name": "thankyou_date",
+              "title": "Thank-you Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "name": "source",
+              "title": "Contribution Source",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "name": "contribution_status_id",
+              "options": [
+                {"id": 1, "label": "Completed", "name": "Completed"},
+                {"id": 2, "label": "Pending", "name": "Pending"},
+                {"id": 3, "label": "Cancelled", "name": "Cancelled"},
+                {"id": 4, "label": "Failed", "name": "Failed"},
+                {"id": 5, "label": "Refunded", "name": "Refunded"},
+                {"id": 6, "label": "Partially paid", "name": "Partially paid"}
+              ],
+              "title": "Contribution Status",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "name": "is_test",
+              "title": "Test",
+              "type": "Field"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getFields",
+    "civicrm_version": "default",
+    "description": "Contribution field metadata",
+    "entity": "Contribution",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contribution_getFields",
+  "version": "default"
+}

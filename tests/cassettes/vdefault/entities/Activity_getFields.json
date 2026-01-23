@@ -1,0 +1,192 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"loadOptions\": true}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Activity/getFields"
+      },
+      "response": {
+        "body": {
+          "count": 15,
+          "countFetched": 15,
+          "values": [
+            {
+              "data_type": "Integer",
+              "description": "Unique Activity ID",
+              "name": "id",
+              "readonly": true,
+              "required": false,
+              "title": "Activity ID",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "FK to civicrm_option_value",
+              "name": "activity_type_id",
+              "options": [
+                {"id": 1, "label": "Meeting", "name": "Meeting"},
+                {"id": 2, "label": "Phone Call", "name": "Phone Call"},
+                {"id": 3, "label": "Email", "name": "Email"},
+                {"id": 4, "label": "Outbound Email", "name": "Outbound Email"},
+                {"id": 5, "label": "Event Registration", "name": "Event Registration"}
+              ],
+              "required": true,
+              "title": "Activity Type",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Subject of the activity",
+              "name": "subject",
+              "required": false,
+              "title": "Subject",
+              "type": "Field"
+            },
+            {
+              "data_type": "Timestamp",
+              "description": "Date and time of activity",
+              "name": "activity_date_time",
+              "required": false,
+              "title": "Activity Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Duration in minutes",
+              "name": "duration",
+              "required": false,
+              "title": "Duration",
+              "type": "Field"
+            },
+            {
+              "data_type": "String",
+              "description": "Location of activity",
+              "name": "location",
+              "required": false,
+              "title": "Location",
+              "type": "Field"
+            },
+            {
+              "data_type": "Text",
+              "description": "Details about the activity",
+              "name": "details",
+              "required": false,
+              "title": "Details",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Activity status",
+              "name": "status_id",
+              "options": [
+                {"id": 1, "label": "Scheduled", "name": "Scheduled"},
+                {"id": 2, "label": "Completed", "name": "Completed"},
+                {"id": 3, "label": "Cancelled", "name": "Cancelled"},
+                {"id": 4, "label": "Left Message", "name": "Left Message"},
+                {"id": 5, "label": "Unreachable", "name": "Unreachable"},
+                {"id": 6, "label": "Not Required", "name": "Not Required"}
+              ],
+              "required": false,
+              "title": "Activity Status",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Priority level",
+              "name": "priority_id",
+              "options": [
+                {"id": 1, "label": "Urgent", "name": "Urgent"},
+                {"id": 2, "label": "Normal", "name": "Normal"},
+                {"id": 3, "label": "Low", "name": "Low"}
+              ],
+              "required": false,
+              "title": "Priority",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Contact who created the activity",
+              "name": "source_contact_id",
+              "required": false,
+              "title": "Source Contact",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Is this a test activity?",
+              "name": "is_test",
+              "required": false,
+              "title": "Test",
+              "type": "Field"
+            },
+            {
+              "data_type": "Boolean",
+              "description": "Is this activity deleted?",
+              "name": "is_deleted",
+              "required": false,
+              "title": "Deleted",
+              "type": "Field"
+            },
+            {
+              "data_type": "Integer",
+              "description": "Engagement level",
+              "name": "engagement_level",
+              "options": [
+                {"id": 1, "label": "1", "name": "1"},
+                {"id": 2, "label": "2", "name": "2"},
+                {"id": 3, "label": "3", "name": "3"},
+                {"id": 4, "label": "4", "name": "4"},
+                {"id": 5, "label": "5", "name": "5"}
+              ],
+              "required": false,
+              "title": "Engagement Level",
+              "type": "Field"
+            },
+            {
+              "data_type": "Timestamp",
+              "description": "When the activity was created",
+              "name": "created_date",
+              "readonly": true,
+              "required": false,
+              "title": "Created Date",
+              "type": "Field"
+            },
+            {
+              "data_type": "Timestamp",
+              "description": "When the activity was last modified",
+              "name": "modified_date",
+              "readonly": true,
+              "required": false,
+              "title": "Modified Date",
+              "type": "Field"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getFields",
+    "civicrm_version": "default",
+    "description": "Activity field metadata",
+    "entity": "Activity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Activity_getFields",
+  "version": "default"
+}

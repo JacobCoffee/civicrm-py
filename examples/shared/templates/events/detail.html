@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ event.title }}</h1>
+</div>
+
+<!-- Event Details -->
+<div class="card">
+    <div class="card-header">
+        <h3>Event Information</h3>
+    </div>
+    <div class="card-body">
+        <dl class="detail-list">
+            <dt>ID</dt>
+            <dd>{{ event.id }}</dd>
+
+            <dt>Title</dt>
+            <dd>{{ event.title }}</dd>
+
+            <dt>Event Type</dt>
+            <dd>{{ event|get_attr('event_type_id:label', '-') }}</dd>
+
+            <dt>Status</dt>
+            <dd>
+                {% if event.is_active %}
+                <span class="badge badge-success">Active</span>
+                {% else %}
+                <span class="badge badge-secondary">Inactive</span>
+                {% endif %}
+            </dd>
+
+            <dt>Visibility</dt>
+            <dd>
+                {% if event.is_public %}
+                <span class="badge badge-primary">Public</span>
+                {% else %}
+                <span class="badge badge-warning">Private</span>
+                {% endif %}
+            </dd>
+
+            <dt>Start Date</dt>
+            <dd>{{ event.start_date or '-' }}</dd>
+
+            <dt>End Date</dt>
+            <dd>{{ event.end_date or '-' }}</dd>
+
+            {% if event.max_participants %}
+            <dt>Max Participants</dt>
+            <dd>{{ event.max_participants }}</dd>
+            {% endif %}
+
+            {% if event.summary %}
+            <dt>Summary</dt>
+            <dd>{{ event.summary }}</dd>
+            {% endif %}
+
+            {% if event.description %}
+            <dt>Description</dt>
+            <dd>{{ event.description|safe }}</dd>
+            {% endif %}
+
+            {% if event|get_attr('loc_block_id.address.street_address') %}
+            <dt>Location</dt>
+            <dd>
+                {{ event|get_attr('loc_block_id.address.street_address', '') }}<br>
+                {{ event|get_attr('loc_block_id.address.city', '') }}{% if event|get_attr('loc_block_id.address.state_province_id:label') %}, {{ event|get_attr('loc_block_id.address.state_province_id:label') }}{% endif %}
+                {{ event|get_attr('loc_block_id.address.postal_code', '') }}
+            </dd>
+            {% endif %}
+
+            <dt>Created</dt>
+            <dd>{{ event.created_date or '-' }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a href="{{ url_for('event_list') }}" class="btn btn-outline">Back to Events</a>
+</div>
+{% endblock %}

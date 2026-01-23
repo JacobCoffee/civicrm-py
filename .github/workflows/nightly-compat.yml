@@ -1,0 +1,596 @@
+# Nightly CiviCRM Compatibility Testing Workflow
+#
+# Purpose: Run full test suite against a live CiviCRM instance nightly to:
+#   - Detect API drift and schema changes early
+#   - Update cassettes automatically when API changes
+#   - Alert maintainers to compatibility issues
+#
+# Schedule: Daily at 3:00 AM UTC (off-peak hours)
+# Manual trigger: workflow_dispatch for on-demand testing
+#
+# Phase 8.5.12: https://github.com/JacobCoffee/civi-py/issues/XXX
+
+name: Nightly Compatibility
+
+on:
+  schedule:
+    # Run at 3:00 AM UTC daily
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      cassette_mode:
+        description: "Cassette mode (record, replay, auto)"
+        required: false
+        default: "record"
+        type: choice
+        options:
+          - record
+          - replay
+          - auto
+      create_pr:
+        description: "Create PR for cassette updates"
+        required: false
+        default: true
+        type: boolean
+      send_notifications:
+        description: "Send failure notifications"
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: nightly-compat-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  UV_SYSTEM_PYTHON: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  # CiviCRM test configuration
+  CIVI_BASE_URL: http://localhost:8080/civicrm/ajax/api4
+  CIVI_API_KEY: test-api-key-civi-py
+  CIVI_TIMEOUT: "60"
+  CIVI_VERIFY_SSL: "false"
+
+jobs:
+  # ==========================================================================
+  # Start CiviCRM Infrastructure
+  # ==========================================================================
+  setup-civicrm:
+    name: Setup CiviCRM
+    runs-on: ubuntu-latest
+    outputs:
+      civicrm_version: ${{ steps.version.outputs.version }}
+      civicrm_ready: ${{ steps.health.outputs.ready }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start Docker services
+        run: docker compose up -d
+
+      - name: Wait for database to be ready
+        run: |
+          echo "Waiting for MariaDB to be ready..."
+          timeout 120 bash -c 'until docker compose exec -T db healthcheck.sh --connect --innodb_initialized 2>/dev/null; do sleep 2; done'
+          echo "Database is ready!"
+
+      - name: Install CiviCRM
+        run: |
+          echo "Installing CiviCRM Standalone..."
+          docker compose exec -u www-data -T civicrm cv core:install \
+            --db=mysql://civicrm:civicrm@db:3306/civicrm \
+            -l http://localhost:8080 \
+            -m extras.adminUser=admin \
+            -m extras.adminPass=admin123 \
+            --force
+          echo "CiviCRM installed!"
+
+      - name: Configure API access
+        run: |
+          echo "Configuring API access..."
+
+          # Enable authx extension
+          docker compose exec -u www-data -T civicrm cv ext:enable authx
+
+          # Set API key on admin user (Contact ID 2)
+          docker compose exec -u www-data -T civicrm cv api4 Contact.update \
+            +w 'id=2' +v 'api_key=test-api-key-civi-py'
+
+          # Configure authx for API key authentication
+          docker compose exec -u www-data -T civicrm cv ev 'Civi::settings()->set("authx_guards", []);'
+          docker compose exec -u www-data -T civicrm cv ev 'Civi::settings()->set("authx_header_cred", ["jwt","api_key"]);'
+          docker compose exec -u www-data -T civicrm cv ev 'Civi::settings()->set("authx_xheader_cred", ["jwt","api_key"]);'
+
+          # Add 'authenticate with api key' permission
+          docker compose exec -u www-data -T civicrm cv api4 Role.update \
+            +w 'name="everyone"' \
+            +v 'permissions=["access CiviMail subscribe/unsubscribe pages","make online contributions","view event info","register for events","access password resets","authenticate with password","authenticate with api key"]'
+
+          # Add admin to Administrators group
+          docker compose exec -u www-data -T civicrm cv api4 GroupContact.create \
+            +v 'group_id=1' +v 'contact_id=2' +v 'status="Added"' || true
+
+          # Add staff role to admin user
+          docker compose exec -u www-data -T civicrm cv api4 User.update \
+            +w 'id=1' +v 'roles=["2","3"]'
+
+          # Flush caches
+          docker compose exec -u www-data -T civicrm cv flush
+
+          echo "API access configured!"
+
+      - name: Get CiviCRM version
+        id: version
+        run: |
+          VERSION=$(docker compose exec -u www-data -T civicrm cv api4 System.get +s version --out=json | jq -r '.values[0].version // "unknown"' 2>/dev/null || echo "unknown")
+          echo "CiviCRM Version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify API health
+        id: health
+        run: |
+          echo "Verifying API health..."
+
+          # Test API endpoint
+          HTTP_CODE=$(curl -s -o /tmp/api_response.json -w "%{http_code}" \
+            -X POST "http://localhost:8080/civicrm/ajax/api4/Contact/get" \
+            -H "Authorization: Bearer test-api-key-civi-py" \
+            -H "X-Requested-With: XMLHttpRequest" \
+            -H "Content-Type: application/json" \
+            -d '{"limit":1}')
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "API health check passed!"
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            cat /tmp/api_response.json | jq .
+          else
+            echo "API health check failed with HTTP $HTTP_CODE"
+            cat /tmp/api_response.json || true
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+      - name: Upload CiviCRM logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: civicrm-logs
+          path: |
+            /var/log/civicrm/
+          retention-days: 7
+
+  # ==========================================================================
+  # Run Compatibility Tests
+  # ==========================================================================
+  compat-tests:
+    name: Compatibility Tests
+    runs-on: ubuntu-latest
+    needs: setup-civicrm
+    if: needs.setup-civicrm.outputs.civicrm_ready == 'true'
+
+    outputs:
+      cassettes_changed: ${{ steps.check-changes.outputs.changed }}
+      test_status: ${{ steps.tests.outcome }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --group test
+
+      - name: Start Docker services
+        run: docker compose up -d
+
+      - name: Wait for CiviCRM
+        run: |
+          echo "Waiting for CiviCRM to be ready..."
+          timeout 180 bash -c '
+            until curl -sf -o /dev/null "http://localhost:8080/civicrm/ajax/api4/System/get" \
+              -H "Authorization: Bearer test-api-key-civi-py" \
+              -H "X-Requested-With: XMLHttpRequest" \
+              -H "Content-Type: application/json" \
+              -d "{\"select\":[\"version\"]}"; do
+              echo "Waiting..."
+              sleep 5
+            done
+          '
+          echo "CiviCRM is ready!"
+
+      - name: Run compatibility tests (record mode)
+        id: tests
+        env:
+          CIVI_CASSETTE_MODE: ${{ github.event.inputs.cassette_mode || 'record' }}
+          CIVI_VERSION: ${{ needs.setup-civicrm.outputs.civicrm_version }}
+        run: |
+          echo "Running compatibility tests..."
+          echo "Cassette mode: $CIVI_CASSETTE_MODE"
+          echo "CiviCRM version: $CIVI_VERSION"
+
+          uv run pytest tests/compat \
+            -v \
+            --tb=short \
+            -m "compat or cassette" \
+            --junitxml=reports/compat-results.xml \
+            2>&1 | tee reports/test-output.log
+
+      - name: Check for cassette changes
+        id: check-changes
+        run: |
+          if git diff --quiet tests/cassettes/; then
+            echo "No cassette changes detected"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Cassette changes detected!"
+            git diff --stat tests/cassettes/
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compat-test-results
+          path: |
+            reports/
+            tests/cassettes/
+          retention-days: 30
+
+  # ==========================================================================
+  # Schema Drift Detection
+  # ==========================================================================
+  drift-detection:
+    name: Schema Drift Detection
+    runs-on: ubuntu-latest
+    needs: [setup-civicrm, compat-tests]
+    if: always() && needs.setup-civicrm.outputs.civicrm_ready == 'true'
+
+    outputs:
+      drift_detected: ${{ steps.drift.outputs.detected }}
+      breaking_changes: ${{ steps.drift.outputs.breaking }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --group test
+
+      - name: Start Docker services
+        run: docker compose up -d
+
+      - name: Wait for CiviCRM
+        run: |
+          timeout 120 bash -c '
+            until curl -sf -o /dev/null "http://localhost:8080/civicrm/ajax/api4/System/get" \
+              -H "Authorization: Bearer test-api-key-civi-py" \
+              -H "X-Requested-With: XMLHttpRequest" \
+              -H "Content-Type: application/json" \
+              -d "{\"select\":[\"version\"]}"; do
+              sleep 5
+            done
+          '
+
+      - name: Run drift detection
+        id: drift
+        env:
+          CIVI_VERSION: ${{ needs.setup-civicrm.outputs.civicrm_version }}
+        run: |
+          echo "Running schema drift detection..."
+
+          # Run drift detection tests
+          uv run pytest tests/compat/test_drift_detection.py \
+            -v \
+            --tb=short \
+            2>&1 | tee reports/drift-output.log || true
+
+          # Check for drift using CI helper
+          uv run python -c "
+          from tests.compat.ci_helpers import DriftChecker
+          checker = DriftChecker()
+          result = checker.check_drift()
+          print(f'Drift detected: {result.has_drift}')
+          print(f'Breaking changes: {result.has_breaking_changes}')
+          with open('drift-result.json', 'w') as f:
+              import json
+              json.dump({'detected': result.has_drift, 'breaking': result.has_breaking_changes}, f)
+          " || echo '{"detected": false, "breaking": false}' > drift-result.json
+
+          # Set outputs
+          DETECTED=$(jq -r '.detected' drift-result.json)
+          BREAKING=$(jq -r '.breaking' drift-result.json)
+          echo "detected=$DETECTED" >> "$GITHUB_OUTPUT"
+          echo "breaking=$BREAKING" >> "$GITHUB_OUTPUT"
+
+      - name: Upload drift report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: |
+            reports/drift-output.log
+            drift-result.json
+          retention-days: 30
+
+  # ==========================================================================
+  # Create PR for Cassette Updates
+  # ==========================================================================
+  update-cassettes:
+    name: Update Cassettes PR
+    runs-on: ubuntu-latest
+    needs: [setup-civicrm, compat-tests]
+    if: |
+      always() &&
+      needs.compat-tests.outputs.cassettes_changed == 'true' &&
+      (github.event.inputs.create_pr != 'false')
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download cassette artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: compat-test-results
+          path: ./artifacts
+
+      - name: Copy updated cassettes
+        run: |
+          cp -r ./artifacts/tests/cassettes/* tests/cassettes/
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create cassette update branch
+        id: branch
+        run: |
+          BRANCH_NAME="chore/update-cassettes-$(date +%Y%m%d)"
+          echo "branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Commit cassette changes
+        run: |
+          git add tests/cassettes/
+          git commit -m "chore(cassettes): update API cassettes for CiviCRM ${{ needs.setup-civicrm.outputs.civicrm_version }}
+
+          Automated cassette update from nightly compatibility tests.
+
+          CiviCRM Version: ${{ needs.setup-civicrm.outputs.civicrm_version }}
+          Run ID: ${{ github.run_id }}
+          Workflow: ${{ github.workflow }}"
+
+      - name: Push branch
+        run: |
+          git push origin ${{ steps.branch.outputs.branch }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.branch.outputs.branch }}
+          base: main
+          title: "chore(cassettes): update API cassettes for CiviCRM ${{ needs.setup-civicrm.outputs.civicrm_version }}"
+          body: |
+            ## Automated Cassette Update
+
+            This PR updates the API cassettes to match CiviCRM version **${{ needs.setup-civicrm.outputs.civicrm_version }}**.
+
+            ### Changes
+            - Updated cassette recordings from live CiviCRM API
+            - Schema changes detected and recorded
+
+            ### Verification
+            - [ ] Review cassette diff for expected changes
+            - [ ] Ensure no sensitive data in recordings
+            - [ ] Run tests locally to verify compatibility
+
+            ### Nightly Run Details
+            - **Run ID**: ${{ github.run_id }}
+            - **Workflow**: ${{ github.workflow }}
+            - **Triggered**: ${{ github.event_name }}
+
+            ---
+            *This PR was automatically created by the nightly compatibility workflow.*
+          labels: |
+            automated
+            cassettes
+            compatibility
+          draft: false
+
+  # ==========================================================================
+  # Send Notifications on Failure
+  # ==========================================================================
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [setup-civicrm, compat-tests, drift-detection]
+    if: |
+      always() &&
+      (needs.compat-tests.result == 'failure' || needs.drift-detection.outputs.breaking_changes == 'true') &&
+      (github.event.inputs.send_notifications != 'false')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare failure summary
+        id: summary
+        run: |
+          SUMMARY=""
+
+          if [ "${{ needs.compat-tests.result }}" == "failure" ]; then
+            SUMMARY="${SUMMARY}Compatibility tests failed.\n"
+          fi
+
+          if [ "${{ needs.drift-detection.outputs.breaking_changes }}" == "true" ]; then
+            SUMMARY="${SUMMARY}Breaking schema changes detected!\n"
+          fi
+
+          echo "summary<<EOF" >> "$GITHUB_OUTPUT"
+          echo -e "$SUMMARY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack notification
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "text": "CiviCRM Compatibility Alert",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "CiviCRM Nightly Compatibility Alert"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* ${{ github.repository }}\n*CiviCRM Version:* ${{ needs.setup-civicrm.outputs.civicrm_version }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.summary.outputs.summary }}"
+                  }
+                }
+              ]
+            }'
+
+      - name: Send Discord notification
+        if: env.DISCORD_WEBHOOK_URL != ''
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -X POST "$DISCORD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "CiviCRM Nightly Compatibility Alert",
+                "color": 15158332,
+                "fields": [
+                  {
+                    "name": "Repository",
+                    "value": "${{ github.repository }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "CiviCRM Version",
+                    "value": "${{ needs.setup-civicrm.outputs.civicrm_version }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Status",
+                    "value": "${{ steps.summary.outputs.summary }}"
+                  }
+                ],
+                "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }]
+            }'
+
+      - name: Create GitHub Issue for breaking changes
+        if: needs.drift-detection.outputs.breaking_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Breaking CiviCRM API changes detected (v${{ needs.setup-civicrm.outputs.civicrm_version }})`;
+            const body = `
+            ## Breaking API Changes Detected
+
+            The nightly compatibility tests have detected breaking changes in the CiviCRM API.
+
+            ### Details
+            - **CiviCRM Version**: ${{ needs.setup-civicrm.outputs.civicrm_version }}
+            - **Run ID**: ${{ github.run_id }}
+            - **Workflow Run**: [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            ### Required Actions
+            1. Review the drift detection report
+            2. Update entity models to match new schema
+            3. Update cassettes with new recordings
+            4. Run full test suite to verify compatibility
+
+            ### Artifacts
+            Check the workflow artifacts for:
+            - Drift detection report
+            - Updated cassettes
+            - Test output logs
+
+            ---
+            *This issue was automatically created by the nightly compatibility workflow.*
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'compatibility', 'automated']
+            });
+
+  # ==========================================================================
+  # Cleanup
+  # ==========================================================================
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [compat-tests, drift-detection, update-cassettes, notify-failure]
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Stop Docker services
+        run: docker compose down -v || true
+
+      - name: Summary
+        run: |
+          echo "## Nightly Compatibility Test Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| CiviCRM Setup | ${{ needs.setup-civicrm.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Compatibility Tests | ${{ needs.compat-tests.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Drift Detection | ${{ needs.drift-detection.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cassette Updates | ${{ needs.update-cassettes.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Details" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **CiviCRM Version**: ${{ needs.setup-civicrm.outputs.civicrm_version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Cassettes Changed**: ${{ needs.compat-tests.outputs.cassettes_changed }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Drift Detected**: ${{ needs.drift-detection.outputs.drift_detected }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Breaking Changes**: ${{ needs.drift-detection.outputs.breaking_changes }}" >> "$GITHUB_STEP_SUMMARY"

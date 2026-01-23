@@ -1,0 +1,54 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"values\": {\"activity_type_id\": 1, \"subject\": \"Test Activity Recording\", \"activity_date_time\": \"2024-01-22T10:00:00+00:00\", \"status_id\": 1, \"source_contact_id\": 1}}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Activity/create"
+      },
+      "response": {
+        "body": {
+          "count": 1,
+          "countFetched": 1,
+          "values": [
+            {
+              "activity_date_time": "2024-01-22T10:00:00+00:00",
+              "activity_type_id": 1,
+              "created_date": "2024-01-22T10:00:00+00:00",
+              "id": 100,
+              "is_deleted": false,
+              "is_test": false,
+              "modified_date": "2024-01-22T10:00:00+00:00",
+              "source_contact_id": 1,
+              "status_id": 1,
+              "subject": "Test Activity Recording"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "create",
+    "civicrm_version": "default",
+    "description": "Create new Activity",
+    "entity": "Activity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Activity_create",
+  "version": "default"
+}

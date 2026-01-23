@@ -1,0 +1,63 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"activity_type_id\", \"subject\", \"status_id\", \"activity_date_time\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Activity/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {
+              "activity_date_time": "2024-01-22T09:00:00+00:00",
+              "activity_type_id": 1,
+              "id": 1,
+              "status_id": 2,
+              "subject": "Welcome call"
+            },
+            {
+              "activity_date_time": "2024-01-21T14:30:00+00:00",
+              "activity_type_id": 3,
+              "id": 2,
+              "status_id": 2,
+              "subject": "Follow-up email"
+            },
+            {
+              "activity_date_time": "2024-01-23T10:00:00+00:00",
+              "activity_type_id": 1,
+              "id": 3,
+              "status_id": 1,
+              "subject": "Quarterly review meeting"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Activity get",
+    "entity": "Activity",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Activity_get",
+  "version": "default"
+}

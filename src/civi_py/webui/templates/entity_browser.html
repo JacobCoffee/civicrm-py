@@ -1,0 +1,17 @@
+{% extends "webui_base.html" %}
+
+{% block content %}
+<h1>Entity Browser</h1>
+<p style="color: var(--text-secondary); margin-bottom: 2rem;">
+    Select an entity type to browse its records.
+</p>
+
+<div class="grid">
+    {% for entity in entities %}
+    <a href="{{ webui_url('entity_list', entity=entity) }}" class="card" style="text-decoration: none; transition: transform 0.2s;">
+        <h2 style="margin-bottom: 0.5rem;">{{ entity }}</h2>
+        <p style="color: var(--text-secondary); margin: 0;">Browse {{ entity }} records</p>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

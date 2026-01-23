@@ -1,0 +1,72 @@
+{% extends "webui_base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1>{{ entity }} List</h1>
+    <a href="{{ webui_url('entities') }}" class="btn btn-secondary">Back to Entities</a>
+</div>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<div class="card">
+    <form method="get" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+        <input type="text" name="search" value="{{ search }}" placeholder="Search..." style="flex: 1;">
+        <button type="submit" class="btn">Search</button>
+        {% if search %}
+        <a href="{{ webui_url('entity_list', entity=entity) }}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Showing {{ items|length }} of {{ total }} records
+        {% if search %} matching "{{ search }}"{% endif %}
+    </p>
+
+    {% if items %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Display Name</th>
+                <th>Created</th>
+                <th>Modified</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.display_name or item.subject or item.title or '-' }}</td>
+                <td>{{ item.created_date or '-' }}</td>
+                <td>{{ item.modified_date or '-' }}</td>
+                <td>
+                    <a href="{{ webui_url('entity_detail', entity=entity, entity_id=item.id) }}" class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ webui_url('entity_list', entity=entity) }}?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}">Previous</a>
+        {% endif %}
+
+        <span class="current">Page {{ page }} of {{ total_pages }}</span>
+
+        {% if page < total_pages %}
+        <a href="{{ webui_url('entity_list', entity=entity) }}?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+    <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+        No records found{% if search %} matching "{{ search }}"{% endif %}.
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

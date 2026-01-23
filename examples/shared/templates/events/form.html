@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    <strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h3>{% if is_edit %}Edit Event{% else %}New Event{% endif %}</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{% if is_edit %}{{ url_for('event_edit', event_id=event.id) }}{% else %}{{ url_for('event_create') }}{% endif %}">
+            {{ render_csrf(request) }}
+            <div class="form-group">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="title" id="title" class="form-control" required
+                       value="{{ event.title if event else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="event_type_id" class="form-label">Event Type</label>
+                <select name="event_type_id" id="event_type_id" class="form-control" required>
+                    <option value="1">Conference</option>
+                    <option value="2">Exhibition</option>
+                    <option value="3">Fundraiser</option>
+                    <option value="4">Meeting</option>
+                    <option value="5">Performance</option>
+                    <option value="6">Workshop</option>
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="datetime-local" name="start_date" id="start_date" class="form-control" required
+                           value="{{ event.start_date if event else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="datetime-local" name="end_date" id="end_date" class="form-control"
+                           value="{{ event.end_date if event else '' }}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="max_participants" class="form-label">Max Participants</label>
+                    <input type="number" name="max_participants" id="max_participants" class="form-control" min="0"
+                           value="{{ event.max_participants if event else '' }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Active</label>
+                    <div>
+                        <label style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" name="is_active" value="true" {% if not event or event.is_active %}checked{% endif %}>
+                            Event is active
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Public</label>
+                    <div>
+                        <label style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" name="is_public" value="true" {% if not event or event.is_public %}checked{% endif %}>
+                            Event is public
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-1 mt-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if is_edit %}Update Event{% else %}Create Event{% endif %}
+                </button>
+                <a href="{{ url_for('event_list') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

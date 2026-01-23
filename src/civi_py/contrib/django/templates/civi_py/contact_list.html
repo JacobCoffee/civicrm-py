@@ -1,0 +1,32 @@
+{# CiviCRM Contact List Template #}
+{# Usage: {% civi_contact_list contacts show_email=True show_type=True css_class="my-class" empty_message="No contacts" %} #}
+
+{% if contacts %}
+<ul class="civi-contact-list{% if css_class %} {{ css_class }}{% endif %}">
+    {% for contact in contacts %}
+    <li class="civi-contact-list-item">
+        <div class="civi-contact-list-primary">
+            <span class="civi-contact-name">{{ contact.display_name|default:"Unknown" }}</span>
+            {% if show_type and contact.contact_type %}
+            <span class="civi-contact-type civi-contact-type-{{ contact.contact_type|lower }}">
+                ({{ contact.contact_type }})
+            </span>
+            {% endif %}
+        </div>
+        {% if show_email %}
+            {% with email=contact.email_primary|default:contact.email %}
+            {% if email %}
+            <div class="civi-contact-list-secondary">
+                <a href="mailto:{{ email }}" class="civi-contact-email">{{ email }}</a>
+            </div>
+            {% endif %}
+            {% endwith %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="civi-contact-list-empty{% if css_class %} {{ css_class }}{% endif %}">
+    <p>{{ empty_message }}</p>
+</div>
+{% endif %}

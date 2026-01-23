@@ -1,0 +1,76 @@
+{# CiviCRM Contact Card Template #}
+{# Usage: {% civi_contact_card contact show_email=True show_phone=True css_class="my-class" %} #}
+
+{% if contact %}
+<div class="civi-contact-card{% if css_class %} {{ css_class }}{% endif %}">
+    <div class="civi-contact-card-header">
+        <h3 class="civi-contact-name">{{ contact.display_name|default:"Unknown Contact" }}</h3>
+        {% if contact.contact_type %}
+        <span class="civi-contact-type civi-contact-type-{{ contact.contact_type|lower }}">
+            {{ contact.contact_type }}
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="civi-contact-card-body">
+        {% if contact.job_title or contact.organization_name %}
+        <div class="civi-contact-info">
+            {% if contact.job_title %}
+            <span class="civi-contact-job-title">{{ contact.job_title }}</span>
+            {% endif %}
+            {% if contact.job_title and contact.organization_name %}
+            <span class="civi-contact-at">at</span>
+            {% endif %}
+            {% if contact.organization_name %}
+            <span class="civi-contact-org">{{ contact.organization_name }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if show_email %}
+            {% with email=contact.email_primary|default:contact.email %}
+            {% if email %}
+            <div class="civi-contact-email">
+                <span class="civi-label">Email:</span>
+                <a href="mailto:{{ email }}">{{ email }}</a>
+            </div>
+            {% endif %}
+            {% endwith %}
+        {% endif %}
+
+        {% if show_phone %}
+            {% with phone=contact.phone_primary|default:contact.phone %}
+            {% if phone %}
+            <div class="civi-contact-phone">
+                <span class="civi-label">Phone:</span>
+                <a href="tel:{{ phone }}">{{ phone }}</a>
+            </div>
+            {% endif %}
+            {% endwith %}
+        {% endif %}
+
+        {% if show_address %}
+            {% if contact.address_primary_street_address or contact.address_primary_city %}
+            <div class="civi-contact-address">
+                <span class="civi-label">Address:</span>
+                <address>
+                    {% if contact.address_primary_street_address %}{{ contact.address_primary_street_address }}<br>{% endif %}
+                    {% if contact.address_primary_city %}{{ contact.address_primary_city }}{% endif %}
+                    {% if contact.address_primary_postal_code %}, {{ contact.address_primary_postal_code }}{% endif %}
+                </address>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if contact.id %}
+    <div class="civi-contact-card-footer">
+        <small class="civi-contact-id">ID: {{ contact.id }}</small>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="civi-contact-card civi-contact-card-empty{% if css_class %} {{ css_class }}{% endif %}">
+    <p class="civi-no-contact">Contact not found</p>
+</div>
+{% endif %}

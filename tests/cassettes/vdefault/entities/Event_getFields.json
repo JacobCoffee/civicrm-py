@@ -1,0 +1,70 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"loadOptions\": true}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Event/getFields"
+      },
+      "response": {
+        "body": {
+          "count": 15,
+          "countFetched": 15,
+          "values": [
+            {"data_type": "Integer", "name": "id", "readonly": true, "title": "Event ID", "type": "Field"},
+            {"data_type": "String", "name": "title", "required": true, "title": "Event Title", "type": "Field"},
+            {"data_type": "Text", "name": "summary", "title": "Event Summary", "type": "Field"},
+            {"data_type": "Text", "name": "description", "title": "Complete Description", "type": "Field"},
+            {
+              "data_type": "Integer",
+              "name": "event_type_id",
+              "options": [
+                {"id": 1, "label": "Conference", "name": "Conference"},
+                {"id": 2, "label": "Exhibition", "name": "Exhibition"},
+                {"id": 3, "label": "Fundraiser", "name": "Fundraiser"},
+                {"id": 4, "label": "Meeting", "name": "Meeting"},
+                {"id": 5, "label": "Performance", "name": "Performance"},
+                {"id": 6, "label": "Workshop", "name": "Workshop"}
+              ],
+              "title": "Event Type",
+              "type": "Field"
+            },
+            {"data_type": "Timestamp", "name": "start_date", "title": "Start Date", "type": "Field"},
+            {"data_type": "Timestamp", "name": "end_date", "title": "End Date", "type": "Field"},
+            {"data_type": "Boolean", "name": "is_online_registration", "title": "Allow Online Registration", "type": "Field"},
+            {"data_type": "Timestamp", "name": "registration_start_date", "title": "Registration Start Date", "type": "Field"},
+            {"data_type": "Timestamp", "name": "registration_end_date", "title": "Registration End Date", "type": "Field"},
+            {"data_type": "Integer", "name": "max_participants", "title": "Max Participants", "type": "Field"},
+            {"data_type": "Boolean", "name": "is_monetary", "title": "Is Monetary", "type": "Field"},
+            {"data_type": "Boolean", "name": "is_active", "title": "Is Active", "type": "Field"},
+            {"data_type": "Boolean", "name": "is_public", "title": "Is Public", "type": "Field"},
+            {"data_type": "Integer", "name": "created_id", "readonly": true, "title": "Created By", "type": "Field"}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "getFields",
+    "civicrm_version": "default",
+    "description": "Event field metadata",
+    "entity": "Event",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Event_getFields",
+  "version": "default"
+}

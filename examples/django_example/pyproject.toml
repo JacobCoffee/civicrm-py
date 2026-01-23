@@ -1,0 +1,33 @@
+[project]
+name = "django-civicrm-example"
+version = "0.1.0"
+description = "Django 5+ example app demonstrating civi-py integration"
+requires-python = ">=3.11"
+dependencies = [
+    "civi-py[django]",
+    "django>=5.0",
+    "python-dotenv>=1.0",
+    "uvicorn[standard]>=0.30",  # ASGI server
+    "whitenoise>=6.0",  # Static file serving for ASGI
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-debug-toolbar>=4.0",
+]
+granian = [
+    "granian>=1.0",  # Alternative high-performance ASGI server
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "django-debug-toolbar>=4.0",
+]
+
+[tool.uv.sources]
+# Use local civi-py from parent directory for development
+civi-py = { path = "../..", editable = true }

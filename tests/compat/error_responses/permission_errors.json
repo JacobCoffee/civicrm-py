@@ -1,0 +1,58 @@
+{
+  "access_denied_generic": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "Permission denied"
+    },
+    "description": "Generic permission denied"
+  },
+  "no_read_permission": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "You do not have permission to view this Contact"
+    },
+    "description": "User lacks read permission for entity"
+  },
+  "no_write_permission": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "You do not have permission to edit this Contact"
+    },
+    "description": "User lacks write permission for entity"
+  },
+  "no_delete_permission": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "You do not have permission to delete this Contact"
+    },
+    "description": "User lacks delete permission for entity"
+  },
+  "admin_only_action": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "This action requires administrator privileges"
+    },
+    "description": "Action requires admin role"
+  },
+  "insufficient_acl": {
+    "status_code": 403,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "ACL check failed: Contact not in permitted groups"
+    },
+    "description": "ACL restrictions prevent access"
+  },
+  "api_response_permission_error": {
+    "status_code": 200,
+    "body": {
+      "error_code": "access_denied",
+      "error_message": "Permission denied for Contact::get"
+    },
+    "description": "Permission error returned in API response body (not HTTP status)"
+  }
+}

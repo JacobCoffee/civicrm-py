@@ -1,0 +1,66 @@
+{
+  "entity_not_found_by_id": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Entity not found: No Contact with id = 999999 exists"
+    },
+    "description": "Entity with given ID does not exist"
+  },
+  "entity_not_found_generic": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Contact not found"
+    },
+    "description": "Generic entity not found"
+  },
+  "unknown_entity": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Unknown entity 'NonExistentEntity'"
+    },
+    "description": "Requested entity type does not exist"
+  },
+  "unknown_action": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Unknown action 'nonExistentAction' for entity 'Contact'"
+    },
+    "description": "Requested action does not exist for entity"
+  },
+  "unknown_field": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Unknown field 'nonexistent_field' for entity 'Contact'"
+    },
+    "description": "Requested field does not exist"
+  },
+  "http_404_not_found": {
+    "status_code": 404,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "The requested resource was not found"
+    },
+    "description": "HTTP 404 response from server"
+  },
+  "deleted_entity": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Contact with id = 123 has been deleted"
+    },
+    "description": "Entity was soft-deleted"
+  },
+  "related_entity_not_found": {
+    "status_code": 200,
+    "body": {
+      "error_code": "not_found",
+      "error_message": "Related Activity with id = 456 not found for Contact"
+    },
+    "description": "Related entity in chain/join not found"
+  }
+}

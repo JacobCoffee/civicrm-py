@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    <strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h3>{% if is_edit %}Edit Contribution{% else %}New Contribution{% endif %}</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{% if is_edit %}{{ url_for('contribution_edit', contribution_id=contribution.id) }}{% else %}{{ url_for('contribution_create') }}{% endif %}">
+            {{ render_csrf(request) }}
+            <div class="form-group">
+                <label for="contact_id" class="form-label">Contact</label>
+                <select name="contact_id" id="contact_id" class="form-control" required>
+                    <option value="">Select a contact...</option>
+                    {% for contact in contacts %}
+                    <option value="{{ contact.id }}" {% if contribution and contribution.contact_id == contact.id %}selected{% endif %}>
+                        {{ contact.display_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="total_amount" class="form-label">Amount</label>
+                    <input type="number" name="total_amount" id="total_amount" class="form-control" step="0.01" min="0" required
+                           value="{{ contribution.total_amount if contribution else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="financial_type_id" class="form-label">Financial Type</label>
+                    <select name="financial_type_id" id="financial_type_id" class="form-control" required>
+                        <option value="1">Donation</option>
+                        <option value="2">Member Dues</option>
+                        <option value="3">Campaign Contribution</option>
+                        <option value="4">Event Fee</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="receive_date" class="form-label">Receive Date</label>
+                <input type="date" name="receive_date" id="receive_date" class="form-control"
+                       value="{{ contribution.receive_date if contribution else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="source" class="form-label">Source</label>
+                <input type="text" name="source" id="source" class="form-control" placeholder="e.g., Website, Event, Mail"
+                       value="{{ contribution.source if contribution else '' }}">
+            </div>
+
+            <div class="d-flex gap-1 mt-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if is_edit %}Update Contribution{% else %}Record Contribution{% endif %}
+                </button>
+                <a href="{{ url_for('contribution_list') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

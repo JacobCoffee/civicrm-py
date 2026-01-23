@@ -1,0 +1,54 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"values\": {\"contact_type\": \"Individual\", \"first_name\": \"Test\", \"last_name\": \"Recording\", \"email_primary.email\": \"test.recording@example.com\"}}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contact/create"
+      },
+      "response": {
+        "body": {
+          "count": 1,
+          "countFetched": 1,
+          "values": [
+            {
+              "contact_type": "Individual",
+              "created_date": "2024-01-22T10:00:00+00:00",
+              "display_name": "Test Recording",
+              "first_name": "Test",
+              "id": 100,
+              "is_deceased": false,
+              "is_deleted": false,
+              "last_name": "Recording",
+              "modified_date": "2024-01-22T10:00:00+00:00",
+              "sort_name": "Recording, Test"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "create",
+    "civicrm_version": "default",
+    "description": "Create new Individual contact",
+    "entity": "Contact",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contact_create",
+  "version": "default"
+}

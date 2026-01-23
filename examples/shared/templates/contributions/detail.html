@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+</div>
+
+<!-- Contribution Details -->
+<div class="card">
+    <div class="card-header">
+        <h3>Contribution Information</h3>
+    </div>
+    <div class="card-body">
+        <dl class="detail-list">
+            <dt>ID</dt>
+            <dd>{{ contribution.id }}</dd>
+
+            <dt>Contact</dt>
+            <dd>
+                {% set contact_name = contribution|get_attr('contact_id.display_name') %}
+                {% set cid = contribution|get_attr('contact_id') %}
+                {% if contact_name and cid %}
+                <a href="{{ url_for('contact_detail', contact_id=cid) }}">
+                    {{ contact_name }}
+                </a>
+                {% elif contact_name %}
+                {{ contact_name }}
+                {% else %}
+                -
+                {% endif %}
+            </dd>
+
+            <dt>Amount</dt>
+            <dd><strong>{{ contribution.currency or 'USD' }} {{ contribution.total_amount }}</strong></dd>
+
+            <dt>Financial Type</dt>
+            <dd>{{ contribution|get_attr('financial_type_id:label', '-') }}</dd>
+
+            <dt>Status</dt>
+            <dd>
+                {% set status = contribution|get_attr('contribution_status_id:label', '-') %}
+                <span class="badge {% if status == 'Completed' %}badge-success{% elif status == 'Pending' %}badge-warning{% else %}badge-secondary{% endif %}">
+                    {{ status }}
+                </span>
+            </dd>
+
+            <dt>Receive Date</dt>
+            <dd>{{ contribution.receive_date or '-' }}</dd>
+
+            {% if contribution.source %}
+            <dt>Source</dt>
+            <dd>{{ contribution.source }}</dd>
+            {% endif %}
+
+            {% if contribution|get_attr('payment_instrument_id:label') %}
+            <dt>Payment Method</dt>
+            <dd>{{ contribution|get_attr('payment_instrument_id:label') }}</dd>
+            {% endif %}
+
+            {% if contribution.trxn_id %}
+            <dt>Transaction ID</dt>
+            <dd>{{ contribution.trxn_id }}</dd>
+            {% endif %}
+
+            <dt>Created</dt>
+            <dd>{{ contribution.created_date or '-' }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a href="{{ url_for('contribution_list') }}" class="btn btn-outline">Back to Contributions</a>
+</div>
+{% endblock %}

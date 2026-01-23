@@ -1,0 +1,82 @@
+{
+  "invalid_email_format": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Validation failed for field 'email': Invalid email format"
+    },
+    "description": "Invalid email format"
+  },
+  "required_field_missing": {
+    "status_code": 200,
+    "body": {
+      "error_code": "mandatory_missing",
+      "error_message": "Mandatory values missing from Api4 Contact::create: first_name, last_name"
+    },
+    "description": "Required fields not provided"
+  },
+  "invalid_field_value_type": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Field 'contact_type' expects a string, got integer"
+    },
+    "description": "Field value has wrong type"
+  },
+  "invalid_option_value": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Invalid option value 'InvalidType' for field 'contact_type'"
+    },
+    "description": "Value not in allowed options"
+  },
+  "invalid_date_format": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Invalid date format for field 'birth_date': expected YYYY-MM-DD"
+    },
+    "description": "Invalid date format"
+  },
+  "invalid_foreign_key": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Invalid foreign key: contact_id=999999 does not exist"
+    },
+    "description": "Foreign key references nonexistent record"
+  },
+  "duplicate_unique_field": {
+    "status_code": 200,
+    "body": {
+      "error_code": "db_error",
+      "error_message": "DB Error: Duplicate entry 'test@example.com' for key 'UI_email'"
+    },
+    "description": "Unique constraint violation"
+  },
+  "invalid_json_in_field": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Field 'custom_data' contains invalid JSON"
+    },
+    "description": "JSON field contains invalid JSON"
+  },
+  "value_too_long": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Value for field 'first_name' exceeds maximum length of 64 characters"
+    },
+    "description": "String value exceeds max length"
+  },
+  "negative_value_not_allowed": {
+    "status_code": 200,
+    "body": {
+      "error_code": "validation_error",
+      "error_message": "Field 'total_amount' must be a positive number"
+    },
+    "description": "Numeric field requires positive value"
+  }
+}

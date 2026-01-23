@@ -1,0 +1,44 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"membership_type_id\", \"status_id\", \"start_date\", \"end_date\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Membership/get"
+      },
+      "response": {
+        "body": {
+          "count": 2,
+          "countFetched": 2,
+          "values": [
+            {"contact_id": 3, "end_date": "2024-12-31", "id": 1, "membership_type_id": 1, "start_date": "2024-01-01", "status_id": 1},
+            {"contact_id": 4, "end_date": "2025-06-30", "id": 2, "membership_type_id": 2, "start_date": "2024-07-01", "status_id": 2}
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Membership get",
+    "entity": "Membership",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Membership_get",
+  "version": "default"
+}

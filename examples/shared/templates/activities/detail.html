@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ activity.subject or "(No subject)" }}</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('activity_delete', activity_id=activity.id) }}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
+
+<!-- Activity Details -->
+<div class="card">
+    <div class="card-header">
+        <h3>Activity Information</h3>
+    </div>
+    <div class="card-body">
+        <dl class="detail-list">
+            <dt>ID</dt>
+            <dd>{{ activity.id }}</dd>
+
+            <dt>Subject</dt>
+            <dd>{{ activity.subject or "(No subject)" }}</dd>
+
+            <dt>Activity Type</dt>
+            <dd>{{ activity|get_attr('activity_type_id:label', '-') }}</dd>
+
+            <dt>Status</dt>
+            <dd>
+                {% set status = activity|get_attr('status_id:label', '-') %}
+                <span class="badge {% if status == 'Completed' %}badge-success{% elif status == 'Scheduled' %}badge-primary{% else %}badge-warning{% endif %}">
+                    {{ status }}
+                </span>
+            </dd>
+
+            <dt>Date/Time</dt>
+            <dd>{{ activity.activity_date_time or '-' }}</dd>
+
+            <dt>Priority</dt>
+            <dd>{{ activity|get_attr('priority_id:label', '-') }}</dd>
+
+            {% set contact_name = activity|get_attr('source_contact_id.display_name') %}
+            {% set cid = activity|get_attr('source_contact_id') %}
+            {% if contact_name %}
+            <dt>Source Contact</dt>
+            <dd>
+                {% if cid %}
+                <a href="{{ url_for('contact_detail', contact_id=cid) }}">
+                    {{ contact_name }}
+                </a>
+                {% else %}
+                {{ contact_name }}
+                {% endif %}
+            </dd>
+            {% endif %}
+
+            {% if activity.details %}
+            <dt>Details</dt>
+            <dd>{{ activity.details }}</dd>
+            {% endif %}
+
+            <dt>Created</dt>
+            <dd>{{ activity.created_date or '-' }}</dd>
+
+            <dt>Modified</dt>
+            <dd>{{ activity.modified_date or '-' }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a href="{{ url_for('activity_list') }}" class="btn btn-outline">Back to Activities</a>
+</div>
+{% endblock %}

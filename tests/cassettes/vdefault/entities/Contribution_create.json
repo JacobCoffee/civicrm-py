@@ -1,0 +1,52 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"values\": {\"contact_id\": 1, \"financial_type_id\": 1, \"total_amount\": 100.00, \"receive_date\": \"2024-01-22\", \"contribution_status_id\": 1}}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contribution/create"
+      },
+      "response": {
+        "body": {
+          "count": 1,
+          "countFetched": 1,
+          "values": [
+            {
+              "contact_id": 1,
+              "contribution_status_id": 1,
+              "currency": "USD",
+              "financial_type_id": 1,
+              "id": 100,
+              "is_test": false,
+              "receive_date": "2024-01-22",
+              "total_amount": "100.00"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "create",
+    "civicrm_version": "default",
+    "description": "Create new Contribution",
+    "entity": "Contribution",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contribution_create",
+  "version": "default"
+}

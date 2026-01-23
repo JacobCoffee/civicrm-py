@@ -1,0 +1,3182 @@
+{
+  "$schema": "https://shortlist.app/plan.schema.json",
+  "meta": {
+    "project": "civi-py",
+    "version": "0.1.0",
+    "created_at": "2026-01-22T00:00:00Z",
+    "updated_at": "2026-01-22T23:35:00Z",
+    "business_plan_path": "README.md"
+  },
+  "summary": {
+    "total_phases": 12,
+    "total_tasks": 90,
+    "completed_tasks": 43,
+    "in_progress_tasks": 0,
+    "blocked_tasks": 0,
+    "overall_progress": 48
+  },
+  "phases": [
+    {
+      "id": "1",
+      "name": "Core Foundation",
+      "description": "HTTP client, authentication, configuration with dataclass settings and msgspec serialization",
+      "status": "completed",
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "1.1.1",
+          "title": "Create project structure with src/civi_py layout and py.typed marker",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Module name: civi_py, import as: from civi_py import ...",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.2",
+          "title": "Implement dataclass-based settings (CiviSettings) following litestar-fullstack pattern",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "1.1.2a",
+              "title": "Create get_env helper for environment variable loading",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.2b",
+              "title": "Define CiviSettings dataclass with URL, auth, timeout configs",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.2c",
+              "title": "Add settings caching with lru_cache",
+              "status": "pending"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Use dataclasses NOT pydantic-settings",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.3",
+          "title": "Build msgspec Structs for API request/response serialization",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "1.1.3a",
+              "title": "Define base APIResponse struct",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.3b",
+              "title": "Define APIError struct",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.3c",
+              "title": "Create encoder/decoder utilities",
+              "status": "pending"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "msgspec for speed, Litestar native compatibility",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.4",
+          "title": "Implement authentication providers (API Key, JWT, Basic Auth)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "1.1.4a",
+              "title": "Create AuthProvider protocol/ABC",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.4b",
+              "title": "Implement APIKeyAuth (X-Civi-Auth header)",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.4c",
+              "title": "Implement JWTAuth (Authorization: Bearer)",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.4d",
+              "title": "Implement BasicAuth",
+              "status": "pending"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "CiviCRM API v4 uses X-Civi-Auth or Authorization header",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.5",
+          "title": "Build async HTTP transport layer with httpx",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.3",
+            "1.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "1.1.5a",
+              "title": "Create AsyncTransport class",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.5b",
+              "title": "Create SyncTransport class",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.5c",
+              "title": "Add retry logic with exponential backoff",
+              "status": "pending"
+            },
+            {
+              "id": "1.1.5d",
+              "title": "Implement connection pooling",
+              "status": "pending"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Both sync and async support required",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.6",
+          "title": "Create exception hierarchy (CiviError, AuthError, APIError, etc.)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.1"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": null,
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "1.1.7",
+          "title": "Implement CiviClient main entry point with context manager support",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.5",
+            "1.1.6"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "async with CiviClient(...) as client: ...",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Query System & Entity Layer",
+      "description": "Framework-agnostic query interface (chainable QuerySet) and entity models for 100% API coverage. Core pattern is ORM-agnostic; framework integrations adapt it: Django uses Django ORM patterns, Litestar uses Advanced Alchemy patterns, with optional raw SQLAlchemy support",
+      "status": "completed",
+      "progress": {
+        "completed": 6,
+        "total": 6,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "2.1.1",
+          "title": "Design QuerySet class with chainable methods (filter, exclude, select, limit, etc.)",
+          "status": "completed",
+          "agent_type": "python-backend-architect",
+          "depends_on": [
+            "1.1.7"
+          ],
+          "subtasks": [
+            {
+              "id": "2.1.1a",
+              "title": "Implement filter() with field lookups (exact, contains, gt, lt, etc.)",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.1b",
+              "title": "Implement select() for field selection",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.1c",
+              "title": "Implement order_by() for sorting",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.1d",
+              "title": "Implement limit() and offset() for pagination",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.1e",
+              "title": "Implement join() for related entities",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T19:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "Complete QuerySet implementation with all chainable methods, field lookups, and execution methods. 46 comprehensive tests covering all functionality. Example usage in examples/queryset_usage.py",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-sonnet-4-5"
+          }
+        },
+        {
+          "id": "2.1.2",
+          "title": "Implement EntityManager with CRUD operations",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "2.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "2.1.2a",
+              "title": "Implement get() action",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.2b",
+              "title": "Implement create() action",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.2c",
+              "title": "Implement update() action",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.2d",
+              "title": "Implement delete() action",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.2e",
+              "title": "Implement save() action",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.2f",
+              "title": "Implement getFields() action",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "Full EntityManager with async/sync CRUD, get_or_create, update_or_create, bulk_create. SyncEntityManager included. ManagerDescriptor for .objects pattern.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "2.1.3",
+          "title": "Create base Entity class with field descriptors",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.3"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "BaseEntity with msgspec.Struct, EntityState for dirty tracking, FieldDescriptor, EntityMeta metaclass, save/delete/refresh async methods. Full type-safe serialization.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "2.1.4",
+          "title": "Implement core CiviCRM entities (Contact, Activity, Contribution, Event, etc.)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "2.1.3",
+            "2.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "2.1.4a",
+              "title": "Contact entity with all fields",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4b",
+              "title": "Activity entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4c",
+              "title": "Contribution entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4d",
+              "title": "Event entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4e",
+              "title": "Membership entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4f",
+              "title": "Participant entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4g",
+              "title": "Group entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4h",
+              "title": "Tag entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4i",
+              "title": "Note entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4j",
+              "title": "Address entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4k",
+              "title": "Email entity",
+              "status": "completed"
+            },
+            {
+              "id": "2.1.4l",
+              "title": "Phone entity",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "All 12 core entities implemented: Contact (+ Individual, Organization, Household subtypes), Activity, Contribution, Event, Membership, Participant, Group, Tag, Note, Address, Email, Phone. Each with full field definitions and relationships.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "2.1.5",
+          "title": "Build entity relationship handling (foreign keys, related entities)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "2.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "ForeignKey, RelatedField, ManyToManyField descriptors with RelatedManager, ForeignKeyAccessor, ManyToManyManager. Full relationship registry. Contact.activities, Contact.contributions, Contact.employer relationships working.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "2.1.6",
+          "title": "Create dynamic entity discovery from API introspection",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "2.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T18:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "EntityDiscovery class with get_entities(), get_fields(), get_entity_class() methods. FieldInfo and EntityInfo structs. Dynamic class creation via msgspec.defstruct. Caching with TTL. discover_entities() convenience function. 30+ comprehensive tests.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Framework Integration Base (Tier 3)",
+      "description": "Extensible integration layer providing Tier 3 generic ASGI/WSGI middleware that works with any framework",
+      "status": "completed",
+      "progress": {
+        "completed": 6,
+        "total": 6,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "3.1.1",
+          "title": "Define IntegrationProtocol ABC with lifecycle hooks (startup, shutdown, request context)",
+          "status": "completed",
+          "agent_type": "python-backend-architect",
+          "depends_on": [
+            "2.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "3.1.1a",
+              "title": "Create IntegrationProtocol with abstract methods",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.1b",
+              "title": "Define LifecycleHooks protocol (on_startup, on_shutdown)",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.1c",
+              "title": "Create RequestContext protocol for DI",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:45:00Z",
+            "completed_at": "2026-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Created src/civi_py/contrib/base.py with IntegrationProtocol, LifecycleHooks, and RequestContext protocols using @runtime_checkable Protocol classes",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "3.1.2",
+          "title": "Create BaseIntegration class with common functionality",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "3.1.2a",
+              "title": "Implement client lifecycle management",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.2b",
+              "title": "Add configuration loading from env/settings",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.2c",
+              "title": "Create client factory with DI support",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:45:00Z",
+            "completed_at": "2026-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Created src/civi_py/contrib/integration.py with BaseIntegration class, async/sync lifecycle management, context managers, and CiviIntegrationError exception",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "3.1.3",
+          "title": "Build generic ASGI middleware for any ASGI framework",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "3.1.3a",
+              "title": "Create CiviASGIMiddleware class",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.3b",
+              "title": "Implement request-scoped client injection",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.3c",
+              "title": "Add lifespan event handling",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.3d",
+              "title": "Support scope['state'] pattern",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:45:00Z",
+            "completed_at": "2026-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Created src/civi_py/contrib/asgi.py with CiviASGIMiddleware supporting lifespan events, scope state injection, and get_civi_client helper. Works with Starlette, FastAPI, Litestar, Quart",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "3.1.4",
+          "title": "Build generic WSGI middleware for any WSGI framework",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "3.1.4a",
+              "title": "Create CiviWSGIMiddleware class",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.4b",
+              "title": "Implement environ-based client injection",
+              "status": "completed"
+            },
+            {
+              "id": "3.1.4c",
+              "title": "Add thread-local client support",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:45:00Z",
+            "completed_at": "2026-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Created src/civi_py/contrib/wsgi.py with CiviWSGIMiddleware supporting thread-local clients, environ injection, and get_client_from_environ helper. Works with Flask, Bottle, Falcon",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "3.1.5",
+          "title": "Create integration registry for auto-discovery",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.2"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:45:00Z",
+            "completed_at": "2026-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Created src/civi_py/contrib/registry.py with IntegrationRegistry singleton, @register_integration decorator, entry_points auto-discovery, and convenience functions",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "3.1.6",
+          "title": "Document integration extension pattern for custom frameworks",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "3.1.3",
+            "3.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:45:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 10,
+            "notes": "Comprehensive custom framework guide exists in docs/guides/other.rst. Added CLI commands section (Step 6) documenting CLIPluginProtocol patterns from advanced-alchemy and litestar-vite. Covers command group creation, Click decorators, LitestarGroup, Rich console output.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Django Integration (Tier 1)",
+      "description": "Tier 1 first-class Django 5+ support with Django ORM-style patterns, admin integration, automatic config, management commands, and template tags",
+      "status": "completed",
+      "progress": {
+        "completed": 6,
+        "total": 6,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "4.1.1",
+          "title": "Create Django app structure (civi_py.contrib.django)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.2"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "Created Django app structure with CiviAppConfig, ready() hook, apps.py. INSTALLED_APPS = ['civi_py.contrib.django'] support.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "4.1.2",
+          "title": "Implement Django settings integration (CIVICRM_URL, CIVICRM_API_KEY, etc.)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.1"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "Created settings.py with get_django_settings(), create_settings(), get_civi_settings() with caching, DjangoIntegration class. Full CIVICRM_* settings support.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "4.1.3",
+          "title": "Build Django Admin integration for CiviCRM entities",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "4.1.3a",
+              "title": "Create CiviModelAdmin base class",
+              "status": "completed"
+            },
+            {
+              "id": "4.1.3b",
+              "title": "Implement list_display from entity fields",
+              "status": "completed"
+            },
+            {
+              "id": "4.1.3c",
+              "title": "Add search and filter support",
+              "status": "completed"
+            },
+            {
+              "id": "4.1.3d",
+              "title": "Create inline admin for related entities",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "Full admin integration: CiviModelAdmin, CiviQuerySet, CiviAdminSite, CiviInlineAdmin, CiviChangeList, CiviPaginator. @register_entity decorator, autodiscover_entities(). Browse/edit CiviCRM data from Django admin.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "4.1.4",
+          "title": "Create Django management commands (sync_civi, civi_shell)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.2"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "Created civi_shell (interactive shell with auto-imports), civi_check (verify connection/config), sync_civi (entity discovery, stub generation).",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "4.1.5",
+          "title": "Implement Django middleware for request-scoped client",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.2",
+            "3.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "CiviMiddleware with sync/async support (Django 5+). request.civi_client available in views. Thread-local storage for sync, shared client for async. Graceful degradation.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "4.1.6",
+          "title": "Create Django template tags for CiviCRM data display",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.5"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:55:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 35,
+            "notes": "{% load civi_tags %}: civi_contact, civi_contacts, civi_entity, civi_contact_card, civi_contact_list. Filters: civi_field, civi_format_date, civi_format_currency. Templates for contact_card.html and contact_list.html.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Litestar Integration (Tier 1)",
+      "description": "Tier 1 first-class Litestar 2+ plugin with Advanced Alchemy-style repository pattern, automatic routes, DI, OpenAPI generation, and health checks",
+      "status": "completed",
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "5.1.1",
+          "title": "Create Litestar plugin structure (civi_py.contrib.litestar)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "Created plugin structure with config.py, plugin.py, dependencies.py, dto.py, routes.py, health.py. Usage: app = Litestar(plugins=[CiviPlugin()])",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.2",
+          "title": "Implement CiviPlugin with lifecycle hooks",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "5.1.2a",
+              "title": "on_app_init hook for client setup",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.2b",
+              "title": "on_shutdown hook for cleanup",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.2c",
+              "title": "Configure DI providers",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "CiviPlugin implements InitPluginProtocol with _on_startup/_on_shutdown methods. DI providers registered via get_dependency_providers().",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.3",
+          "title": "Build dependency injection for CiviClient",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.2"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "provide_civi_client() retrieves client from app.state. Handlers use: async def handler(civi_client: CiviClient) -> ...",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.4",
+          "title": "Create automatic route generation for entities",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "5.1.4a",
+              "title": "GET /api/civi/{entity} - list",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.4b",
+              "title": "GET /api/civi/{entity}/{id} - detail",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.4c",
+              "title": "POST /api/civi/{entity} - create",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.4d",
+              "title": "PUT /api/civi/{entity}/{id} - update",
+              "status": "completed"
+            },
+            {
+              "id": "5.1.4e",
+              "title": "DELETE /api/civi/{entity}/{id} - delete",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "7 entity controllers: Contact, Activity, Contribution, Event, Membership, Participant, Group. create_entity_controller() factory for custom entities.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.5",
+          "title": "Generate msgspec DTOs for request/response validation",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "25 DTOs using msgspec.Struct: Contact/Activity/Contribution/Event/Membership Create/Update/Response/Filter DTOs, plus BaseDTO, PaginationDTO, APIResponseDTO.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.6",
+          "title": "Configure OpenAPI schema generation with CiviCRM metadata",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.5"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "OpenAPI tags via CiviPluginConfig.openapi_tags. Route decorators include summary, description, operation_id. DTOs auto-generate schemas.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "5.1.7",
+          "title": "Add health check endpoint for CiviCRM connectivity",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.2"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T16:57:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 33,
+            "notes": "GET /health/civi returns HealthCheckResponse with status, civi_connected, response_time_ms, api_version, timestamp, error. HTTP 200/503.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Community Integrations",
+      "description": "Tier 2 (Flask, FastAPI) and Tier 3 (other frameworks) integrations using base ASGI/WSGI middleware",
+      "status": "completed",
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "6.1.1",
+          "title": "[Tier 2] Create Flask integration (civi_py.contrib.flask)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.1a",
+              "title": "Create Flask extension class (CiviFlask)",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.1b",
+              "title": "Implement init_app() pattern",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.1c",
+              "title": "Add g.civi_client request context",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.1d",
+              "title": "Create Flask CLI commands",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 2: CiviFlask extension with init_app(), g.civi_client, CLI commands (civi-check, civi-shell)",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-flask"
+          }
+        },
+        {
+          "id": "6.1.2",
+          "title": "[Tier 2] Create FastAPI integration (civi_py.contrib.fastapi)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.2a",
+              "title": "Create FastAPI router factory",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.2b",
+              "title": "Implement Depends() for CiviClient DI",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.2c",
+              "title": "Add lifespan context manager",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.2d",
+              "title": "Generate Pydantic models from entities",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 2: Full DI support, lifespan manager, typed CRUD routers, Pydantic DTOs",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-fastapi"
+          }
+        },
+        {
+          "id": "6.1.3",
+          "title": "[Tier 3] Create Starlette integration (civi_py.contrib.starlette)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.3a",
+              "title": "Create Starlette middleware wrapper",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.3b",
+              "title": "Implement request.state.civi_client",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.3c",
+              "title": "Add on_startup/on_shutdown handlers",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 3: Thin wrapper around CiviASGIMiddleware with lifecycle helpers",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-starlette"
+          }
+        },
+        {
+          "id": "6.1.4",
+          "title": "[Tier 3] Create Quart integration (civi_py.contrib.quart)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.4a",
+              "title": "Create Quart extension class",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.4b",
+              "title": "Implement async g.civi_client",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 3: CiviQuart extension mirroring Flask patterns with async support",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-quart"
+          }
+        },
+        {
+          "id": "6.1.5",
+          "title": "[Tier 3] Create Falcon integration (civi_py.contrib.falcon)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3",
+            "3.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.5a",
+              "title": "Create Falcon middleware for WSGI",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.5b",
+              "title": "Create Falcon middleware for ASGI",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.5c",
+              "title": "Implement req.context.civi_client",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 3: Both WSGI and ASGI middleware with auto-detection",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-falcon"
+          }
+        },
+        {
+          "id": "6.1.6",
+          "title": "[Tier 3] Create Sanic integration (civi_py.contrib.sanic)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "6.1.6a",
+              "title": "Create Sanic extension",
+              "status": "completed"
+            },
+            {
+              "id": "6.1.6b",
+              "title": "Implement request.ctx.civi_client",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 3: CiviSanic extension with listeners and request.ctx support",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-sanic"
+          }
+        },
+        {
+          "id": "6.1.7",
+          "title": "[Tier 3] Create Bottle integration (civi_py.contrib.bottle)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "3.1.4"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:30:00Z",
+            "completed_at": "2026-01-22T17:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tier 3: CiviBottlePlugin with API v2 and keyword argument injection",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "python-backend-engineer-bottle"
+          }
+        },
+        {
+          "id": "6.1.8",
+          "title": "Write integration guide for adding new framework support",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "6.1.1",
+            "6.1.2",
+            "6.1.3"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:50:00Z",
+            "completed_at": "2026-01-22T18:00:00Z",
+            "time_spent_minutes": 10,
+            "notes": "Created comprehensive architecture docs for all 7 integrations following Litestar template",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "documentation-expert-integrations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Optional Web UI",
+      "description": "Browser-based interface for API endpoint management and testing",
+      "status": "in_progress",
+      "progress": {
+        "completed": 4,
+        "total": 5,
+        "percentage": 80
+      },
+      "tasks": [
+        {
+          "id": "7.1.1",
+          "title": "Design Web UI architecture (Jinja2 templates + htmx)",
+          "status": "completed",
+          "agent_type": "ui-engineer",
+          "depends_on": [
+            "5.1.4"
+          ],
+          "tracking": {
+            "started_at": "2025-01-21T00:00:00Z",
+            "completed_at": "2025-01-22T00:00:00Z",
+            "time_spent_minutes": null,
+            "notes": "Created Web UI modules for both Django and Litestar with Jinja2 templates, CSS variables for theming, and responsive design",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "7.1.2",
+          "title": "Create entity browser with search/filter/pagination",
+          "status": "completed",
+          "agent_type": "ui-engineer",
+          "depends_on": [
+            "7.1.1"
+          ],
+          "tracking": {
+            "started_at": "2025-01-21T00:00:00Z",
+            "completed_at": "2025-01-22T00:00:00Z",
+            "time_spent_minutes": null,
+            "notes": "Entity browser with list/detail views, search, pagination for both Django and Litestar",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "7.1.3",
+          "title": "Build API playground for testing queries",
+          "status": "completed",
+          "agent_type": "ui-engineer",
+          "depends_on": [
+            "7.1.1"
+          ],
+          "tracking": {
+            "started_at": "2025-01-21T00:00:00Z",
+            "completed_at": "2025-01-22T00:00:00Z",
+            "time_spent_minutes": null,
+            "notes": "API playground with entity/action selection, field selection, where clause builder, and JSON response display",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "7.1.4",
+          "title": "Add authentication and authorization",
+          "status": "completed",
+          "agent_type": "ui-engineer",
+          "depends_on": [
+            "7.1.1"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T00:00:00Z",
+            "completed_at": "2025-01-22T00:00:00Z",
+            "time_spent_minutes": null,
+            "notes": "Django: StaffRequiredMixin with configurable require_staff option. Litestar: Guards support with configurable require_auth. Django Admin integration uses built-in admin auth.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "7.1.5",
+          "title": "Create request history and favorites",
+          "status": "pending",
+          "agent_type": "ui-engineer",
+          "depends_on": [
+            "7.1.3"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Save and replay API calls - deferred for future enhancement",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Testing & Quality",
+      "description": "Maximum test coverage with comprehensive test suite using pytest-databases for real DB testing",
+      "status": "completed",
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "8.1.1",
+          "title": "Set up test infrastructure (pytest, respx, pytest-httpx)",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "1.1.7"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T15:00:00Z",
+            "completed_at": "2025-01-22T15:30:00Z",
+            "time_spent_minutes": 30,
+            "notes": "Achieved 94.85% coverage (target was 95%). Optimized pytest config with PYTHONDONTWRITEBYTECODE=1 and disabled unused plugins.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.2",
+          "title": "Create mock CiviCRM API responses for all entities",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.1.1"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T15:30:00Z",
+            "completed_at": "2025-01-22T15:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Added 35 fixture functions in conftest.py for all CiviCRM entities (Contact, Activity, Contribution, Event, Participant, Membership, Group, Tag, Address, Email, Phone) plus error responses.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.3",
+          "title": "Write unit tests for core module (client, auth, transport)",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.1.2"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T15:45:00Z",
+            "completed_at": "2025-01-22T16:15:00Z",
+            "time_spent_minutes": 30,
+            "notes": "Created test_auth.py (34 tests), test_client.py (58 tests), test_context.py (50 tests), test_exceptions.py (70 tests), test_serialization.py (81 tests), test_transport.py (70 tests). All core modules at 96-100% coverage.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.4",
+          "title": "Write unit tests for query system and entities",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.1.2",
+            "2.1.4"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T16:15:00Z",
+            "completed_at": "2025-01-22T16:45:00Z",
+            "time_spent_minutes": 30,
+            "notes": "Created test_manager.py (82 tests) and test_base.py (123 tests). Query system at 91-94% coverage, entities at 86-100% coverage.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.5",
+          "title": "Write integration tests for base ASGI/WSGI middleware",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "3.1.3",
+            "3.1.4"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T16:45:00Z",
+            "completed_at": "2025-01-22T17:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Existing tests in tests/contrib/test_asgi.py and test_base.py cover ASGI/WSGI middleware.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.6",
+          "title": "Write integration tests for Django contrib",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "4.1.6"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T17:00:00Z",
+            "completed_at": "2025-01-22T17:15:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Tests exist in tests/contrib/django/ (test_admin.py, test_middleware.py, test_settings.py, test_template_tags.py). Fixed test assertions for app_label and verbose_name_plural.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.7",
+          "title": "Write integration tests for Litestar contrib",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "5.1.7"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T17:30:00Z",
+            "completed_at": "2025-01-22T18:00:00Z",
+            "time_spent_minutes": 30,
+            "notes": "Created tests/contrib/litestar/test_plugin.py with 51 tests covering CiviPlugin, DTOs, controllers, health check, and full integration.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "8.1.8",
+          "title": "Write integration tests for community integrations (Flask, FastAPI)",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "6.1.1",
+            "6.1.2"
+          ],
+          "tracking": {
+            "started_at": "2025-01-22T18:00:00Z",
+            "completed_at": "2025-01-22T18:30:00Z",
+            "time_spent_minutes": 30,
+            "notes": "Created tests/contrib/flask/test_flask.py (70 tests) and tests/contrib/fastapi/test_fastapi.py (74 tests). Total 195 new contrib tests.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "8.5",
+      "name": "API Compatibility & Contract Testing",
+      "description": "100% CiviCRM API v4 compatibility with contract testing, schema validation, version matrix testing, and regression detection. Ensures our client perfectly matches CiviCRM behavior.",
+      "status": "completed",
+      "progress": {
+        "completed": 16,
+        "total": 16,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "8.5.1",
+          "title": "Set up VCR/cassette-style API response recording infrastructure",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.1.1",
+            "10.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.1a",
+              "title": "Configure pytest-recording or vcrpy for HTTP cassettes",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.1b",
+              "title": "Create cassette management utilities (record, replay, update)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.1c",
+              "title": "Set up cassette storage structure by CiviCRM version",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.1d",
+              "title": "Add CI mode for cassette-only testing (no network)",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T22:20:00Z",
+            "completed_at": "2026-01-22T22:45:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented CassetteManager with respx, version-organized storage in tests/cassettes/",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a76ce56"
+          }
+        },
+        {
+          "id": "8.5.2",
+          "title": "Record comprehensive API cassettes for all entities and actions",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.1",
+            "2.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.2a",
+              "title": "Record Contact entity: get, create, update, delete, save, getFields",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2b",
+              "title": "Record Activity entity: all CRUD + getActions",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2c",
+              "title": "Record Contribution entity: all actions + payment processing",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2d",
+              "title": "Record Event, Participant, Membership entities",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2e",
+              "title": "Record Group, Tag, Note, Address, Email, Phone entities",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2f",
+              "title": "Record error responses: 400, 401, 403, 404, 500 scenarios",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.2g",
+              "title": "Record edge cases: empty results, pagination, large payloads",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:30:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 25,
+            "notes": "40 cassettes recorded: entities, errors, edge cases",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a8b6c2c"
+          }
+        },
+        {
+          "id": "8.5.3",
+          "title": "Implement API schema validation using CiviCRM introspection",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "2.1.6",
+            "8.5.1"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.3a",
+              "title": "Fetch and cache getFields() schemas for all entities",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.3b",
+              "title": "Build schema validator comparing our models to API schemas",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.3c",
+              "title": "Create pytest fixtures for schema validation assertions",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.3d",
+              "title": "Add field type mapping validation (API type \u2192 Python type)",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T22:20:00Z",
+            "completed_at": "2026-01-22T22:45:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented SchemaValidator, TypeMapping, SchemaCache with 76 tests",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a60a4ea"
+          }
+        },
+        {
+          "id": "8.5.4",
+          "title": "Build contract tests for request/response serialization",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.2",
+            "8.5.3"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.4a",
+              "title": "Test QuerySet.build() output matches expected API request format",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.4b",
+              "title": "Test response parsing matches recorded cassettes exactly",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.4c",
+              "title": "Test where clause operators map correctly to API v4 syntax",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.4d",
+              "title": "Test join/select/orderBy translation to API format",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.4e",
+              "title": "Test error response parsing and exception mapping",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T22:20:00Z",
+            "completed_at": "2026-01-22T22:45:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented 92 contract tests with RequestContracts/ResponseContracts fixtures",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "ae7d3e0"
+          }
+        },
+        {
+          "id": "8.5.5",
+          "title": "Create CiviCRM version compatibility matrix",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.2"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.5a",
+              "title": "Define supported CiviCRM versions: 5.60.x, 5.70.x, 5.80.x+",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.5b",
+              "title": "Create Docker images/tags for each supported version",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.5c",
+              "title": "Record version-specific cassettes for API differences",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.5d",
+              "title": "Document version-specific behaviors and workarounds",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:30:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 25,
+            "notes": "VersionMatrix with 5.60/5.70/5.80 support, Docker compose",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "aed9789"
+          }
+        },
+        {
+          "id": "8.5.6",
+          "title": "Implement API drift detection system",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.3",
+            "8.5.5"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.6a",
+              "title": "Create schema snapshot storage (JSON files in repo)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.6b",
+              "title": "Build diff tool comparing current vs stored schemas",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.6c",
+              "title": "Add pytest plugin to detect schema changes",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.6d",
+              "title": "Create schema update workflow with changelog generation",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented SchemaDiffer, DriftDetector with STRICT/BREAKING/REPORT modes",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "afb7c16"
+          }
+        },
+        {
+          "id": "8.5.7",
+          "title": "Build 100% entity coverage validation",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "2.1.6",
+            "8.5.3"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.7a",
+              "title": "Fetch all available entities from CiviCRM Entity.get()",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.7b",
+              "title": "Compare against our implemented entities",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.7c",
+              "title": "Generate coverage report: implemented vs available",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.7d",
+              "title": "Create TODO list for missing entities with priority ranking",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T22:20:00Z",
+            "completed_at": "2026-01-22T22:45:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented EntityCoverageValidator, ActionCoverageValidator with priority rankings",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a46166f"
+          }
+        },
+        {
+          "id": "8.5.8",
+          "title": "Build 100% action coverage validation per entity",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.7"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.8a",
+              "title": "Fetch all actions per entity via getActions()",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.8b",
+              "title": "Compare against our EntityManager methods",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.8c",
+              "title": "Generate action coverage report per entity",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.8d",
+              "title": "Identify custom actions needing special handling",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented ActionMapping with CIVICRM action->method mappings, custom action tracking",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "af2c657"
+          }
+        },
+        {
+          "id": "8.5.9",
+          "title": "Build 100% field coverage validation per entity",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.7"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.9a",
+              "title": "Fetch all fields per entity via getFields()",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.9b",
+              "title": "Compare against our entity model fields",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.9c",
+              "title": "Generate field coverage report with type accuracy",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.9d",
+              "title": "Flag deprecated/removed fields in our models",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented FieldCoverageValidator with type accuracy and deprecation detection",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a2dca67"
+          }
+        },
+        {
+          "id": "8.5.10",
+          "title": "Create error handling compatibility tests",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.2",
+            "1.1.6"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.10a",
+              "title": "Test authentication errors (invalid key, expired JWT)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.10b",
+              "title": "Test authorization errors (permission denied)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.10c",
+              "title": "Test validation errors (invalid field values)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.10d",
+              "title": "Test not found errors (nonexistent entity/ID)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.10e",
+              "title": "Test server errors (500, timeouts, connection failures)",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T22:20:00Z",
+            "completed_at": "2026-01-22T22:45:00Z",
+            "time_spent_minutes": 25,
+            "notes": "Implemented 79 error handling tests with JSON fixtures for all error types",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "ad9f6de"
+          }
+        },
+        {
+          "id": "8.5.11",
+          "title": "Create relationship and join compatibility tests",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.4",
+            "2.1.5"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.11a",
+              "title": "Test FK relationships (Contact.employer_id \u2192 Organization)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.11b",
+              "title": "Test implicit joins (Contact.email_primary.email)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.11c",
+              "title": "Test explicit joins (Contact JOIN Activity)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.11d",
+              "title": "Test related entity prefetching",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "64 relationship tests including FK, implicit/explicit joins, M2M bridges",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "ac7c437"
+          }
+        },
+        {
+          "id": "8.5.12",
+          "title": "Set up nightly CI workflow for live API testing",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.5",
+            "10.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.12a",
+              "title": "Create GitHub Actions workflow for nightly runs",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.12b",
+              "title": "Spin up Docker CiviCRM in CI environment",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.12c",
+              "title": "Run full test suite against live API",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.12d",
+              "title": "Update cassettes automatically on schema changes",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.12e",
+              "title": "Send alerts on compatibility failures",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:30:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 25,
+            "notes": "nightly-compat.yml workflow with Docker, alerts, auto-PR",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "ae6f3ce"
+          }
+        },
+        {
+          "id": "8.5.13",
+          "title": "Set up version matrix CI testing",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.5",
+            "8.5.12"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.13a",
+              "title": "Create matrix build for CiviCRM 5.60, 5.70, 5.80+",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.13b",
+              "title": "Run compatibility tests against each version",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.13c",
+              "title": "Generate compatibility report per version",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.13d",
+              "title": "Add version-specific test skips where needed",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:30:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 25,
+            "notes": "version-matrix.yml with CiviCRM 5.60/5.70/5.80 matrix",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a70f78d"
+          }
+        },
+        {
+          "id": "8.5.14",
+          "title": "Create API compatibility coverage report generator",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.7",
+            "8.5.8",
+            "8.5.9"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.14a",
+              "title": "Build report aggregating entity/action/field coverage",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.14b",
+              "title": "Generate HTML report with coverage percentages",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.14c",
+              "title": "Add badge generation for README (e.g., '100% API Coverage')",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.14d",
+              "title": "Integrate with CI to publish coverage reports",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "HTML/Markdown/JSON reports, SVG badges, trend tracking, CLI interface",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "ac7899e"
+          }
+        },
+        {
+          "id": "8.5.15",
+          "title": "Implement performance baseline tests",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.5.2"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.15a",
+              "title": "Benchmark serialization speed vs raw httpx",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.15b",
+              "title": "Benchmark QuerySet building overhead",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.15c",
+              "title": "Test bulk operations performance (1000+ records)",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.15d",
+              "title": "Set performance regression thresholds in CI",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:00:00Z",
+            "completed_at": "2026-01-22T23:25:00Z",
+            "time_spent_minutes": 25,
+            "notes": "36 benchmark tests with serialization, QuerySet, entity hydration, bulk ops, memory",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "a46f172"
+          }
+        },
+        {
+          "id": "8.5.16",
+          "title": "Document API compatibility testing strategy",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "8.5.14"
+          ],
+          "subtasks": [
+            {
+              "id": "8.5.16a",
+              "title": "Write contributor guide for adding new entity tests",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.16b",
+              "title": "Document cassette recording process",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.16c",
+              "title": "Create troubleshooting guide for compatibility failures",
+              "status": "completed"
+            },
+            {
+              "id": "8.5.16d",
+              "title": "Document version support policy",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T23:30:00Z",
+            "completed_at": "2026-01-22T23:55:00Z",
+            "time_spent_minutes": 25,
+            "notes": "6 docs files: README, cassettes, schema, adding-entities, ci, troubleshooting",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "afd88b7"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Documentation",
+      "description": "Comprehensive docs at civi.scriptr.dev with shibuya theme",
+      "status": "completed",
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "9.1.1",
+          "title": "Set up Sphinx with shibuya theme (crimson color)",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "1.1.7"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": "Deploy to civi.scriptr.dev",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.2",
+          "title": "Write Getting Started guide with installation and quickstart",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.1"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": "Human-friendly writing, nonprofit audience",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.3",
+          "title": "Document Django integration with examples",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.2",
+            "4.1.6"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": null,
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.4",
+          "title": "Document Litestar integration with examples",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.2",
+            "5.1.7"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": null,
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.5",
+          "title": "Document support tiers and community integrations (Tier 2: Flask/FastAPI, Tier 3: others)",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.2",
+            "6.1.8"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": "Tier 1: Django/Litestar (full support), Tier 2: Flask/FastAPI (well-supported), Tier 3: Generic ASGI/WSGI (base middleware)",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.6",
+          "title": "Write custom integration guide for third-party frameworks",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.2",
+            "3.1.6"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": "How to add civi-py to your own framework",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "9.1.7",
+          "title": "Generate API reference from docstrings",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "9.1.1",
+            "2.1.6"
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": "2026-01-22T23:35:00Z",
+            "time_spent_minutes": null,
+            "notes": "sphinx-autodoc with type hints",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Infrastructure & Examples",
+      "description": "Docker infrastructure for local CiviCRM testing and example applications for Django and Litestar",
+      "status": "completed",
+      "progress": {
+        "completed": 6,
+        "total": 6,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "10.1.1",
+          "title": "Create Docker Compose infrastructure for local CiviCRM (make infra)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [],
+          "tracking": {
+            "started_at": "2026-01-22T15:30:00Z",
+            "completed_at": "2026-01-22T15:45:00Z",
+            "time_spent_minutes": 15,
+            "notes": "docker-compose.yml with CiviCRM Standalone + MariaDB, cv core:install, .env.example",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "10.1.2",
+          "title": "Create example app scaffolding (examples/django_example, examples/litestar_example)",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "10.1.1"
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T15:45:00Z",
+            "completed_at": "2026-01-22T16:00:00Z",
+            "time_spent_minutes": 15,
+            "notes": "Django 5+ ASGI example, Litestar 2+ example with placeholder views",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "10.1.3",
+          "title": "Complete Django example with full civi-py integration",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "4.1.6",
+            "10.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "10.1.3a",
+              "title": "Integrate civi_py.contrib.django app",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.3b",
+              "title": "Add working contact list/detail views",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.3c",
+              "title": "Configure Django admin for CiviCRM entities",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.3d",
+              "title": "Add template tags example",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T19:00:00Z",
+            "completed_at": "2026-01-22T20:00:00Z",
+            "time_spent_minutes": 60,
+            "notes": "Django example fully functional with civi_py.contrib.django integration. Full admin at /admin/civi/ with list/add/change/delete/history views for Contact, Activity, Contribution, Event. Working CRUD views, shared templates, sample data generator.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "10.1.4",
+          "title": "Complete Litestar example with full civi-py integration",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.7",
+            "10.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "10.1.4a",
+              "title": "Integrate CiviPlugin",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.4b",
+              "title": "Add working CRUD routes",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.4c",
+              "title": "Configure OpenAPI schema",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.4d",
+              "title": "Add health check with CiviCRM connectivity",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-22T17:25:00Z",
+            "completed_at": "2026-01-22T17:30:00Z",
+            "time_spent_minutes": 5,
+            "notes": "Litestar example fully functional with CiviPlugin, CRUD routes for Contact/Activity/Contribution/Event, OpenAPI docs, and health check endpoint. Custom endpoints demonstrate DI usage.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "claude-opus-4-5"
+          }
+        },
+        {
+          "id": "10.1.5",
+          "title": "Add integration test suite using Docker infrastructure",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "10.1.1",
+            "8.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "10.1.5a",
+              "title": "Create pytest fixtures for Docker CiviCRM",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.5b",
+              "title": "Add integration tests for core client",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.5c",
+              "title": "Add CI workflow for integration tests",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-23T01:32:00Z",
+            "completed_at": "2026-01-23T02:00:00Z",
+            "time_spent_minutes": 28,
+            "notes": "52 integration tests covering CRUD operations, error handling, entity relationships. CI workflow with MariaDB service, CiviCRM container setup, manual/scheduled triggers.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "hive-mind-swarm"
+          }
+        },
+        {
+          "id": "10.1.6",
+          "title": "Add Flask and FastAPI example apps",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "6.1.1",
+            "6.1.2",
+            "10.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "10.1.6a",
+              "title": "Create examples/flask_example",
+              "status": "completed"
+            },
+            {
+              "id": "10.1.6b",
+              "title": "Create examples/fastapi_example",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": "2026-01-23T01:32:00Z",
+            "completed_at": "2026-01-23T01:50:00Z",
+            "time_spent_minutes": 18,
+            "notes": "Flask example with CiviFlask extension, full CRUD views, JSON API endpoints. FastAPI example with lifespan context, dependency injection, OpenAPI docs.",
+            "attempts": 1,
+            "last_error": null,
+            "assigned_agent_id": "hive-mind-swarm"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Litestar Ecosystem Integration",
+      "description": "Optional integrations with Litestar ecosystem tools: sqlspec for local DB persistence, litestar-workflows for business process automation, pytest-databases for real DB testing",
+      "status": "completed",
+      "progress": {
+        "completed": 12,
+        "total": 12,
+        "percentage": 100
+      },
+      "tasks": [
+        {
+          "id": "11.1.1",
+          "title": "Add sqlspec as optional dependency with adapter configs",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "1.1.7"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.1a",
+              "title": "Add sqlspec[asyncpg,aiosqlite] to pyproject.toml extras",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.1b",
+              "title": "Create civi_py.contrib.sqlspec module structure",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.1c",
+              "title": "Implement CiviSQLSpecConfig dataclass",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "pip install civi-py[sqlspec] for local DB support",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.2",
+          "title": "Build sqlspec repository layer for CiviCRM entity caching",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.1",
+            "2.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.2a",
+              "title": "Create CiviRepository base class wrapping sqlspec session",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.2b",
+              "title": "Implement entity-to-table mapping for Contact, Activity, etc.",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.2c",
+              "title": "Add sync methods: sync_from_civi(), sync_to_civi()",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.2d",
+              "title": "Implement query builder integration with sqlspec",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Local DB cache for offline access and performance",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.3",
+          "title": "Implement sqlspec migrations for CiviCRM cache tables",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.3a",
+              "title": "Create migration config for cache schema",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.3b",
+              "title": "Generate initial migration from entity definitions",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.3c",
+              "title": "Add CLI command: civi-py db upgrade",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Use sqlspec migration CLI for schema versioning",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.4",
+          "title": "Integrate sqlspec with Litestar plugin",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.2",
+            "5.1.3"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.4a",
+              "title": "Add SQLSpecPlugin co-registration with CiviPlugin",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.4b",
+              "title": "Implement dual DI: CiviClient + SQLSpec session",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.4c",
+              "title": "Add correlation middleware integration",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.4d",
+              "title": "Configure OpenTelemetry tracing across both",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Seamless DI for both CiviCRM API and local DB",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.5",
+          "title": "Add litestar-workflows as optional dependency",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "5.1.2"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.5a",
+              "title": "Add litestar-workflows[db] to pyproject.toml extras",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.5b",
+              "title": "Create civi_py.contrib.workflows module structure",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "pip install civi-py[workflows] for business process automation",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.6",
+          "title": "Create CiviCRM workflow step primitives",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.5",
+            "2.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.6a",
+              "title": "Create CiviFetchStep base class (machine step)",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.6b",
+              "title": "Create CiviMutateStep for create/update/delete",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.6c",
+              "title": "Create CiviApprovalStep (human step) with form schemas",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.6d",
+              "title": "Create CiviSyncStep for local DB sync operations",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Reusable workflow primitives for CiviCRM operations",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.7",
+          "title": "Build pre-built workflow templates",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.6"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.7a",
+              "title": "ContactSyncWorkflow: fetch \u2192 review \u2192 sync",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.7b",
+              "title": "BulkUpdateWorkflow: select \u2192 approve \u2192 execute",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.7c",
+              "title": "MembershipRenewalWorkflow: check \u2192 notify \u2192 process \u2192 update",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.7d",
+              "title": "DonationProcessingWorkflow: receive \u2192 validate \u2192 create \u2192 receipt",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Ready-to-use workflows for common nonprofit operations",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.8",
+          "title": "Integrate workflows with Litestar plugin",
+          "status": "completed",
+          "agent_type": "python-backend-engineer",
+          "depends_on": [
+            "11.1.7",
+            "5.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.8a",
+              "title": "Register workflow routes: /api/workflows/*",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.8b",
+              "title": "Add workflow DI providers",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.8c",
+              "title": "Create workflow status/history endpoints",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Expose workflow management via API",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.9",
+          "title": "Add pytest-databases to dev dependencies",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "8.1.1"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.9a",
+              "title": "Add pytest-databases[postgres,mysql] to dev extras",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.9b",
+              "title": "Configure pytest plugins in conftest.py",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.9c",
+              "title": "Create base fixtures for DB services",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Real database testing without custom Docker setup",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.10",
+          "title": "Write sqlspec integration tests with pytest-databases",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "11.1.9",
+            "11.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.10a",
+              "title": "Test repository CRUD against real Postgres",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.10b",
+              "title": "Test sync operations with real DB",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.10c",
+              "title": "Test migrations against real DB",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Real DB integration tests, no mocking",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.11",
+          "title": "Write workflow integration tests",
+          "status": "completed",
+          "agent_type": "Python Testing Expert",
+          "depends_on": [
+            "11.1.9",
+            "11.1.8"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.11a",
+              "title": "Test workflow execution with mocked CiviCRM",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.11b",
+              "title": "Test human step approval flow",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.11c",
+              "title": "Test workflow persistence with real DB",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "End-to-end workflow testing",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        },
+        {
+          "id": "11.1.12",
+          "title": "Document Litestar ecosystem integrations",
+          "status": "completed",
+          "agent_type": "documentation-expert",
+          "depends_on": [
+            "11.1.4",
+            "11.1.8",
+            "9.1.4"
+          ],
+          "subtasks": [
+            {
+              "id": "11.1.12a",
+              "title": "Write sqlspec integration guide",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.12b",
+              "title": "Write workflows integration guide",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.12c",
+              "title": "Add example workflows to docs",
+              "status": "completed"
+            },
+            {
+              "id": "11.1.12d",
+              "title": "Document pytest-databases usage for contributors",
+              "status": "completed"
+            }
+          ],
+          "tracking": {
+            "started_at": null,
+            "completed_at": null,
+            "time_spent_minutes": null,
+            "notes": "Comprehensive docs for all ecosystem integrations",
+            "attempts": 0,
+            "last_error": null,
+            "assigned_agent_id": null
+          }
+        }
+      ]
+    }
+  ],
+  "decisions": {
+    "pending": [
+      {
+        "id": "D1",
+        "question": "How to handle CiviCRM v5 API compatibility?",
+        "options": [
+          "Separate namespaces (civi_py.v4, civi_py.v5)",
+          "Version parameter in client (client = CiviClient(api_version='v5'))",
+          "Automatic detection with fallback"
+        ],
+        "recommended": "Separate namespaces (civi_py.v4, civi_py.v5)"
+      },
+      {
+        "id": "D2",
+        "question": "Should Web UI be a separate optional dependency or built-in?",
+        "options": [
+          "Optional extra: pip install civi-py[ui]",
+          "Always included with Jinja2 dep",
+          "Separate package: civi-py-ui"
+        ],
+        "recommended": "Optional extra: pip install civi-py[ui]"
+      },
+      {
+        "id": "D3",
+        "question": "How should SQLAlchemy integration be structured?",
+        "options": [
+          "Optional contrib module: civi_py.contrib.sqlalchemy with repository base",
+          "Part of core with optional dep: civi_py.orm.sqlalchemy",
+          "Use sqlspec instead (wraps SQLAlchemy/asyncpg/aiosqlite)"
+        ],
+        "recommended": "Use sqlspec instead (wraps SQLAlchemy/asyncpg/aiosqlite)",
+        "note": "Superseded by D4 - sqlspec provides the database layer with better Litestar ecosystem integration"
+      }
+    ],
+    "resolved": [
+      {
+        "id": "D0",
+        "question": "Serialization library choice",
+        "options": [
+          "pydantic",
+          "msgspec",
+          "dataclasses + json"
+        ],
+        "recommended": "msgspec",
+        "decided": "msgspec",
+        "decided_at": "2026-01-22T00:00:00Z",
+        "decided_by": "user"
+      },
+      {
+        "id": "D4",
+        "question": "Local database persistence layer",
+        "options": [
+          "SQLAlchemy directly",
+          "sqlspec (Litestar org)",
+          "Custom implementation"
+        ],
+        "recommended": "sqlspec (Litestar org)",
+        "decided": "sqlspec (Litestar org)",
+        "decided_at": "2026-01-22T00:00:00Z",
+        "decided_by": "user",
+        "rationale": "Same ecosystem as Litestar, native msgspec support, query builder, migrations CLI, observability built-in"
+      },
+      {
+        "id": "D5",
+        "question": "Workflow/business process automation",
+        "options": [
+          "Celery",
+          "Temporal",
+          "litestar-workflows",
+          "None"
+        ],
+        "recommended": "litestar-workflows",
+        "decided": "litestar-workflows",
+        "decided_at": "2026-01-22T00:00:00Z",
+        "decided_by": "user",
+        "rationale": "Native Litestar integration, human+machine steps, async-first, type-safe, built for the ecosystem"
+      },
+      {
+        "id": "D6",
+        "question": "Database testing strategy",
+        "options": [
+          "Mock everything",
+          "Custom Docker fixtures",
+          "pytest-databases (Litestar org)"
+        ],
+        "recommended": "pytest-databases (Litestar org)",
+        "decided": "pytest-databases (Litestar org)",
+        "decided_at": "2026-01-22T00:00:00Z",
+        "decided_by": "user",
+        "rationale": "Ready-made fixtures for Postgres/MySQL, Docker-managed containers, no custom setup needed"
+      }
+    ]
+  },
+  "success_metrics": {
+    "targets": [
+      {
+        "metric": "Test coverage",
+        "target": "95%+",
+        "current": null
+      },
+      {
+        "metric": "API entity coverage",
+        "target": "100%",
+        "current": null
+      },
+      {
+        "metric": "API action coverage",
+        "target": "100% of getActions() per entity",
+        "current": null
+      },
+      {
+        "metric": "API field coverage",
+        "target": "100% of getFields() per entity",
+        "current": null
+      },
+      {
+        "metric": "API contract tests",
+        "target": "All entities with cassette-based contract tests",
+        "current": null
+      },
+      {
+        "metric": "CiviCRM version matrix",
+        "target": "5.60.x, 5.70.x, 5.80.x+ tested",
+        "current": null
+      },
+      {
+        "metric": "API drift detection",
+        "target": "Automated schema change detection in CI",
+        "current": null
+      },
+      {
+        "metric": "Documentation completeness",
+        "target": "All public APIs documented",
+        "current": null
+      },
+      {
+        "metric": "Type coverage",
+        "target": "100% typed (py.typed)",
+        "current": null
+      },
+      {
+        "metric": "Framework integrations",
+        "target": "7+ frameworks supported",
+        "current": null
+      },
+      {
+        "metric": "Litestar ecosystem integrations",
+        "target": "sqlspec + litestar-workflows + pytest-databases",
+        "current": null
+      },
+      {
+        "metric": "Pre-built workflows",
+        "target": "4+ ready-to-use workflow templates",
+        "current": null
+      }
+    ]
+  },
+  "blockers": []
+}

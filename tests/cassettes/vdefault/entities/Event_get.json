@@ -1,0 +1,58 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"title\", \"event_type_id\", \"start_date\", \"end_date\", \"is_active\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Event/get"
+      },
+      "response": {
+        "body": {
+          "count": 2,
+          "countFetched": 2,
+          "values": [
+            {
+              "end_date": "2024-02-15T17:00:00+00:00",
+              "event_type_id": 1,
+              "id": 1,
+              "is_active": true,
+              "start_date": "2024-02-15T09:00:00+00:00",
+              "title": "Annual Conference 2024"
+            },
+            {
+              "end_date": "2024-03-20T16:00:00+00:00",
+              "event_type_id": 2,
+              "id": 2,
+              "is_active": true,
+              "start_date": "2024-03-20T10:00:00+00:00",
+              "title": "Spring Fundraiser"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Event get",
+    "entity": "Event",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Event_get",
+  "version": "default"
+}

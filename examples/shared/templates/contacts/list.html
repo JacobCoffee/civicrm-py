@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('contact_create') }}" class="btn btn-primary">Add Contact</a>
+    </div>
+</div>
+
+{% if result.error %}
+<div class="alert alert-warning">
+    <strong>Warning:</strong> {{ result.error }}
+</div>
+{% endif %}
+
+<!-- Search and Filter -->
+<div class="card">
+    <div class="card-body">
+        <form method="get" class="form-inline">
+            <input type="text" name="q" value="{{ search }}" placeholder="Search contacts..." class="form-control" style="max-width: 300px;">
+            <select name="type" class="form-control form-select" style="max-width: 180px;">
+                <option value="">All Types</option>
+                <option value="Individual" {% if contact_type == 'Individual' %}selected{% endif %}>Individual</option>
+                <option value="Organization" {% if contact_type == 'Organization' %}selected{% endif %}>Organization</option>
+                <option value="Household" {% if contact_type == 'Household' %}selected{% endif %}>Household</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">Search</button>
+            {% if search or contact_type %}
+            <a href="{{ url_for('contact_list') }}" class="btn btn-outline">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Contacts Table -->
+<div class="card">
+    <div class="table-container">
+        {% if result.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in result.items %}
+                <tr>
+                    <td>{{ contact.id }}</td>
+                    <td>
+                        <a href="{{ url_for('contact_detail', contact_id=contact.id) }}">
+                            <strong>{{ contact.display_name }}</strong>
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge {% if contact.contact_type == 'Individual' %}badge-primary{% elif contact.contact_type == 'Organization' %}badge-success{% else %}badge-secondary{% endif %}">
+                            {{ contact.contact_type }}
+                        </span>
+                    </td>
+                    <td>{{ contact|get_attr('email_primary.email', '-') }}</td>
+                    <td>{{ contact|get_attr('phone_primary.phone', '-') }}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url_for('contact_detail', contact_id=contact.id) }}" class="btn btn-outline btn-sm">View</a>
+                            <a href="{{ url_for('contact_edit', contact_id=contact.id) }}" class="btn btn-outline btn-sm">Edit</a>
+                            <a href="{{ url_for('contact_delete', contact_id=contact.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No contacts found.</p>
+            {% if search or contact_type %}
+            <p class="mt-1">Try adjusting your search criteria.</p>
+            {% else %}
+            <a href="{{ url_for('contact_create') }}" class="btn btn-primary mt-1">Add Your First Contact</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if result.pages > 1 %}
+<div class="pagination">
+    {% if result.has_prev %}
+    <a href="?page={{ result.page - 1 }}{% if search %}&q={{ search }}{% endif %}{% if contact_type %}&type={{ contact_type }}{% endif %}">Previous</a>
+    {% else %}
+    <span class="disabled">Previous</span>
+    {% endif %}
+
+    {% for p in range(1, result.pages + 1) %}
+    {% if p == result.page %}
+    <span class="active">{{ p }}</span>
+    {% else %}
+    <a href="?page={{ p }}{% if search %}&q={{ search }}{% endif %}{% if contact_type %}&type={{ contact_type }}{% endif %}">{{ p }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if result.has_next %}
+    <a href="?page={{ result.page + 1 }}{% if search %}&q={{ search }}{% endif %}{% if contact_type %}&type={{ contact_type }}{% endif %}">Next</a>
+    {% else %}
+    <span class="disabled">Next</span>
+    {% endif %}
+
+    <span class="pagination-info">
+        Showing {{ result.items|length }} of {{ result.total }} contacts
+    </span>
+</div>
+{% endif %}
+{% endblock %}

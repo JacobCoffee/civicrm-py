@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}CiviCRM Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>CiviCRM Dashboard</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('generate_data') }}" class="btn btn-success">Generate Sample Data</a>
+    </div>
+</div>
+
+{% if stats.error %}
+<div class="alert alert-warning">
+    <strong>Warning:</strong> {{ stats.error }}
+    <p class="mt-1">
+        Run <code>make infra-up && make infra-install && make infra-setup</code> to start the CiviCRM infrastructure.
+    </p>
+</div>
+{% endif %}
+
+<!-- Stats Overview -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-label">Total Contacts</div>
+        <div class="stat-card-value">{{ stats.total_contacts }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Individuals</div>
+        <div class="stat-card-value">{{ stats.total_individuals }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Organizations</div>
+        <div class="stat-card-value">{{ stats.total_organizations }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Activities</div>
+        <div class="stat-card-value">{{ stats.total_activities }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Contributions</div>
+        <div class="stat-card-value">{{ stats.total_contributions }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Active Events</div>
+        <div class="stat-card-value">{{ stats.total_events }}</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+    <!-- Recent Contacts -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Recent Contacts</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if stats.recent_contacts %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in stats.recent_contacts %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('contact_detail', contact_id=contact.id) }}">{{ contact.display_name }}</a>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary">{{ contact.contact_type }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <p>No contacts yet</p>
+                <a href="{{ url_for('contact_create') }}" class="btn btn-primary btn-sm mt-1">Add Contact</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Recent Activities</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if stats.recent_activities %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in stats.recent_activities %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('activity_detail', activity_id=activity.id) }}">{{ activity.subject or "(No subject)" }}</a>
+                        </td>
+                        <td>
+                            {% set status = activity|get_attr('status_id:label', '-') %}
+                            <span class="badge {% if status == 'Completed' %}badge-success{% else %}badge-warning{% endif %}">
+                                {{ status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <p>No activities yet</p>
+                <a href="{{ url_for('activity_create') }}" class="btn btn-primary btn-sm mt-1">Add Activity</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card mt-2">
+    <div class="card-header">
+        <h3>Quick Actions</h3>
+    </div>
+    <div class="card-body">
+        <div class="d-flex gap-1">
+            <a href="{{ url_for('contact_create') }}" class="btn btn-primary">Add Contact</a>
+            <a href="{{ url_for('activity_create') }}" class="btn btn-secondary">Add Activity</a>
+            <a href="{{ url_for('contribution_create') }}" class="btn btn-secondary">Record Contribution</a>
+            <a href="{{ url_for('event_create') }}" class="btn btn-secondary">Create Event</a>
+            <a href="{{ url_for('generate_data') }}" class="btn btn-outline">Generate Sample Data</a>
+        </div>
+    </div>
+</div>
+
+<!-- About -->
+<div class="card">
+    <div class="card-header">
+        <h3>About This Demo</h3>
+    </div>
+    <div class="card-body">
+        <p>This is a demonstration of the <strong>civi-py</strong> Litestar integration, showcasing:</p>
+        <ul>
+            <li>CiviPlugin for dependency injection and auto-generated routes</li>
+            <li>Async views with the shared CiviShowcase module</li>
+            <li>CRUD operations for CiviCRM entities</li>
+            <li>Jinja2 templates for server-rendered UI</li>
+            <li>JSON API endpoints at <code>/api/*</code></li>
+            <li>OpenAPI documentation with Scalar and Swagger UI</li>
+        </ul>
+        <p class="mt-1">
+            <a href="https://github.com/JacobCoffee/civi-py" class="btn btn-outline btn-sm">View on GitHub</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

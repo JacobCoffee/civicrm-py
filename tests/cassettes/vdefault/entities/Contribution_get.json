@@ -1,0 +1,66 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2024-01-22T10:00:00+00:00",
+      "request": {
+        "body": {
+          "params": "{\"select\": [\"id\", \"contact_id\", \"financial_type_id\", \"total_amount\", \"receive_date\", \"contribution_status_id\"], \"limit\": 10}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "[REDACTED]",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Civi-Site-Key": "[REDACTED]",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        "method": "POST",
+        "url": "http://localhost:8080/civicrm/ajax/api4/Contribution/get"
+      },
+      "response": {
+        "body": {
+          "count": 3,
+          "countFetched": 3,
+          "values": [
+            {
+              "contact_id": 3,
+              "contribution_status_id": 1,
+              "financial_type_id": 1,
+              "id": 1,
+              "receive_date": "2024-01-15",
+              "total_amount": "100.00"
+            },
+            {
+              "contact_id": 4,
+              "contribution_status_id": 1,
+              "financial_type_id": 1,
+              "id": 2,
+              "receive_date": "2024-01-20",
+              "total_amount": "250.00"
+            },
+            {
+              "contact_id": 3,
+              "contribution_status_id": 2,
+              "financial_type_id": 2,
+              "id": 3,
+              "receive_date": "2024-01-22",
+              "total_amount": "50.00"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status_code": 200
+      }
+    }
+  ],
+  "metadata": {
+    "action": "get",
+    "civicrm_version": "default",
+    "description": "Basic Contribution get",
+    "entity": "Contribution",
+    "recorded_at": "2024-01-22T10:00:00+00:00"
+  },
+  "name": "Contribution_get",
+  "version": "default"
+}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <div class="page-header-actions">
+        <a href="{{ url_for('contribution_create') }}" class="btn btn-primary">Record Contribution</a>
+    </div>
+</div>
+
+{% if result.error %}
+<div class="alert alert-warning">
+    <strong>Warning:</strong> {{ result.error }}
+</div>
+{% endif %}
+
+<!-- Contributions Table -->
+<div class="card">
+    <div class="table-container">
+        {% if result.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Contact</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contribution in result.items %}
+                <tr>
+                    <td>{{ contribution.id }}</td>
+                    <td>
+                        {% set contact_name = contribution|get_attr('contact_id.display_name') %}
+                        {% set cid = contribution|get_attr('contact_id') %}
+                        {% if contact_name and cid %}
+                        <a href="{{ url_for('contact_detail', contact_id=cid) }}">
+                            {{ contact_name }}
+                        </a>
+                        {% elif contact_name %}
+                        {{ contact_name }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('contribution_detail', contribution_id=contribution.id) }}">
+                            <strong>{{ contribution.currency or 'USD' }} {{ contribution.total_amount }}</strong>
+                        </a>
+                    </td>
+                    <td>{{ contribution|get_attr('financial_type_id:label', '-') }}</td>
+                    <td>
+                        {% set status = contribution|get_attr('contribution_status_id:label', '-') %}
+                        <span class="badge {% if status == 'Completed' %}badge-success{% elif status == 'Pending' %}badge-warning{% else %}badge-secondary{% endif %}">
+                            {{ status }}
+                        </span>
+                    </td>
+                    <td>{{ contribution.receive_date or '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('contribution_detail', contribution_id=contribution.id) }}" class="btn btn-outline btn-sm">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No contributions found.</p>
+            <a href="{{ url_for('contribution_create') }}" class="btn btn-primary mt-1">Record Your First Contribution</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if result.pages > 1 %}
+<div class="pagination">
+    {% if result.has_prev %}
+    <a href="?page={{ result.page - 1 }}">Previous</a>
+    {% else %}
+    <span class="disabled">Previous</span>
+    {% endif %}
+
+    {% for p in range(1, result.pages + 1) %}
+    {% if p == result.page %}
+    <span class="active">{{ p }}</span>
+    {% else %}
+    <a href="?page={{ p }}">{{ p }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if result.has_next %}
+    <a href="?page={{ result.page + 1 }}">Next</a>
+    {% else %}
+    <span class="disabled">Next</span>
+    {% endif %}
+
+    <span class="pagination-info">
+        Showing {{ result.items|length }} of {{ result.total }} contributions
+    </span>
+</div>
+{% endif %}
+{% endblock %}
