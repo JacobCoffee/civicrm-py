@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.1] - 2026-01-24
+## [0.1.2] - 2026-01-24
+
+### Features
+
+- Add sigstore signing and attestation to publish workflow by @JacobCoffee
 
 ### Miscellaneous
 
