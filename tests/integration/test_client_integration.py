@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from civi_py import (
+from civicrm_py import (
     CiviAPIError,
     CiviAuthError,
     CiviClient,

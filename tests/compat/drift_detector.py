@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
+    from civicrm_py.core.client import CiviClient
     from tests.compat.schema_validator import SchemaCache
 
 __all__ = [

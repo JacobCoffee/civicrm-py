@@ -55,7 +55,7 @@ snapshot.save()
 ```python
 from tests.compat.drift_detector import DriftDetector
 from tests.compat.schema_validator import SchemaCache
-from civi_py import CiviClient
+from civicrm_py import CiviClient
 
 async def update_all_snapshots():
     cache = SchemaCache()

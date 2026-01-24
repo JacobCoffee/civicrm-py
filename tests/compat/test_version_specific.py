@@ -420,7 +420,7 @@ class TestEntityCompatibility:
     @pytest.mark.compat
     def test_contact_fields_baseline(self) -> None:
         """Test Contact entity has baseline fields across all versions."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # These fields should exist in all supported versions
         baseline_fields = ["id", "display_name", "contact_type", "is_deleted"]
@@ -432,7 +432,7 @@ class TestEntityCompatibility:
     @pytest.mark.compat
     def test_activity_fields_baseline(self) -> None:
         """Test Activity entity has baseline fields across all versions."""
-        from civi_py.entities import Activity
+        from civicrm_py.entities import Activity
 
         baseline_fields = [
             "id",

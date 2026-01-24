@@ -10,7 +10,7 @@ Install with the Flask extra:
 
 .. code-block:: bash
 
-   pip install civi-py[flask]
+   pip install civicrm-py[flask]
 
 
 Basic Setup
@@ -21,7 +21,7 @@ Initialize the extension with your Flask app:
 .. code-block:: python
 
    from flask import Flask, g
-   from civi_py.contrib.flask import CiviFlask
+   from civicrm_py.contrib.flask import CiviFlask
 
    app = Flask(__name__)
    app.config["CIVI_BASE_URL"] = "https://example.org/civicrm/ajax/api4"
@@ -44,7 +44,7 @@ For larger applications using the factory pattern:
 .. code-block:: python
 
    from flask import Flask
-   from civi_py.contrib.flask import CiviFlask
+   from civicrm_py.contrib.flask import CiviFlask
 
    civi = CiviFlask()
 
@@ -106,7 +106,7 @@ Basic Usage
 .. code-block:: python
 
    from flask import Flask, g, jsonify, request
-   from civi_py.contrib.flask import CiviFlask
+   from civicrm_py.contrib.flask import CiviFlask
 
    app = Flask(__name__)
    CiviFlask(app)
@@ -143,7 +143,7 @@ For explicit error handling:
 
 .. code-block:: python
 
-   from civi_py.contrib.flask import get_civi_client
+   from civicrm_py.contrib.flask import get_civi_client
 
 
    @app.route("/contacts")
@@ -164,8 +164,8 @@ Pass settings directly to the extension:
 
 .. code-block:: python
 
-   from civi_py.core.config import CiviSettings
-   from civi_py.contrib.flask import CiviFlask
+   from civicrm_py.core.config import CiviSettings
+   from civicrm_py.contrib.flask import CiviFlask
 
    settings = CiviSettings(
        base_url="https://example.org/civicrm/ajax/api4",
@@ -183,7 +183,7 @@ Customize extension behavior with ``CiviFlaskConfig``:
 
 .. code-block:: python
 
-   from civi_py.contrib.flask import CiviFlask, CiviFlaskConfig
+   from civicrm_py.contrib.flask import CiviFlask, CiviFlaskConfig
 
    config = CiviFlaskConfig(
        use_thread_local=True,   # Thread-local clients (recommended)
@@ -281,7 +281,7 @@ Complete Example
 .. code-block:: python
 
    from flask import Flask, g, jsonify, request
-   from civi_py.contrib.flask import CiviFlask
+   from civicrm_py.contrib.flask import CiviFlask
 
 
    def create_app():

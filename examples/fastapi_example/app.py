@@ -49,7 +49,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from starlette import status
 
-from civi_py.contrib.fastapi import (
+from civicrm_py.contrib.fastapi import (
     CiviFastAPIConfig,
     create_civi_lifespan,
     create_civi_router,

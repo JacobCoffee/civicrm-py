@@ -1,5 +1,5 @@
-civi-py
-=======
+civicrm-py
+==========
 
 .. rst-class:: lead
 
@@ -7,7 +7,7 @@ civi-py
 
 ----
 
-**civi-py** gives you a clean, typed Python interface to CiviCRM. It works async or sync,
+**civicrm-py** gives you a clean, typed Python interface to CiviCRM. It works async or sync,
 plays well with Django, Litestar, Flask, and FastAPI, and uses msgspec for fast serialization.
 
 .. grid:: 1 1 2 2
@@ -17,7 +17,7 @@ plays well with Django, Litestar, Flask, and FastAPI, and uses msgspec for fast 
       :link: getting-started/index
       :link-type: doc
 
-      Install civi-py and make your first API call in five minutes.
+      Install civicrm-py and make your first API call in five minutes.
 
    .. grid-item-card:: Core Concepts
       :link: concepts/index
@@ -63,7 +63,7 @@ Quick Example
 
       .. code-block:: python
 
-         from civi_py import CiviClient
+         from civicrm_py import CiviClient
 
          async with CiviClient(base_url="...", api_key="...") as client:
              response = await client.get("Contact", limit=10)
@@ -74,7 +74,7 @@ Quick Example
 
       .. code-block:: python
 
-         from civi_py import SyncCiviClient
+         from civicrm_py import SyncCiviClient
 
          with SyncCiviClient(base_url="...", api_key="...") as client:
              response = client.get("Contact", limit=10)
@@ -87,20 +87,22 @@ Installation
 
 .. code-block:: bash
 
-   pip install civi-py
+   pip install civicrm-py
 
    # With framework extras
-   pip install civi-py[django]    # Django integration
-   pip install civi-py[litestar]  # Litestar integration
-   pip install civi-py[flask]     # Flask integration
-   pip install civi-py[fastapi]   # FastAPI integration
+   pip install civicrm-py[django]    # Django integration
+   pip install civicrm-py[litestar]  # Litestar integration
+   pip install civicrm-py[flask]     # Flask integration
+   pip install civicrm-py[fastapi]   # FastAPI integration
 
    # With ecosystem extras
-   pip install civi-py[sqlspec]   # Local database caching
-   pip install civi-py[workflows] # Workflow automation
+   pip install civicrm-py[sqlspec]   # Local database caching
+   pip install civicrm-py[workflows] # Workflow automation
 
    # Combined extras
-   pip install 'civi-py[litestar,sqlspec,workflows]'
+   pip install 'civicrm-py[litestar,sqlspec,workflows]'
+
+See docs for :doc:`sqlspec </guides/sqlspec>`, :doc:`workflows </guides/workflows>`, and :doc:`pytest-databases </guides/pytest-databases>`.
 
 
 .. toctree::
@@ -132,8 +134,14 @@ Installation
    :hidden:
    :caption: Project
 
-   GitHub <https://github.com/JacobCoffee/civi-py>
+   GitHub <https://github.com/JacobCoffee/civicrm-py>
    CiviCRM <https://civicrm.org/>
+
+
+Alternatives
+------------
+
+- `civipy <https://github.com/indepndnt/civipy>`_ - Another Python client for CiviCRM. No built-in web framework integrations.
 
 
 Indices and tables

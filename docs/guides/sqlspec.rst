@@ -3,6 +3,8 @@ SQLSpec Integration
 
 Local database caching for CiviCRM entities using sqlspec with support for PostgreSQL and SQLite.
 
+For full sqlspec documentation, see `sqlspec.dev <https://sqlspec.dev>`_.
+
 The sqlspec integration provides a repository layer that caches CiviCRM data locally for:
 
 - **Offline access**: Query cached data without CiviCRM connectivity
@@ -16,7 +18,7 @@ Install with the sqlspec extra:
 
 .. code-block:: bash
 
-   pip install civi-py[sqlspec]
+   pip install civicrm-py[sqlspec]
 
 This installs sqlspec with both asyncpg (PostgreSQL) and aiosqlite (SQLite) adapters.
 
@@ -33,7 +35,7 @@ SQLite is the simplest option, requiring no external database server:
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig
 
    # In-memory database (data lost on restart)
    config = CiviSQLSpecConfig()
@@ -51,7 +53,7 @@ For production deployments with connection pooling:
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig
 
    config = CiviSQLSpecConfig(
        adapter="asyncpg",
@@ -118,8 +120,8 @@ Basic Usage
 .. code-block:: python
 
    import asyncio
-   from civi_py import CiviClient
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig, ContactRepository
+   from civicrm_py import CiviClient
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig, ContactRepository
 
    async def main():
        # Configure database
@@ -254,7 +256,7 @@ Save and Delete
 
 .. code-block:: python
 
-   from civi_py.entities import Contact
+   from civicrm_py.entities import Contact
 
    async with contact_repo.get_session() as session:
        # Create new contact in local cache
@@ -277,7 +279,7 @@ Track synchronization state for each entity.
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import SyncStatus
+   from civicrm_py.contrib.sqlspec import SyncStatus
 
    async with contact_repo.get_session() as session:
        metadata = await contact_repo.get_sync_metadata(session, entity_id=42)
@@ -308,7 +310,7 @@ Running Migrations
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import (
+   from civicrm_py.contrib.sqlspec import (
        CiviSQLSpecConfig,
        MigrationConfig,
        upgrade,
@@ -341,7 +343,7 @@ Rolling Back
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import downgrade
+   from civicrm_py.contrib.sqlspec import downgrade
 
    async with spec.get_session() as session:
        # Rollback to version 1
@@ -362,10 +364,10 @@ Initialization
 .. code-block:: bash
 
    # Initialize SQLite database
-   civi-py db init --database ./cache.db
+   civicrm-py db init --database ./cache.db
 
    # Initialize PostgreSQL
-   civi-py db init --adapter asyncpg --dsn postgresql://localhost/civi_cache
+   civicrm-py db init --adapter asyncpg --dsn postgresql://localhost/civi_cache
 
 Upgrade
 ^^^^^^^
@@ -373,10 +375,10 @@ Upgrade
 .. code-block:: bash
 
    # Apply all pending migrations
-   civi-py db upgrade --database cache.db
+   civicrm-py db upgrade --database cache.db
 
    # Upgrade to specific version
-   civi-py db upgrade --database cache.db --version 1
+   civicrm-py db upgrade --database cache.db --version 1
 
 Status
 ^^^^^^
@@ -384,10 +386,10 @@ Status
 .. code-block:: bash
 
    # Check migration status
-   civi-py db status --database cache.db
+   civicrm-py db status --database cache.db
 
    # JSON output
-   civi-py db status --database cache.db --json
+   civicrm-py db status --database cache.db --json
 
 Downgrade
 ^^^^^^^^^
@@ -395,13 +397,13 @@ Downgrade
 .. code-block:: bash
 
    # Rollback to version 1
-   civi-py db downgrade --database cache.db --version 1
+   civicrm-py db downgrade --database cache.db --version 1
 
    # Remove all tables (requires confirmation)
-   civi-py db downgrade --database cache.db --version 0
+   civicrm-py db downgrade --database cache.db --version 0
 
    # Skip confirmation
-   civi-py db downgrade --database cache.db --version 0 --yes
+   civicrm-py db downgrade --database cache.db --version 0 --yes
 
 
 Litestar Integration
@@ -415,9 +417,9 @@ Plugin Configuration
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig
 
    config = CiviPluginConfig(
        sqlspec=SQLSpecPluginConfig(
@@ -443,8 +445,8 @@ Repositories are automatically injected via dependency injection:
    from typing import Annotated
    from litestar import get
    from litestar.params import Dependency
-   from civi_py.contrib.sqlspec import ContactRepository
-   from civi_py.core.client import CiviClient
+   from civicrm_py.contrib.sqlspec import ContactRepository
+   from civicrm_py.core.client import CiviClient
 
    @get("/cached-contacts")
    async def list_cached_contacts(
@@ -483,7 +485,7 @@ Use sqlspec independently of CiviPlugin:
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar.sqlspec_integration import (
+   from civicrm_py.contrib.litestar.sqlspec_integration import (
        SQLSpecPlugin,
        SQLSpecPluginConfig,
    )
@@ -503,8 +505,8 @@ Create repositories for custom entities:
 
 .. code-block:: python
 
-   from civi_py.contrib.sqlspec import CiviRepository
-   from civi_py.entities.base import BaseEntity
+   from civicrm_py.contrib.sqlspec import CiviRepository
+   from civicrm_py.entities.base import BaseEntity
 
    class MyCustomEntity(BaseEntity):
        """Custom CiviCRM entity."""
@@ -562,10 +564,10 @@ A full example combining sync, caching, and Litestar:
    from litestar.params import Dependency
    from typing import Annotated
 
-   from civi_py import CiviClient
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
-   from civi_py.contrib.sqlspec import (
+   from civicrm_py import CiviClient
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+   from civicrm_py.contrib.sqlspec import (
        CiviSQLSpecConfig,
        ContactRepository,
        SyncStatus,

@@ -46,7 +46,7 @@ from functools import lru_cache
 from typing import TYPE_CHECKING, Any, ClassVar
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
+    from civicrm_py.core.client import CiviClient
 
 
 class DifferenceType(Enum):

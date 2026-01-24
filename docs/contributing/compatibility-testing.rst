@@ -4,7 +4,7 @@
 API Compatibility Testing
 =========================
 
-civi-py includes a comprehensive compatibility testing infrastructure to ensure the library
+civicrm-py includes a comprehensive compatibility testing infrastructure to ensure the library
 works correctly across CiviCRM versions and detects API changes before they cause problems
 in production.
 
@@ -19,7 +19,7 @@ This guide covers:
 Overview
 ========
 
-The compatibility testing system validates civi-py against CiviCRM API v4 through
+The compatibility testing system validates civicrm-py against CiviCRM API v4 through
 several mechanisms:
 
 **Schema Validation**
@@ -90,7 +90,7 @@ First, create the entity model in ``src/civi/entities/``:
 
     import msgspec
 
-    from civi_py.entities.base import BaseEntity
+    from civicrm_py.entities.base import BaseEntity
 
     if TYPE_CHECKING:
         from datetime import date
@@ -122,7 +122,7 @@ Fetch and cache the entity schema from a live CiviCRM instance:
 .. code-block:: python
 
     import asyncio
-    from civi_py import CiviClient
+    from civicrm_py import CiviClient
     from tests.compat.schema_validator import SchemaCache
 
     async def cache_relationship_schema():
@@ -148,7 +148,7 @@ Create a test file in ``tests/compat/``:
 
     import pytest
 
-    from civi_py.entities import Relationship
+    from civicrm_py.entities import Relationship
     from tests.compat.schema_validator import SchemaValidator
 
 
@@ -214,7 +214,7 @@ Add contract tests to verify QuerySet operations produce correct API requests:
 
     import pytest
 
-    from civi_py.entities import Relationship
+    from civicrm_py.entities import Relationship
 
 
     class TestRelationshipContracts:
@@ -544,7 +544,7 @@ Use the schema validator interactively to diagnose issues:
 
 .. code-block:: python
 
-    from civi_py.entities import Contact
+    from civicrm_py.entities import Contact
     from tests.compat.schema_validator import SchemaCache, SchemaValidator
 
     cache = SchemaCache()
@@ -585,7 +585,7 @@ Version Support Policy
 Supported CiviCRM Versions
 --------------------------
 
-civi-py supports the following CiviCRM versions:
+civicrm-py supports the following CiviCRM versions:
 
 - **Current stable release**: Full support with complete test coverage
 - **Previous stable release**: Full support

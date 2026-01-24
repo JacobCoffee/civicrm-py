@@ -3,6 +3,8 @@ Workflow Automation
 
 Automate multi-step CiviCRM operations with human approval workflows using litestar-workflows.
 
+For full litestar-workflows documentation, see `workflows.litestar.scriptr.dev <https://workflows.litestar.scriptr.dev>`_.
+
 The workflows integration provides:
 
 - **Step primitives**: Reusable CiviCRM operation steps
@@ -17,7 +19,7 @@ Install with the workflows extra:
 
 .. code-block:: bash
 
-   pip install civi-py[workflows]
+   pip install civicrm-py[workflows]
 
 This installs litestar-workflows and its dependencies.
 
@@ -43,7 +45,7 @@ Workflows are defined as a series of steps connected by edges (transitions).
 Step Primitives
 ---------------
 
-civi-py provides four CiviCRM-specific step types.
+civicrm-py provides four CiviCRM-specific step types.
 
 CiviFetchStep
 ^^^^^^^^^^^^^
@@ -52,7 +54,7 @@ Fetch data from CiviCRM and store it in the workflow context:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import CiviFetchStep
+   from civicrm_py.contrib.workflows import CiviFetchStep
 
    fetch_contacts = CiviFetchStep(
        name="fetch_contacts",
@@ -88,7 +90,7 @@ Create, update, or delete CiviCRM records:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import CiviMutateStep
+   from civicrm_py.contrib.workflows import CiviMutateStep
 
    # Create new contacts
    create_contacts = CiviMutateStep(
@@ -134,7 +136,7 @@ Pause workflow for human review and approval:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import CiviApprovalStep
+   from civicrm_py.contrib.workflows import CiviApprovalStep
 
    review_step = CiviApprovalStep(
        name="review_contacts",
@@ -165,7 +167,7 @@ Sync data between CiviCRM and local database cache:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import CiviSyncStep
+   from civicrm_py.contrib.workflows import CiviSyncStep
 
    # Sync from CiviCRM to local cache
    sync_from_civi = CiviSyncStep(
@@ -193,7 +195,7 @@ This step requires both workflows and sqlspec:
 
 .. code-block:: bash
 
-   pip install 'civi-py[workflows,sqlspec]'
+   pip install 'civicrm-py[workflows,sqlspec]'
 
 
 Workflow Templates
@@ -208,8 +210,8 @@ Fetch contacts, human review, sync to local database:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import WORKFLOWS_AVAILABLE
-   from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+   from civicrm_py.contrib.workflows import WORKFLOWS_AVAILABLE
+   from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
    if WORKFLOWS_AVAILABLE:
        definition = ContactSyncWorkflow.get_definition(
@@ -232,7 +234,7 @@ Select entities, approve changes, execute bulk update:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+   from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
    definition = BulkUpdateWorkflow.get_definition(
        entity="Contact",
@@ -255,7 +257,7 @@ Check expiring memberships, notify, process renewals:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows.templates import MembershipRenewalWorkflow
+   from civicrm_py.contrib.workflows.templates import MembershipRenewalWorkflow
 
    definition = MembershipRenewalWorkflow.get_definition(
        days_until_expiry=30,
@@ -277,7 +279,7 @@ Validate donation, approve large amounts, create contribution:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+   from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
    definition = DonationProcessingWorkflow.get_definition(
        approval_threshold=1000.0,  # Require approval for $1000+
@@ -303,7 +305,7 @@ Basic Workflow
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import (
+   from civicrm_py.contrib.workflows import (
        WORKFLOWS_AVAILABLE,
        require_workflows,
        WorkflowDefinition,
@@ -402,7 +404,7 @@ Starting a Workflow
 
 .. code-block:: python
 
-   from civi_py import CiviClient
+   from civicrm_py import CiviClient
 
    async def start_workflow():
        async with CiviClient() as client:
@@ -474,8 +476,8 @@ Plugin Configuration
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
 
    config = CiviPluginConfig(
        workflows=WorkflowPluginConfig(
@@ -584,7 +586,7 @@ All workflow step errors are wrapped in ``CiviWorkflowError``:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import CiviWorkflowError
+   from civicrm_py.contrib.workflows import CiviWorkflowError
 
    try:
        await engine.start("my_workflow", context=context)
@@ -599,7 +601,7 @@ Check if workflows are available before using:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows import WORKFLOWS_AVAILABLE, require_workflows
+   from civicrm_py.contrib.workflows import WORKFLOWS_AVAILABLE, require_workflows
 
    # Check availability
    if WORKFLOWS_AVAILABLE:
@@ -625,9 +627,9 @@ Full example combining custom workflow with Litestar:
    from litestar import Litestar, get, post
    from litestar.params import Parameter
 
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
-   from civi_py.contrib.workflows import (
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
+   from civicrm_py.contrib.workflows import (
        WORKFLOWS_AVAILABLE,
        CiviFetchStep,
        CiviApprovalStep,

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from civi_py.contrib.base import IntegrationProtocol, LifecycleHooks, RequestContext
-from civi_py.core.client import CiviClient, SyncCiviClient
-from civi_py.core.config import CiviSettings
+from civicrm_py.contrib.base import IntegrationProtocol, LifecycleHooks, RequestContext
+from civicrm_py.core.client import CiviClient, SyncCiviClient
+from civicrm_py.core.config import CiviSettings
 
 
 class MockAsyncIntegration:

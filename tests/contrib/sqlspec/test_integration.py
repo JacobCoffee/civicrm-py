@@ -53,7 +53,7 @@ def sqlspec_config_sqlite() -> Any:
     Note: This fixture will raise ImportError if sqlspec is not installed
     when the config tries to create the adapter config.
     """
-    from civi_py.contrib.sqlspec.config import CiviSQLSpecConfig
+    from civicrm_py.contrib.sqlspec.config import CiviSQLSpecConfig
 
     return CiviSQLSpecConfig(
         adapter="aiosqlite",
@@ -73,7 +73,7 @@ def sqlspec_config_postgres(postgres_async_url: str) -> Any:
     Returns:
         CiviSQLSpecConfig configured for PostgreSQL.
     """
-    from civi_py.contrib.sqlspec.config import CiviSQLSpecConfig
+    from civicrm_py.contrib.sqlspec.config import CiviSQLSpecConfig
 
     return CiviSQLSpecConfig(
         adapter="asyncpg",
@@ -88,7 +88,7 @@ def sqlspec_config_postgres(postgres_async_url: str) -> Any:
 @pytest.fixture
 def migration_config_sqlite() -> Any:
     """Create migration config for SQLite."""
-    from civi_py.contrib.sqlspec.migrations import MigrationConfig
+    from civicrm_py.contrib.sqlspec.migrations import MigrationConfig
 
     return MigrationConfig(
         table_prefix="test_civi_",
@@ -101,7 +101,7 @@ def migration_config_sqlite() -> Any:
 @pytest.fixture
 def migration_config_postgres() -> Any:
     """Create migration config for PostgreSQL."""
-    from civi_py.contrib.sqlspec.migrations import MigrationConfig
+    from civicrm_py.contrib.sqlspec.migrations import MigrationConfig
 
     return MigrationConfig(
         table_prefix="test_civi_",
@@ -243,7 +243,7 @@ class TestRepositoryWithSQLite:
 
     async def test_repository_initialization(self, sqlspec_config_sqlite: Any) -> None:
         """Test that repository initializes correctly with SQLite."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -253,8 +253,8 @@ class TestRepositoryWithSQLite:
 
     async def test_contact_crud_operations(self, sqlspec_config_sqlite: Any) -> None:
         """Test basic CRUD operations for ContactRepository with SQLite."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
-        from civi_py.entities.contact import Contact
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.entities.contact import Contact
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -290,8 +290,8 @@ class TestRepositoryWithSQLite:
 
     async def test_entity_to_row_conversion(self, sqlspec_config_sqlite: Any) -> None:
         """Test entity to database row conversion."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
-        from civi_py.entities.contact import Contact
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.entities.contact import Contact
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -324,7 +324,7 @@ class TestRepositoryWithSQLite:
 
     async def test_row_to_entity_conversion(self, sqlspec_config_sqlite: Any) -> None:
         """Test database row to entity conversion."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -352,7 +352,7 @@ class TestRepositoryWithSQLite:
         sqlspec_config_sqlite: Any,
     ) -> None:
         """Test ActivityRepository initialization."""
-        from civi_py.contrib.sqlspec.repository import ActivityRepository
+        from civicrm_py.contrib.sqlspec.repository import ActivityRepository
 
         repo = ActivityRepository(sqlspec_config_sqlite)
 
@@ -368,7 +368,7 @@ class TestMigrationsWithSQLite:
 
     async def test_upgrade_creates_tables(self, migration_config_sqlite: Any) -> None:
         """Test that upgrade creates all expected tables."""
-        from civi_py.contrib.sqlspec.migrations import upgrade
+        from civicrm_py.contrib.sqlspec.migrations import upgrade
 
         mock_session = AsyncMock()
         mock_session.fetch_one = AsyncMock(return_value=None)  # No existing tables
@@ -385,7 +385,7 @@ class TestMigrationsWithSQLite:
 
     async def test_downgrade_drops_tables(self, migration_config_sqlite: Any) -> None:
         """Test that downgrade drops tables correctly."""
-        from civi_py.contrib.sqlspec.migrations import downgrade
+        from civicrm_py.contrib.sqlspec.migrations import downgrade
 
         mock_session = AsyncMock()
         # Simulate existing tables at version 1
@@ -408,7 +408,7 @@ class TestMigrationsWithSQLite:
         migration_config_sqlite: Any,
     ) -> None:
         """Test that verify_schema checks for expected tables."""
-        from civi_py.contrib.sqlspec.migrations import verify_schema
+        from civicrm_py.contrib.sqlspec.migrations import verify_schema
 
         mock_session = AsyncMock()
         # All tables exist
@@ -425,7 +425,7 @@ class TestMigrationsWithSQLite:
 
     async def test_get_migration_status(self, migration_config_sqlite: Any) -> None:
         """Test get_migration_status returns correct information."""
-        from civi_py.contrib.sqlspec.migrations import get_migration_status
+        from civicrm_py.contrib.sqlspec.migrations import get_migration_status
 
         mock_session = AsyncMock()
         mock_session.fetch_one = AsyncMock(return_value=None)  # No migrations applied
@@ -451,7 +451,7 @@ class TestSyncOperationsWithMock:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test syncing data from CiviCRM to local database."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository, SyncResult
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository, SyncResult
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -476,7 +476,7 @@ class TestSyncOperationsWithMock:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test syncing with filter conditions."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -505,11 +505,11 @@ class TestSyncOperationsWithMock:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test syncing local changes back to CiviCRM."""
-        from civi_py.contrib.sqlspec.repository import (
+        from civicrm_py.contrib.sqlspec.repository import (
             ContactRepository,
             SyncResult,
         )
-        from civi_py.entities.contact import Contact
+        from civicrm_py.entities.contact import Contact
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -543,8 +543,8 @@ class TestSyncOperationsWithMock:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test that sync_to_civi updates existing entities."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
-        from civi_py.entities.contact import Contact
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.entities.contact import Contact
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -586,7 +586,7 @@ class TestActivitySyncOperations:
         mock_civi_client_activities: AsyncMock,
     ) -> None:
         """Test syncing activities from CiviCRM."""
-        from civi_py.contrib.sqlspec.repository import ActivityRepository
+        from civicrm_py.contrib.sqlspec.repository import ActivityRepository
 
         repo = ActivityRepository(sqlspec_config_sqlite)
 
@@ -616,7 +616,7 @@ class TestRepositoryWithPostgres:
 
     async def test_postgres_config_creation(self, postgres_async_url: str) -> None:
         """Test PostgreSQL config creation."""
-        from civi_py.contrib.sqlspec.config import CiviSQLSpecConfig
+        from civicrm_py.contrib.sqlspec.config import CiviSQLSpecConfig
 
         # Convert asyncpg URL to standard PostgreSQL URL
         dsn = postgres_async_url.replace("postgresql+asyncpg://", "postgresql://")
@@ -639,7 +639,7 @@ class TestRepositoryWithPostgres:
         sqlspec_config_postgres: Any,
     ) -> None:
         """Test ContactRepository generates correct table name for Postgres."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_postgres)
 
@@ -657,7 +657,7 @@ class TestMigrationsWithPostgres:
         migration_config_postgres: Any,
     ) -> None:
         """Test running migrations against PostgreSQL."""
-        from civi_py.contrib.sqlspec.migrations import upgrade
+        from civicrm_py.contrib.sqlspec.migrations import upgrade
 
         mock_session = AsyncMock()
         # PostgreSQL table check returns (False,) for non-existent table
@@ -674,7 +674,7 @@ class TestMigrationsWithPostgres:
         migration_config_postgres: Any,
     ) -> None:
         """Test rolling back migrations on PostgreSQL."""
-        from civi_py.contrib.sqlspec.migrations import downgrade
+        from civicrm_py.contrib.sqlspec.migrations import downgrade
 
         mock_session = AsyncMock()
         # Simulate tables exist and version is 1
@@ -699,7 +699,7 @@ class TestMigrationsWithPostgres:
         migration_config_postgres: Any,
     ) -> None:
         """Test schema verification on PostgreSQL."""
-        from civi_py.contrib.sqlspec.migrations import verify_schema
+        from civicrm_py.contrib.sqlspec.migrations import verify_schema
 
         mock_session = AsyncMock()
         # Simulate all tables exist
@@ -728,7 +728,7 @@ class TestSyncOperationsWithPostgres:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test syncing data from CiviCRM to PostgreSQL."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_postgres)
 
@@ -747,8 +747,8 @@ class TestSyncOperationsWithPostgres:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test syncing local PostgreSQL changes back to CiviCRM."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
-        from civi_py.entities.contact import Contact
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.entities.contact import Contact
 
         repo = ContactRepository(sqlspec_config_postgres)
 
@@ -792,7 +792,7 @@ class TestErrorHandling:
         sqlspec_config_sqlite: Any,
     ) -> None:
         """Test that sync_from_civi handles API errors gracefully."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -813,7 +813,7 @@ class TestErrorHandling:
         sqlspec_config_sqlite: Any,
     ) -> None:
         """Test that sync_from_civi handles entities without ID."""
-        from civi_py.contrib.sqlspec.repository import ContactRepository
+        from civicrm_py.contrib.sqlspec.repository import ContactRepository
 
         repo = ContactRepository(sqlspec_config_sqlite)
 
@@ -850,7 +850,7 @@ class TestMigrationErrorHandling:
         migration_config_sqlite: Any,
     ) -> None:
         """Test that migration errors are handled gracefully."""
-        from civi_py.contrib.sqlspec.migrations import upgrade
+        from civicrm_py.contrib.sqlspec.migrations import upgrade
 
         mock_session = AsyncMock()
         mock_session.fetch_one = AsyncMock(return_value=None)
@@ -878,7 +878,7 @@ class TestRepositorySmokeTests:
         sqlspec_config_sqlite: Any,
     ) -> None:
         """Test that all repository classes can be instantiated."""
-        from civi_py.contrib.sqlspec.repository import (
+        from civicrm_py.contrib.sqlspec.repository import (
             ActivityRepository,
             ContactRepository,
             ContributionRepository,
@@ -908,7 +908,7 @@ class TestIntegrationSmokeTests:
 
     async def test_migration_functions_are_importable(self) -> None:
         """Test that all migration functions can be imported."""
-        from civi_py.contrib.sqlspec.migrations import (
+        from civicrm_py.contrib.sqlspec.migrations import (
             create_entity_table,
             create_sync_metadata_table,
             downgrade,
@@ -931,7 +931,7 @@ class TestIntegrationSmokeTests:
 
     async def test_sync_status_enum_values(self) -> None:
         """Test SyncStatus enum has expected values."""
-        from civi_py.contrib.sqlspec.repository import SyncStatus
+        from civicrm_py.contrib.sqlspec.repository import SyncStatus
 
         assert SyncStatus.PENDING.value == "pending"
         assert SyncStatus.SYNCED.value == "synced"
@@ -940,7 +940,7 @@ class TestIntegrationSmokeTests:
 
     async def test_sync_result_dataclass(self) -> None:
         """Test SyncResult dataclass creation."""
-        from civi_py.contrib.sqlspec.repository import SyncResult
+        from civicrm_py.contrib.sqlspec.repository import SyncResult
 
         result = SyncResult()
         assert result.synced_count == 0
@@ -957,7 +957,7 @@ class TestIntegrationSmokeTests:
         """Test SyncMetadata dataclass creation."""
         from datetime import datetime
 
-        from civi_py.contrib.sqlspec.repository import SyncMetadata, SyncStatus
+        from civicrm_py.contrib.sqlspec.repository import SyncMetadata, SyncStatus
 
         metadata = SyncMetadata(entity_id=1, entity_type="Contact")
         assert metadata.entity_id == 1

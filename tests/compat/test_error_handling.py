@@ -25,16 +25,16 @@ import httpx
 import msgspec
 import pytest
 
-from civi_py import CiviSettings
-from civi_py.core.auth import APIKeyAuth, JWTAuth
-from civi_py.core.exceptions import (
+from civicrm_py import CiviSettings
+from civicrm_py.core.auth import APIKeyAuth, JWTAuth
+from civicrm_py.core.exceptions import (
     CiviAPIError,
     CiviAuthError,
     CiviConnectionError,
     CiviError,
     CiviTimeoutError,
 )
-from civi_py.http.transport import AsyncTransport, SyncTransport
+from civicrm_py.http.transport import AsyncTransport, SyncTransport
 
 if TYPE_CHECKING:
     import respx

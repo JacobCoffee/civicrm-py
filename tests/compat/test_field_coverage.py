@@ -703,7 +703,7 @@ class TestFieldCoverageValidator:
         minimal_activity_schema: list[dict[str, Any]],
     ) -> None:
         """Test validating multiple entities from cache."""
-        from civi_py.entities import Activity, Contact
+        from civicrm_py.entities import Activity, Contact
 
         # Cache schemas
         validator.cache.save_schema("Contact", minimal_contact_schema)
@@ -945,7 +945,7 @@ class TestFieldCoverageAsync:
     @pytest.mark.asyncio
     async def test_validate_all_entities_from_api(self) -> None:
         """Test validating all entities from live API."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # Mock client
         mock_client = MagicMock()
@@ -971,7 +971,7 @@ class TestFieldCoverageAsync:
     @pytest.mark.asyncio
     async def test_generate_field_coverage_report(self, tmp_path: Path) -> None:
         """Test the main report generation function."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # Mock client
         mock_client = MagicMock()

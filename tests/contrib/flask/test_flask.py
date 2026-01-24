@@ -15,14 +15,14 @@ import respx
 from flask import Flask, g
 from httpx import Response
 
-from civi_py.contrib.flask import (
+from civicrm_py.contrib.flask import (
     CiviFlask,
     CiviFlaskConfig,
     _get_bool,
     _get_int,
     get_civi_client,
 )
-from civi_py.core.config import CiviSettings
+from civicrm_py.core.config import CiviSettings
 
 if TYPE_CHECKING:
     from flask.testing import FlaskClient
@@ -363,7 +363,7 @@ class TestCiviFlaskGetClient:
         civi = CiviFlask(app)
         client = civi.get_client()
 
-        from civi_py.core.client import SyncCiviClient
+        from civicrm_py.core.client import SyncCiviClient
 
         assert isinstance(client, SyncCiviClient)
 

@@ -6,13 +6,13 @@ import base64
 
 import pytest
 
-from civi_py.core.auth import (
+from civicrm_py.core.auth import (
     APIKeyAuth,
     AuthProvider,
     BasicAuth,
     JWTAuth,
 )
-from civi_py.core.config import CiviSettings
+from civicrm_py.core.config import CiviSettings
 
 
 class TestAPIKeyAuth:

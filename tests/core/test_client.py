@@ -16,9 +16,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from civi_py import CiviClient, CiviSettings
-from civi_py.core.client import SyncCiviClient
-from civi_py.core.serialization import APIRequest, APIResponse
+from civicrm_py import CiviClient, CiviSettings
+from civicrm_py.core.client import SyncCiviClient
+from civicrm_py.core.serialization import APIRequest, APIResponse
 
 
 class TestCiviClientInitialization:
@@ -187,7 +187,7 @@ class TestCiviClientRequest:
         client = CiviClient(settings=civi_settings)
         assert client._transport is None
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[{"id": 1}], count=1)
             mock_transport_cls.return_value = mock_transport
@@ -201,7 +201,7 @@ class TestCiviClientRequest:
         """Test request reuses existing transport instance."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[{"id": 1}], count=1)
             mock_transport_cls.return_value = mock_transport
@@ -217,7 +217,7 @@ class TestCiviClientRequest:
         """Test request passes entity and action to transport."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport
@@ -230,7 +230,7 @@ class TestCiviClientRequest:
         """Test request with APIRequest object."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport
@@ -244,7 +244,7 @@ class TestCiviClientRequest:
         """Test request with None params."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport
@@ -598,7 +598,7 @@ class TestSyncCiviClientRequest:
         """Test request creates transport on first call."""
         client = SyncCiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.SyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.SyncTransport") as mock_transport_cls:
             mock_transport = MagicMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport
@@ -611,7 +611,7 @@ class TestSyncCiviClientRequest:
         """Test request reuses existing transport."""
         client = SyncCiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.SyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.SyncTransport") as mock_transport_cls:
             mock_transport = MagicMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport
@@ -701,7 +701,7 @@ class TestClientTransportIntegration:
         """Test _get_transport creates transport with correct settings."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport_cls.return_value = mock_transport
 
@@ -714,7 +714,7 @@ class TestClientTransportIntegration:
         """Test _get_transport returns cached transport on subsequent calls."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport_cls.return_value = mock_transport
 
@@ -728,7 +728,7 @@ class TestClientTransportIntegration:
         """Test _get_transport creates transport with correct settings."""
         client = SyncCiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.SyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.SyncTransport") as mock_transport_cls:
             mock_transport = MagicMock()
             mock_transport_cls.return_value = mock_transport
 
@@ -743,7 +743,7 @@ class TestClientAuthProviderIntegration:
 
     def test_async_client_creates_auth_provider(self, civi_settings: CiviSettings) -> None:
         """Test async client creates auth provider from settings."""
-        with patch("civi_py.core.client.AuthProvider") as mock_auth_cls:
+        with patch("civicrm_py.core.client.AuthProvider") as mock_auth_cls:
             mock_auth = MagicMock()
             mock_auth_cls.from_settings.return_value = mock_auth
 
@@ -754,7 +754,7 @@ class TestClientAuthProviderIntegration:
 
     def test_sync_client_creates_auth_provider(self, civi_settings: CiviSettings) -> None:
         """Test sync client creates auth provider from settings."""
-        with patch("civi_py.core.client.AuthProvider") as mock_auth_cls:
+        with patch("civicrm_py.core.client.AuthProvider") as mock_auth_cls:
             mock_auth = MagicMock()
             mock_auth_cls.from_settings.return_value = mock_auth
 
@@ -799,7 +799,7 @@ class TestClientEdgeCases:
         """Test client can make requests to multiple entities."""
         client = CiviClient(settings=civi_settings)
 
-        with patch("civi_py.core.client.AsyncTransport") as mock_transport_cls:
+        with patch("civicrm_py.core.client.AsyncTransport") as mock_transport_cls:
             mock_transport = AsyncMock()
             mock_transport.request.return_value = APIResponse(values=[], count=0)
             mock_transport_cls.return_value = mock_transport

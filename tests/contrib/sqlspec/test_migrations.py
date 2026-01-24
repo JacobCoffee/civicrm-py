@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from civi_py.contrib.sqlspec.migrations import (
+from civicrm_py.contrib.sqlspec.migrations import (
     DatabaseDialect,
     Migration,
     MigrationConfig,

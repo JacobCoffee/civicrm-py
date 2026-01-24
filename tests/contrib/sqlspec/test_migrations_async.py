@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from civi_py.contrib.sqlspec.migrations import (
+from civicrm_py.contrib.sqlspec.migrations import (
     MigrationConfig,
     MigrationResult,
     create_entity_table,

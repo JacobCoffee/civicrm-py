@@ -10,7 +10,7 @@ Install with the Litestar extra:
 
 .. code-block:: bash
 
-   pip install civi-py[litestar]
+   pip install civicrm-py[litestar]
 
 
 Plugin Setup
@@ -24,8 +24,8 @@ Add the plugin to your Litestar application:
 .. code-block:: python
 
    from litestar import Litestar, get
-   from civi_py.core.client import CiviClient
-   from civi_py.contrib.litestar import CiviPlugin
+   from civicrm_py.core.client import CiviClient
+   from civicrm_py.contrib.litestar import CiviPlugin
 
 
    @get("/contacts")
@@ -52,7 +52,7 @@ Customize the plugin behavior with ``CiviPluginConfig``:
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
 
    config = CiviPluginConfig(
        api_prefix="/api/v1/civi",           # CRUD routes prefix
@@ -85,7 +85,7 @@ The plugin provides ``CiviClient`` via Litestar's dependency injection. Declare 
 .. code-block:: python
 
    from litestar import get, post, delete
-   from civi_py.core.client import CiviClient
+   from civicrm_py.core.client import CiviClient
 
 
    @get("/contacts")
@@ -125,7 +125,7 @@ For custom dependency logic:
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar import provide_civi_client, CIVI_CLIENT_STATE_KEY
+   from civicrm_py.contrib.litestar import provide_civi_client, CIVI_CLIENT_STATE_KEY
 
    app = Litestar(
        route_handlers=[...],
@@ -189,7 +189,7 @@ Use the built-in controllers directly:
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar import (
+   from civicrm_py.contrib.litestar import (
        CiviPlugin,
        ContactController,
        ActivityController,
@@ -204,7 +204,7 @@ Create custom controllers:
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import create_entity_controller
+   from civicrm_py.contrib.litestar import create_entity_controller
 
    # Create a controller for a custom entity
    CustomEntityController = create_entity_controller(
@@ -254,7 +254,7 @@ Use the health check function in custom routes:
 .. code-block:: python
 
    from litestar import get
-   from civi_py.contrib.litestar import civi_health_check, HealthCheckResponse
+   from civicrm_py.contrib.litestar import civi_health_check, HealthCheckResponse
 
 
    @get("/my-health")
@@ -272,7 +272,7 @@ Filter DTOs
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import ContactFilterDTO, ActivityFilterDTO
+   from civicrm_py.contrib.litestar import ContactFilterDTO, ActivityFilterDTO
 
    @get("/contacts")
    async def list_contacts(
@@ -287,7 +287,7 @@ Response DTOs
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import (
+   from civicrm_py.contrib.litestar import (
        ContactResponseDTO,
        ActivityResponseDTO,
        ContributionResponseDTO,
@@ -311,7 +311,7 @@ Create/Update DTOs
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import ContactCreateDTO, ContactUpdateDTO
+   from civicrm_py.contrib.litestar import ContactCreateDTO, ContactUpdateDTO
 
    @post("/contacts")
    async def create_contact(
@@ -326,7 +326,7 @@ Pagination DTO
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import PaginationDTO
+   from civicrm_py.contrib.litestar import PaginationDTO
 
    @get("/contacts")
    async def list_contacts(
@@ -352,8 +352,8 @@ Complete Example
 
    from litestar import Litestar, get, post
    from litestar.exceptions import NotFoundException
-   from civi_py.core.client import CiviClient
-   from civi_py.contrib.litestar import (
+   from civicrm_py.core.client import CiviClient
+   from civicrm_py.contrib.litestar import (
        CiviPlugin,
        CiviPluginConfig,
        ContactCreateDTO,
@@ -427,13 +427,13 @@ For fine-grained control over client lifecycle:
 .. code-block:: python
 
    from litestar import Litestar
-   from civi_py.contrib.litestar import (
+   from civicrm_py.contrib.litestar import (
        provide_civi_client,
        cleanup_client,
        CIVI_CLIENT_STATE_KEY,
    )
-   from civi_py.core.client import CiviClient
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.core.client import CiviClient
+   from civicrm_py.core.config import CiviSettings
 
 
    async def on_startup(app: Litestar) -> None:
@@ -471,7 +471,7 @@ Access via:
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import (
+   from civicrm_py.contrib.litestar import (
        ContactController,
        ActivityController,
        DEFAULT_CONTROLLERS,
@@ -607,7 +607,7 @@ Generated stubs provide type-safe entity classes:
 
    from typing import Any
 
-   from civi_py.entities.base import BaseEntity
+   from civicrm_py.entities.base import BaseEntity
 
 
    class Custom_MyEntity(BaseEntity):
@@ -627,7 +627,7 @@ Enable local database caching with the sqlspec integration. This requires the ``
 
 .. code-block:: bash
 
-   pip install 'civi-py[litestar,sqlspec]'
+   pip install 'civicrm-py[litestar,sqlspec]'
 
 Configuration
 ^^^^^^^^^^^^^
@@ -636,9 +636,9 @@ Add SQLSpec configuration to ``CiviPluginConfig``:
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig
 
    config = CiviPluginConfig(
        sqlspec=SQLSpecPluginConfig(
@@ -664,7 +664,7 @@ When ``provide_repositories=True``, repositories are injected automatically:
    from typing import Annotated
    from litestar import get
    from litestar.params import Dependency
-   from civi_py.contrib.sqlspec import ContactRepository
+   from civicrm_py.contrib.sqlspec import ContactRepository
 
    @get("/cached-contacts")
    async def list_cached_contacts(
@@ -713,7 +713,7 @@ Enable workflow automation with the workflows integration. This requires the ``w
 
 .. code-block:: bash
 
-   pip install 'civi-py[litestar,workflows]'
+   pip install 'civicrm-py[litestar,workflows]'
 
 Configuration
 ^^^^^^^^^^^^^
@@ -722,8 +722,8 @@ Add workflow configuration to ``CiviPluginConfig``:
 
 .. code-block:: python
 
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
 
    config = CiviPluginConfig(
        workflows=WorkflowPluginConfig(
@@ -774,7 +774,7 @@ Register custom workflows via the configuration:
 
 .. code-block:: python
 
-   from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+   from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
    config = CiviPluginConfig(
        workflows=WorkflowPluginConfig(
@@ -799,10 +799,10 @@ Use all integrations together:
 .. code-block:: python
 
    from litestar import Litestar, get, post
-   from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-   from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
-   from civi_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig
+   from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+   from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+   from civicrm_py.contrib.litestar.workflows_integration import WorkflowPluginConfig
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig
 
    config = CiviPluginConfig(
        # Health check endpoint

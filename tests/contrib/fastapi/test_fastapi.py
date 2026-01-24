@@ -21,7 +21,7 @@ import respx
 from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
-from civi_py.contrib.fastapi import (
+from civicrm_py.contrib.fastapi import (
     CIVI_CLIENT_STATE_KEY,
     DEFAULT_ENTITIES,
     ActivityCreate,
@@ -47,8 +47,8 @@ from civi_py.contrib.fastapi import (
     create_health_check_router,
     get_civi_client,
 )
-from civi_py.core.client import CiviClient
-from civi_py.core.config import CiviSettings
+from civicrm_py.core.client import CiviClient
+from civicrm_py.core.config import CiviSettings
 
 
 @pytest.fixture

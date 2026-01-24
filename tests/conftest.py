@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from civi_py import CiviClient, CiviSettings
+from civicrm_py import CiviClient, CiviSettings
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator

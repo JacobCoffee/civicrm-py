@@ -7,7 +7,7 @@ Request and response models.
 APIRequest
 ----------
 
-.. autoclass:: civi_py.APIRequest
+.. autoclass:: civicrm_py.APIRequest
    :members:
    :undoc-members:
    :show-inheritance:
@@ -17,7 +17,7 @@ APIRequest
 APIResponse
 -----------
 
-.. autoclass:: civi_py.APIResponse
+.. autoclass:: civicrm_py.APIResponse
    :members:
    :undoc-members:
    :show-inheritance:

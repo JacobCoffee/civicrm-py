@@ -1,7 +1,7 @@
 Core Concepts
 =============
 
-Understand how civi-py works.
+Understand how civicrm-py works.
 
 .. toctree::
    :maxdepth: 2

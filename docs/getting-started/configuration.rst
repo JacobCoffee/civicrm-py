@@ -1,7 +1,7 @@
 Configuration
 =============
 
-civi-py reads configuration from environment variables or accepts parameters directly.
+civicrm-py reads configuration from environment variables or accepts parameters directly.
 
 
 Environment Variables
@@ -49,7 +49,7 @@ Pass settings directly to the client:
 
 .. code-block:: python
 
-   from civi_py import CiviClient
+   from civicrm_py import CiviClient
 
    client = CiviClient(
        base_url="https://example.org/civicrm/ajax/api4",
@@ -63,7 +63,7 @@ Or use a settings object:
 
 .. code-block:: python
 
-   from civi_py import CiviClient, CiviSettings
+   from civicrm_py import CiviClient, CiviSettings
 
    settings = CiviSettings(
        base_url="https://example.org/civicrm/ajax/api4",

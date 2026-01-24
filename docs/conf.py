@@ -1,4 +1,4 @@
-"""Sphinx configuration for civi-py documentation."""
+"""Sphinx configuration for civicrm-py documentation."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-project = "civi-py"
+project = "civicrm-py"
 copyright = f"{datetime.now().year}, Jacob Coffee"
 author = "Jacob Coffee"
 release = "0.1.0"
@@ -103,23 +103,23 @@ suppress_warnings = ["myst.header"]
 
 # HTML
 html_theme = "shibuya"
-html_title = "civi-py"
+html_title = "civicrm-py"
 html_static_path = ["_static"]
 
 html_theme_options = {
     "accent_color": "crimson",
-    "github_url": "https://github.com/JacobCoffee/civi-py",
-    "discussion_url": "https://github.com/JacobCoffee/civi-py/discussions",
+    "github_url": "https://github.com/JacobCoffee/civicrm-py",
+    "discussion_url": "https://github.com/JacobCoffee/civicrm-py/discussions",
     "nav_links": [
         {"title": "CiviCRM", "url": "https://civicrm.org/"},
-        {"title": "PyPI", "url": "https://pypi.org/project/civi-py/"},
+        {"title": "PyPI", "url": "https://pypi.org/project/civicrm-py/"},
     ],
 }
 
 html_context = {
     "source_type": "github",
     "source_user": "JacobCoffee",
-    "source_repo": "civi-py",
+    "source_repo": "civicrm-py",
     "source_version": "main",
     "source_docs_path": "/docs/",
 }

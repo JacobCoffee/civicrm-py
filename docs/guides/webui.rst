@@ -1,7 +1,7 @@
 Web UI Explorer
 ===============
 
-The civi-py Web UI provides an interactive browser for exploring CiviCRM data and
+The civicrm-py Web UI provides an interactive browser for exploring CiviCRM data and
 testing API queries. It integrates seamlessly with both Django and Litestar, offering
 a clean, responsive interface with light and dark theme support.
 
@@ -54,7 +54,7 @@ Create a ``WebUIConfig`` instance to customize the Web UI:
 
 .. code-block:: python
 
-    from civi_py.contrib.django.webui import WebUIConfig
+    from civicrm_py.contrib.django.webui import WebUIConfig
 
     webui_config = WebUIConfig(
         title="CiviCRM Explorer",       # Header title
@@ -129,7 +129,7 @@ Add the shared templates directory to your Django settings:
 .. code-block:: python
 
     # settings.py
-    from civi_py.contrib.django.webui import TEMPLATES_DIR
+    from civicrm_py.contrib.django.webui import TEMPLATES_DIR
 
     TEMPLATES = [
         {
@@ -160,7 +160,7 @@ Include the Web UI URL patterns in your project:
 
     # urls.py
     from django.urls import include, path
-    from civi_py.contrib.django.webui import WebUIConfig, get_urlpatterns
+    from civicrm_py.contrib.django.webui import WebUIConfig, get_urlpatterns
 
     webui_config = WebUIConfig(
         title="My CiviCRM Explorer",
@@ -263,7 +263,7 @@ Configure the Web UI through ``WebUIConfig``:
 
 .. code-block:: python
 
-    from civi_py.contrib.litestar.webui import WebUIConfig
+    from civicrm_py.contrib.litestar.webui import WebUIConfig
 
     webui_config = WebUIConfig(
         title="CiviCRM Explorer",       # Header title
@@ -342,8 +342,8 @@ Enable the Web UI through the CiviPlugin configuration:
 .. code-block:: python
 
     from litestar import Litestar
-    from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig
-    from civi_py.contrib.litestar.webui import WebUIConfig
+    from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig
+    from civicrm_py.contrib.litestar.webui import WebUIConfig
 
     civi_config = CiviPluginConfig(
         enable_webui=True,
@@ -365,8 +365,8 @@ For more control, register the controllers directly:
 .. code-block:: python
 
     from litestar import Litestar
-    from civi_py.contrib.litestar.webui import WebUIConfig, get_webui_controllers
-    from civi_py.contrib.litestar.webui.controllers import get_template_config
+    from civicrm_py.contrib.litestar.webui import WebUIConfig, get_webui_controllers
+    from civicrm_py.contrib.litestar.webui.controllers import get_template_config
 
     webui_config = WebUIConfig(title="My Explorer")
     controllers = get_webui_controllers(webui_config, base_path="/explorer")
@@ -602,7 +602,7 @@ Comparison: Django vs Litestar
 
       .. code-block:: python
 
-          from civi_py.contrib.django.webui import WebUIConfig, get_urlpatterns
+          from civicrm_py.contrib.django.webui import WebUIConfig, get_urlpatterns
 
           urlpatterns = [
               path("explorer/", include(get_urlpatterns(WebUIConfig()))),
@@ -620,6 +620,6 @@ Comparison: Django vs Litestar
 
       .. code-block:: python
 
-          from civi_py.contrib.litestar.webui import WebUIConfig, get_webui_controllers
+          from civicrm_py.contrib.litestar.webui import WebUIConfig, get_webui_controllers
 
           controllers = get_webui_controllers(WebUIConfig(), base_path="/explorer")

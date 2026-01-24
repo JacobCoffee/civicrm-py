@@ -667,7 +667,7 @@ class TestEntityCoverageValidator:
         validator: EntityCoverageValidator,
     ) -> None:
         """Test priority lookup for known entities."""
-        from civi_py.entities.discovery import EntityInfo
+        from civicrm_py.entities.discovery import EntityInfo
 
         contact = EntityInfo(name="Contact", type="primary")
         activity = EntityInfo(name="Activity", type="secondary")
@@ -682,7 +682,7 @@ class TestEntityCoverageValidator:
         validator: EntityCoverageValidator,
     ) -> None:
         """Test priority inference for unknown entities."""
-        from civi_py.entities.discovery import EntityInfo
+        from civicrm_py.entities.discovery import EntityInfo
 
         custom = EntityInfo(name="Custom_MyEntity", type="primary")
         primary = EntityInfo(name="NewPrimaryEntity", type="primary")

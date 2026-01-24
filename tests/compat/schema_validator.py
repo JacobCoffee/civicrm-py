@@ -30,8 +30,8 @@ from typing import TYPE_CHECKING, Any, ClassVar
 import msgspec
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
-    from civi_py.entities.base import BaseEntity
+    from civicrm_py.core.client import CiviClient
+    from civicrm_py.entities.base import BaseEntity
 
 __all__ = [
     "FieldMismatch",
@@ -232,6 +232,16 @@ class TypeMapping:
     }
 
     @classmethod
+    def _check_union_compatibility(cls, api_type: str, args: tuple[type, ...]) -> bool:
+        """Check if any non-None type in a union is compatible with the API type."""
+        non_none_args = [arg for arg in args if arg is not type(None)]
+        if not non_none_args:
+            # Only None types - this is unusual but accept it
+            return True
+        # Check that at least one non-None type is compatible
+        return any(cls.is_compatible(api_type, arg) for arg in non_none_args)
+
+    @classmethod
     def is_compatible(cls, api_type: str, python_type: type | str) -> bool:
         """Check if a Python type is compatible with a CiviCRM API type.
 
@@ -242,6 +252,7 @@ class TypeMapping:
         Returns:
             True if the types are compatible.
         """
+        import types
         import typing
 
         # Handle string type annotations (from __annotations__ fallback)
@@ -249,26 +260,20 @@ class TypeMapping:
             return cls._is_compatible_string(api_type, python_type)
 
         # Handle None type (optional fields) - None alone is always compatible
-        # as it represents optional/nullable fields
         if python_type is type(None):
             return True
 
-        # Handle Union types (e.g., str | None, int | None) and generic types
-        origin = getattr(python_type, "__origin__", None)
-        if origin is not None:
-            # Check for Union types (including Optional from typing.Union)
-            if origin is typing.Union:
-                args = getattr(python_type, "__args__", ())
-                # For Union types, at least one non-None type must be compatible
-                non_none_args = [arg for arg in args if arg is not type(None)]
-                if not non_none_args:
-                    # Only None types - this is unusual but accept it
-                    return True
-                # Check that at least one non-None type is compatible
-                return any(cls.is_compatible(api_type, arg) for arg in non_none_args)
+        # Handle Python 3.10+ union types (e.g., int | None using | operator)
+        if isinstance(python_type, types.UnionType):
+            return cls._check_union_compatibility(api_type, python_type.__args__)
 
+        # Handle typing.Union and generic types
+        origin = getattr(python_type, "__origin__", None)
+        if origin is typing.Union:
+            return cls._check_union_compatibility(api_type, getattr(python_type, "__args__", ()))
+
+        if origin is not None:
             # For generic types like list[int], dict[str, Any], check the origin
-            # origin will be the base type (list, dict, etc.)
             compatible_types = cls.API_TO_PYTHON.get(api_type, ())
             return origin in compatible_types
 
@@ -483,7 +488,7 @@ class SchemaCache:
         Returns:
             Dict mapping entity names to their schema file paths.
         """
-        from civi_py.entities.discovery import EntityDiscovery
+        from civicrm_py.entities.discovery import EntityDiscovery
 
         discovery = EntityDiscovery(client)
         paths: dict[str, Path] = {}
@@ -513,7 +518,7 @@ class SchemaValidator:
     mismatches in field presence, types, and requirements.
 
     Example:
-        >>> from civi_py.entities import Contact
+        >>> from civicrm_py.entities import Contact
         >>> validator = SchemaValidator()
         >>> schema = cache.load_schema("Contact")
         >>> result = validator.validate_entity(Contact, schema)

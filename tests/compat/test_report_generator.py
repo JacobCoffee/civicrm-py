@@ -127,7 +127,7 @@ def sample_aggregate_report(
         action_reports=sample_action_reports,
         field_reports=sample_field_reports,
         civicrm_version="5.74",
-        civi_py_version="0.1.0",
+        civicrm_py_version="0.1.0",
         trends=[
             TrendData(
                 date="2024-01-01",
@@ -367,7 +367,7 @@ class TestAggregateReport:
         assert "entities_total" in summary
         assert "generated_at" in summary
         assert "civicrm_version" in summary
-        assert "civi_py_version" in summary
+        assert "civicrm_py_version" in summary
 
     def test_to_dict(self, sample_aggregate_report: AggregateReport) -> None:
         """Test full dictionary serialization."""

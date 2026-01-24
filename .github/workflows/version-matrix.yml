@@ -126,7 +126,7 @@ jobs:
             --tb=short \
             -m "compat or version_specific" \
             --junitxml=reports/junit-${{ matrix.civicrm-version }}.xml \
-            --cov=src/civi_py \
+            --cov=src/civicrm_py \
             --cov-report=xml:reports/coverage-${{ matrix.civicrm-version }}.xml \
             --cov-report=term-missing
 

@@ -4,7 +4,7 @@
 Contributing
 ============
 
-Thank you for your interest in contributing to civi-py! This section covers
+Thank you for your interest in contributing to civicrm-py! This section covers
 development setup, testing practices, and guidelines for submitting changes.
 
 .. toctree::
@@ -28,8 +28,8 @@ Development Workflow
 .. code-block:: bash
 
     # Clone your fork
-    git clone https://github.com/YOUR_USERNAME/civi-py.git
-    cd civi-py
+    git clone https://github.com/YOUR_USERNAME/civicrm-py.git
+    cd civicrm-py
 
     # Create a virtual environment
     python -m venv .venv
@@ -54,7 +54,7 @@ Development Workflow
 Testing Overview
 ================
 
-civi-py uses pytest for testing with several test categories:
+civicrm-py uses pytest for testing with several test categories:
 
 **Unit Tests** (``tests/unit/``)
     Fast tests that do not require network access. Test individual components
@@ -65,7 +65,7 @@ civi-py uses pytest for testing with several test categories:
     to simulate external dependencies.
 
 **Compatibility Tests** (``tests/compat/``)
-    Tests that verify civi-py works correctly with CiviCRM API. Includes
+    Tests that verify civicrm-py works correctly with CiviCRM API. Includes
     schema validation, coverage tracking, and drift detection. See
     :doc:`compatibility-testing` for details.
 
@@ -85,7 +85,7 @@ Running Tests
     pytest tests/compat/ -v
 
     # Run with coverage
-    pytest --cov=civi_py --cov-report=html
+    pytest --cov=civicrm_py --cov-report=html
 
     # Run a specific test file
     pytest tests/compat/test_schema_validation.py -v
@@ -97,7 +97,7 @@ Running Tests
 Code Style
 ==========
 
-civi-py uses:
+civicrm-py uses:
 
 - **ruff** for linting and formatting
 - **ty** for type checking

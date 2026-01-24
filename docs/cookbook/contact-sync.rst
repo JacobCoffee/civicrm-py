@@ -50,7 +50,7 @@ Import contacts from a CSV file:
 .. code-block:: python
 
    import csv
-   from civi_py import CiviClient
+   from civicrm_py import CiviClient
 
    async def sync_contacts_from_csv(filepath: str):
        async with CiviClient() as client:

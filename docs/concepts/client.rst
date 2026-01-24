@@ -1,7 +1,7 @@
 The Client
 ==========
 
-civi-py provides two client classes for interacting with CiviCRM API v4. Choose based on your codebase.
+civicrm-py provides two client classes for interacting with CiviCRM API v4. Choose based on your codebase.
 
 .. tab-set::
 
@@ -12,7 +12,7 @@ civi-py provides two client classes for interacting with CiviCRM API v4. Choose 
 
       .. code-block:: python
 
-         from civi_py import CiviClient
+         from civicrm_py import CiviClient
 
          async with CiviClient() as client:
              response = await client.get("Contact")
@@ -25,7 +25,7 @@ civi-py provides two client classes for interacting with CiviCRM API v4. Choose 
 
       .. code-block:: python
 
-         from civi_py import SyncCiviClient
+         from civicrm_py import SyncCiviClient
 
          with SyncCiviClient() as client:
              response = client.get("Contact")

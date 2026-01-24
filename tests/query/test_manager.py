@@ -12,11 +12,11 @@ import httpx
 import pytest
 import respx
 
-from civi_py.core.client import CiviClient, SyncCiviClient
-from civi_py.core.config import CiviSettings
-from civi_py.core.context import ClientContext, set_current_client
-from civi_py.core.exceptions import DoesNotExist, MultipleObjectsReturned
-from civi_py.query.manager import EntityManager, ManagerDescriptor, SyncEntityManager
+from civicrm_py.core.client import CiviClient, SyncCiviClient
+from civicrm_py.core.config import CiviSettings
+from civicrm_py.core.context import ClientContext, set_current_client
+from civicrm_py.core.exceptions import DoesNotExist, MultipleObjectsReturned
+from civicrm_py.query.manager import EntityManager, ManagerDescriptor, SyncEntityManager
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Generator
@@ -267,7 +267,7 @@ class TestQuerySetFactoryMethods:
     def test_all_returns_queryset(self, entity_manager: EntityManager[dict[str, Any]]) -> None:
         """Test all() returns a fresh QuerySet."""
         qs = entity_manager.all()
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         assert isinstance(qs, QuerySet)
         assert qs._entity == "Contact"
@@ -1209,7 +1209,7 @@ class TestManagerDescriptor:
             with pytest.raises(RuntimeError, match="No client configured"):
                 _ = Contact.objects
         finally:
-            from civi_py.core.context import reset_current_client
+            from civicrm_py.core.context import reset_current_client
 
             reset_current_client(token)
 

@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # CiviCRM integration
-    "civi_py.contrib.django",
+    "civicrm_py.contrib.django",
 ]
 
 MIDDLEWARE = [
@@ -46,12 +46,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # CiviCRM middleware - adds request.civi_client
-    "civi_py.contrib.django.CiviMiddleware",
+    "civicrm_py.contrib.django.CiviMiddleware",
 ]
 
 ROOT_URLCONF = "civicrm_demo.urls"
 
-from civi_py.contrib.django.webui import TEMPLATES_DIR as WEBUI_TEMPLATES_DIR
+from civicrm_py.contrib.django.webui import TEMPLATES_DIR as WEBUI_TEMPLATES_DIR
 
 # Shared Jinja2 templates directory
 SHARED_TEMPLATES_DIR = BASE_DIR.parent.parent / "shared" / "templates"
@@ -85,7 +85,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 # CiviCRM context processor - adds civi_client to all templates
-                "civi_py.contrib.django.templatetags.civi_tags.civi_context_processor",
+                "civicrm_py.contrib.django.templatetags.civi_tags.civi_context_processor",
             ],
         },
     },
@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # =============================================================================
 # CiviCRM Configuration
 # =============================================================================
-# These settings are used by civi_py.contrib.django
+# These settings are used by civicrm_py.contrib.django
 
 CIVICRM_URL = os.getenv("CIVI_BASE_URL", "http://localhost:8080/civicrm/ajax/api4")
 CIVICRM_API_KEY = os.getenv("CIVI_API_KEY", "")

@@ -30,7 +30,7 @@ The async client:
 .. code-block:: python
 
    import asyncio
-   from civi_py import CiviClient
+   from civicrm_py import CiviClient
 
    async def main():
        async with CiviClient() as client:
@@ -47,7 +47,7 @@ The sync client for traditional code:
 
 .. code-block:: python
 
-   from civi_py import SyncCiviClient
+   from civicrm_py import SyncCiviClient
 
    with SyncCiviClient() as client:
        response = client.get("Contact", limit=10)
@@ -133,7 +133,7 @@ Catch specific exceptions:
 
 .. code-block:: python
 
-   from civi_py import CiviClient, CiviAPIError, CiviConnectionError
+   from civicrm_py import CiviClient, CiviAPIError, CiviConnectionError
 
    async with CiviClient() as client:
        try:

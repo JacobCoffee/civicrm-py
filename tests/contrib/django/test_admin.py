@@ -6,13 +6,13 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from civi_py.contrib.django.admin import (
+from civicrm_py.contrib.django.admin import (
     CiviField,
     CiviOptions,
     CiviQuerySet,
     _check_django_available,
 )
-from civi_py.core.exceptions import CiviAPIError, DoesNotExist
+from civicrm_py.core.exceptions import CiviAPIError, DoesNotExist
 
 
 # Create a mock entity class for testing
@@ -374,7 +374,7 @@ class TestCiviModelAdmin:
 
     def test_import_admin_classes(self) -> None:
         """Test that admin classes can be imported when Django is available."""
-        from civi_py.contrib.django.admin import (
+        from civicrm_py.contrib.django.admin import (
             CiviAdminSite,
             CiviChangeList,
             CiviInlineAdmin,
@@ -399,7 +399,7 @@ class TestRegisterEntityDecorator:
 
     def test_register_entity_sets_entity_class(self) -> None:
         """Test that register_entity sets entity_class on admin."""
-        from civi_py.contrib.django.admin import CiviModelAdmin, register_entity
+        from civicrm_py.contrib.django.admin import CiviModelAdmin, register_entity
 
         @register_entity(MockEntity)  # type: ignore[arg-type]
         class TestAdmin(CiviModelAdmin):
@@ -414,7 +414,7 @@ class TestCiviAdminSite:
 
     def test_init(self) -> None:
         """Test CiviAdminSite initialization."""
-        from civi_py.contrib.django.admin import CiviAdminSite
+        from civicrm_py.contrib.django.admin import CiviAdminSite
 
         site = CiviAdminSite(name="testadmin")
         assert site.name == "testadmin"
@@ -422,7 +422,7 @@ class TestCiviAdminSite:
 
     def test_register_entity(self) -> None:
         """Test registering an entity with the site."""
-        from civi_py.contrib.django.admin import CiviAdminSite, CiviModelAdmin
+        from civicrm_py.contrib.django.admin import CiviAdminSite, CiviModelAdmin
 
         site = CiviAdminSite(name="testadmin2")
 
@@ -435,7 +435,7 @@ class TestCiviAdminSite:
 
     def test_unregister_entity(self) -> None:
         """Test unregistering an entity."""
-        from civi_py.contrib.django.admin import CiviAdminSite, CiviModelAdmin
+        from civicrm_py.contrib.django.admin import CiviAdminSite, CiviModelAdmin
 
         site = CiviAdminSite(name="testadmin3")
 

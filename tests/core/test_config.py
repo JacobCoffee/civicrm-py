@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from civi_py.core.config import (
+from civicrm_py.core.config import (
     CiviSettings,
     clear_settings_cache,
     get_env,

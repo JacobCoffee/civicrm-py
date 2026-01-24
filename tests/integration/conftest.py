@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 import httpx
 import pytest
 
-from civi_py import CiviClient, CiviSettings, SyncCiviClient
+from civicrm_py import CiviClient, CiviSettings, SyncCiviClient
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Generator

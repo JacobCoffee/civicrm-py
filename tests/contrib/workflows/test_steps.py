@@ -11,7 +11,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from civi_py.contrib.workflows import WORKFLOWS_AVAILABLE
+from civicrm_py.contrib.workflows import WORKFLOWS_AVAILABLE
 
 # Skip all tests if workflows dependency is not available
 pytestmark = pytest.mark.skipif(
@@ -54,21 +54,21 @@ class TestCiviFetchStep:
 
     def test_init_requires_entity(self) -> None:
         """Test that entity is required."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         with pytest.raises(ValueError, match="entity is required"):
             CiviFetchStep(name="test", entity="")
 
     def test_init_requires_name(self) -> None:
         """Test that name is required."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         with pytest.raises(ValueError, match="name is required"):
             CiviFetchStep(name="", entity="Contact")
 
     def test_init_sets_default_description(self) -> None:
         """Test that description is auto-generated."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         step = CiviFetchStep(name="test", entity="Contact")
         assert step.description == "Fetch Contact records from CiviCRM"
@@ -80,7 +80,7 @@ class TestCiviFetchStep:
         mock_context: MagicMock,
     ) -> None:
         """Test that execute fetches data and stores in context."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         # Setup mock response
         mock_response = MagicMock()
@@ -112,7 +112,7 @@ class TestCiviFetchStep:
         mock_context: MagicMock,
     ) -> None:
         """Test that execute raises error if no client in context."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
 
         # Remove client from context
         mock_context._data.pop("civi_client")
@@ -128,14 +128,14 @@ class TestCiviMutateStep:
 
     def test_init_requires_entity(self) -> None:
         """Test that entity is required."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         with pytest.raises(ValueError, match="entity is required"):
             CiviMutateStep(name="test", entity="")
 
     def test_init_validates_action(self) -> None:
         """Test that action is validated."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         with pytest.raises(ValueError, match="action must be"):
             CiviMutateStep(name="test", entity="Contact", action="invalid")  # type: ignore[arg-type]
@@ -147,7 +147,7 @@ class TestCiviMutateStep:
         mock_context: MagicMock,
     ) -> None:
         """Test create action."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         # Setup mock response
         mock_response = MagicMock()
@@ -177,7 +177,7 @@ class TestCiviMutateStep:
         mock_context: MagicMock,
     ) -> None:
         """Test that update requires id in records."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep, CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep, CiviWorkflowError
 
         # Add data without id
         mock_context._data["contacts"] = [{"display_name": "Test"}]
@@ -199,7 +199,7 @@ class TestCiviMutateStep:
         mock_context: MagicMock,
     ) -> None:
         """Test delete action."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         mock_client.delete.return_value = MagicMock()
 
@@ -224,14 +224,14 @@ class TestCiviApprovalStep:
 
     def test_init_requires_name(self) -> None:
         """Test that name is required."""
-        from civi_py.contrib.workflows.steps import CiviApprovalStep
+        from civicrm_py.contrib.workflows.steps import CiviApprovalStep
 
         with pytest.raises(ValueError, match="name is required"):
             CiviApprovalStep(name="")
 
     def test_init_creates_form_schema(self) -> None:
         """Test that form schema is created."""
-        from civi_py.contrib.workflows.steps import CiviApprovalStep
+        from civicrm_py.contrib.workflows.steps import CiviApprovalStep
 
         step = CiviApprovalStep(
             name="review",
@@ -246,7 +246,7 @@ class TestCiviApprovalStep:
 
     def test_form_schema_requires_comments_on_reject(self) -> None:
         """Test conditional comments requirement."""
-        from civi_py.contrib.workflows.steps import CiviApprovalStep
+        from civicrm_py.contrib.workflows.steps import CiviApprovalStep
 
         step = CiviApprovalStep(
             name="review",
@@ -257,7 +257,7 @@ class TestCiviApprovalStep:
 
     def test_get_review_data_filters_fields(self) -> None:
         """Test that get_review_data filters to show_fields."""
-        from civi_py.contrib.workflows.steps import CiviApprovalStep
+        from civicrm_py.contrib.workflows.steps import CiviApprovalStep
 
         step = CiviApprovalStep(
             name="review",
@@ -280,14 +280,14 @@ class TestCiviSyncStep:
 
     def test_init_requires_entity(self) -> None:
         """Test that entity is required."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         with pytest.raises(ValueError, match="entity is required"):
             CiviSyncStep(name="test", entity="")
 
     def test_init_validates_direction(self) -> None:
         """Test that direction is validated."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         with pytest.raises(ValueError, match="direction must be"):
             CiviSyncStep(name="test", entity="Contact", direction="invalid")  # type: ignore[arg-type]
@@ -299,7 +299,7 @@ class TestCiviSyncStep:
         mock_context: MagicMock,
     ) -> None:
         """Test syncing data from CiviCRM."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         # Setup mock response
         mock_response = MagicMock()
@@ -327,7 +327,7 @@ class TestCiviWorkflowError:
 
     def test_error_attributes(self) -> None:
         """Test error has correct attributes."""
-        from civi_py.contrib.workflows.steps import CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviWorkflowError
 
         error = CiviWorkflowError(
             "Test error",
@@ -345,7 +345,7 @@ class TestFilterConversion:
 
     def test_simple_equality_filter(self) -> None:
         """Test simple equality filters."""
-        from civi_py.contrib.workflows.steps import _convert_filters_to_where
+        from civicrm_py.contrib.workflows.steps import _convert_filters_to_where
 
         filters = {"is_deleted": False, "contact_type": "Individual"}
         result = _convert_filters_to_where(filters)
@@ -355,7 +355,7 @@ class TestFilterConversion:
 
     def test_operator_filter(self) -> None:
         """Test operator-based filters."""
-        from civi_py.contrib.workflows.steps import _convert_filters_to_where
+        from civicrm_py.contrib.workflows.steps import _convert_filters_to_where
 
         filters = {"age": {">=": 18, "<=": 65}}
         result = _convert_filters_to_where(filters)

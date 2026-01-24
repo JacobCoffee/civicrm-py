@@ -1,7 +1,7 @@
 Custom Framework Integration
 ============================
 
-This guide shows you how to build civi-py integrations for frameworks that do not have dedicated support. You will learn the integration architecture, implement a complete custom integration, test it properly, and optionally publish it as a community package.
+This guide shows you how to build civicrm-py integrations for frameworks that do not have dedicated support. You will learn the integration architecture, implement a complete custom integration, test it properly, and optionally publish it as a community package.
 
 
 When to Build a Custom Integration
@@ -22,12 +22,12 @@ The generic middleware works well for simple use cases:
 .. code-block:: python
 
    # ASGI middleware works with Starlette, Quart, Blacksheep, etc.
-   from civi_py.contrib.asgi import CiviASGIMiddleware
+   from civicrm_py.contrib.asgi import CiviASGIMiddleware
 
    app = CiviASGIMiddleware(your_asgi_app)
 
    # WSGI middleware works with Bottle, Falcon, Werkzeug, etc.
-   from civi_py.contrib.wsgi import CiviWSGIMiddleware
+   from civicrm_py.contrib.wsgi import CiviWSGIMiddleware
 
    app = CiviWSGIMiddleware(your_wsgi_app)
 
@@ -43,18 +43,18 @@ A custom integration provides significant benefits:
 - **Lifecycle Management**: Hook into framework startup and shutdown events properly
 - **Testing Support**: Provide test utilities that work with framework testing patterns
 
-The effort pays off when you use civi-py extensively within a specific framework.
+The effort pays off when you use civicrm-py extensively within a specific framework.
 
 
 Integration Architecture
 ------------------------
 
-The civi-py integration system consists of three layers: protocols that define the interface, a base class that provides common functionality, and a registry for discovery.
+The civicrm-py integration system consists of three layers: protocols that define the interface, a base class that provides common functionality, and a registry for discovery.
 
 Protocols
 ^^^^^^^^^
 
-The ``civi_py.contrib.base`` module defines three protocols that integrations can implement.
+The ``civicrm_py.contrib.base`` module defines three protocols that integrations can implement.
 
 **IntegrationProtocol** defines core client access:
 
@@ -121,11 +121,11 @@ The ``civi_py.contrib.base`` module defines three protocols that integrations ca
 BaseIntegration Class
 ^^^^^^^^^^^^^^^^^^^^^
 
-The ``BaseIntegration`` class in ``civi_py.contrib.integration`` provides a complete implementation you can extend:
+The ``BaseIntegration`` class in ``civicrm_py.contrib.integration`` provides a complete implementation you can extend:
 
 .. code-block:: python
 
-   from civi_py.contrib.integration import BaseIntegration
+   from civicrm_py.contrib.integration import BaseIntegration
 
    class MyFrameworkIntegration(BaseIntegration):
        """Integration for MyFramework."""
@@ -172,14 +172,14 @@ Key methods from BaseIntegration:
 Integration Registry
 ^^^^^^^^^^^^^^^^^^^^
 
-The registry in ``civi_py.contrib.registry`` enables automatic discovery of integrations.
+The registry in ``civicrm_py.contrib.registry`` enables automatic discovery of integrations.
 
 Register your integration:
 
 .. code-block:: python
 
-   from civi_py.contrib.registry import register_integration
-   from civi_py.contrib.integration import BaseIntegration
+   from civicrm_py.contrib.registry import register_integration
+   from civicrm_py.contrib.integration import BaseIntegration
 
    @register_integration("myframework")
    class MyFrameworkIntegration(BaseIntegration):
@@ -190,7 +190,7 @@ Discover and use integrations:
 
 .. code-block:: python
 
-   from civi_py.contrib.registry import (
+   from civicrm_py.contrib.registry import (
        discover_integrations,
        get_integration,
        list_integrations,
@@ -228,12 +228,12 @@ Start by extending BaseIntegration and adding framework specific configuration:
    from dataclasses import dataclass, field
    from typing import TYPE_CHECKING
 
-   from civi_py.contrib.integration import BaseIntegration
-   from civi_py.contrib.registry import register_integration
+   from civicrm_py.contrib.integration import BaseIntegration
+   from civicrm_py.contrib.registry import register_integration
 
    if TYPE_CHECKING:
-       from civi_py.core.client import CiviClient
-       from civi_py.core.config import CiviSettings
+       from civicrm_py.core.client import CiviClient
+       from civicrm_py.core.config import CiviSettings
 
    logger = logging.getLogger(__name__)
 
@@ -304,7 +304,7 @@ Start by extending BaseIntegration and adding framework specific configuration:
            self._app = None
 
            if self._config.debug:
-               logging.getLogger("civi_py").setLevel(logging.DEBUG)
+               logging.getLogger("civicrm_py").setLevel(logging.DEBUG)
 
        @property
        def config(self) -> CiviRocketConfig:
@@ -462,7 +462,7 @@ Support loading settings from framework configuration:
                >>> civi = CiviRocket.from_rocket_config(app)
                >>> civi.init_app(app)
            """
-           from civi_py.core.config import CiviSettings
+           from civicrm_py.core.config import CiviSettings
 
            settings = CiviSettings(
                base_url=app.config["CIVI_BASE_URL"],
@@ -545,7 +545,7 @@ Modify your plugin class to implement both protocols:
        from litestar import Litestar
        from litestar.config.app import AppConfig
 
-   from civi_py.contrib.integration import BaseIntegration
+   from civicrm_py.contrib.integration import BaseIntegration
 
 
    class CiviLitestarPlugin(BaseIntegration, InitPluginProtocol, CLIPluginProtocol):
@@ -799,7 +799,7 @@ Test the integration class in isolation:
    import pytest
    from unittest.mock import AsyncMock, MagicMock, patch
 
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.core.config import CiviSettings
    from civi_rocket import CiviRocket, CiviRocketConfig
 
 
@@ -908,7 +908,7 @@ Test the integration with a mock framework:
    import pytest
    from unittest.mock import AsyncMock, MagicMock
 
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.core.config import CiviSettings
    from civi_rocket import CiviRocket, CiviRocketConfig, get_civi_client
 
 
@@ -1044,7 +1044,7 @@ If your framework supports test clients, write end to end tests:
    # Assuming Rocket provides a test client
    # from rocket.testing import TestClient
 
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.core.config import CiviSettings
    from civi_rocket import CiviRocket, CiviRocketConfig
 
 
@@ -1153,7 +1153,7 @@ Configure your package with proper entry points for auto discovery:
        "Topic :: Software Development :: Libraries :: Python Modules",
    ]
    dependencies = [
-       "civi-py>=1.0.0",
+       "civicrm-py>=1.0.0",
        "rocket>=2.0.0",
    ]
 
@@ -1164,7 +1164,7 @@ Configure your package with proper entry points for auto discovery:
        "pytest-cov>=4.0",
    ]
 
-   [project.entry-points."civi_py.integrations"]
+   [project.entry-points."civicrm_py.integrations"]
    rocket = "civi_rocket:CiviRocket"
 
    [build-system]
@@ -1174,11 +1174,11 @@ Configure your package with proper entry points for auto discovery:
    [tool.hatch.build.targets.wheel]
    packages = ["src/civi_rocket"]
 
-The ``[project.entry-points."civi_py.integrations"]`` section enables automatic discovery. When users install your package, they can discover it with:
+The ``[project.entry-points."civicrm_py.integrations"]`` section enables automatic discovery. When users install your package, they can discover it with:
 
 .. code-block:: python
 
-   from civi_py.contrib.registry import discover_integrations, get_integration
+   from civicrm_py.contrib.registry import discover_integrations, get_integration
 
    discover_integrations()
    RocketIntegration = get_integration("rocket")
@@ -1228,7 +1228,7 @@ Include a clear README with installation and usage instructions:
    Or configure in code:
 
    ```python
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.core.config import CiviSettings
    from civi_rocket import CiviRocket, CiviRocketConfig
 
    settings = CiviSettings(
@@ -1263,8 +1263,8 @@ Basic Usage
 
 .. code-block:: python
 
-   from civi_py.contrib.asgi import CiviASGIMiddleware
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.contrib.asgi import CiviASGIMiddleware
+   from civicrm_py.core.config import CiviSettings
 
    settings = CiviSettings(
        base_url="https://example.org/civicrm/ajax/api4",
@@ -1288,7 +1288,7 @@ Starlette Example
    from starlette.applications import Starlette
    from starlette.routing import Route
    from starlette.responses import JSONResponse
-   from civi_py.contrib.asgi import CiviASGIMiddleware
+   from civicrm_py.contrib.asgi import CiviASGIMiddleware
 
 
    async def list_contacts(request):
@@ -1358,7 +1358,7 @@ Using the helper function:
 
 .. code-block:: python
 
-   from civi_py.contrib.asgi import get_civi_client
+   from civicrm_py.contrib.asgi import get_civi_client
 
 
    async def my_handler(scope, receive, send):
@@ -1395,8 +1395,8 @@ Basic Usage
 
 .. code-block:: python
 
-   from civi_py.contrib.wsgi import CiviWSGIMiddleware
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.contrib.wsgi import CiviWSGIMiddleware
+   from civicrm_py.core.config import CiviSettings
 
    settings = CiviSettings(
        base_url="https://example.org/civicrm/ajax/api4",
@@ -1418,7 +1418,7 @@ Bottle Example
 .. code-block:: python
 
    from bottle import Bottle, request, response
-   from civi_py.contrib.wsgi import CiviWSGIMiddleware
+   from civicrm_py.contrib.wsgi import CiviWSGIMiddleware
 
    app = Bottle()
 
@@ -1456,7 +1456,7 @@ Falcon Example
 .. code-block:: python
 
    import falcon
-   from civi_py.contrib.wsgi import CiviWSGIMiddleware
+   from civicrm_py.contrib.wsgi import CiviWSGIMiddleware
 
 
    class ContactResource:
@@ -1498,7 +1498,7 @@ The client is stored in the WSGI environ dictionary:
    client = environ["civi.client"]
 
    # Using helper function
-   from civi_py.contrib.wsgi import get_client_from_environ
+   from civicrm_py.contrib.wsgi import get_client_from_environ
 
    client = get_client_from_environ(environ)
 
@@ -1571,7 +1571,7 @@ All middleware and integrations use these environment variables when settings ar
 Summary
 -------
 
-Building a custom framework integration provides idiomatic access to civi-py within your framework of choice. The integration architecture supports three levels of complexity:
+Building a custom framework integration provides idiomatic access to civicrm-py within your framework of choice. The integration architecture supports three levels of complexity:
 
 1. **Quick start**: Use ``CiviASGIMiddleware`` or ``CiviWSGIMiddleware`` for basic client injection
 2. **Custom integration**: Extend ``BaseIntegration`` for framework specific features like dependency injection and CLI commands
@@ -1584,13 +1584,13 @@ The key steps for a custom integration are:
 3. Register dependency providers for clean handler signatures
 4. Add optional features like health checks and CLI commands
 5. Write comprehensive tests at unit, integration, and E2E levels
-6. Publish with the ``civi_py.integrations`` entry point for discovery
+6. Publish with the ``civicrm_py.integrations`` entry point for discovery
 
 
 See Also
 --------
 
-* :doc:`/getting-started/quickstart` for basic civi-py usage
+* :doc:`/getting-started/quickstart` for basic civicrm-py usage
 * :doc:`/concepts/client` for CiviClient API details
 * :doc:`/api/config` for CiviSettings reference
 * :doc:`django` for a Tier 1 integration example

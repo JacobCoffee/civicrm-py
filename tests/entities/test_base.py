@@ -24,10 +24,10 @@ from unittest.mock import AsyncMock, Mock
 import msgspec
 import pytest
 
-from civi_py.core.exceptions import CiviError, CiviNotFoundError
-from civi_py.core.serialization import APIResponse
-from civi_py.entities.activity import Activity
-from civi_py.entities.base import (
+from civicrm_py.core.exceptions import CiviError, CiviNotFoundError
+from civicrm_py.core.serialization import APIResponse
+from civicrm_py.entities.activity import Activity
+from civicrm_py.entities.base import (
     BaseEntity,
     EntityMeta,
     EntityState,
@@ -35,8 +35,8 @@ from civi_py.entities.base import (
     entity_from_dict,
     get_entity_name,
 )
-from civi_py.entities.contact import Contact, Household, Individual, Organization
-from civi_py.entities.contribution import Contribution
+from civicrm_py.entities.contact import Contact, Household, Individual, Organization
+from civicrm_py.entities.contribution import Contribution
 
 # =============================================================================
 # Test Fixtures and Helper Entities
@@ -96,7 +96,7 @@ def simple_entity() -> SimpleEntity:
 def entity_with_client(mock_client: Mock) -> SimpleEntity:
     """Create a SimpleEntity with a mock client bound."""
     entity = SimpleEntity(id=1, name="Test", value=42)
-    object.__setattr__(entity, "_client", mock_client)
+    msgspec.Struct.__setattr__(entity, "_client", mock_client)
     return entity
 
 
@@ -771,7 +771,7 @@ class TestBaseEntitySave:
         )
 
         entity = SimpleEntity(name="New", value=42)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         result = await entity.save()
 
@@ -789,7 +789,7 @@ class TestBaseEntitySave:
         )
 
         entity = SimpleEntity(id=1, name="Original")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
         entity.name = "Updated"
 
         result = await entity.save()
@@ -807,7 +807,7 @@ class TestBaseEntitySave:
         )
 
         entity = SimpleEntity(name="New")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         await entity.save()
 
@@ -824,7 +824,7 @@ class TestBaseEntitySave:
         )
 
         entity = SimpleEntity(name="New")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         await entity.save()
 
@@ -878,7 +878,7 @@ class TestBaseEntityDelete:
         mock_client.delete.return_value = APIResponse(values=[], count=0)
 
         entity = SimpleEntity(id=42, name="To Delete")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         await entity.delete()
 
@@ -890,7 +890,7 @@ class TestBaseEntityDelete:
         mock_client.delete.return_value = APIResponse(values=[], count=0)
 
         entity = SimpleEntity(id=42, name="To Delete")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         await entity.delete()
 
@@ -900,7 +900,7 @@ class TestBaseEntityDelete:
     async def test_delete_without_id_raises(self, mock_client: Mock) -> None:
         """Test delete() on unsaved entity raises CiviError."""
         entity = SimpleEntity(name="No ID")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         with pytest.raises(CiviError, match="Cannot delete entity without ID"):
             await entity.delete()
@@ -942,7 +942,7 @@ class TestBaseEntityRefresh:
         )
 
         entity = SimpleEntity(id=1, name="Original", value=0)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         await entity.refresh()
 
@@ -958,7 +958,7 @@ class TestBaseEntityRefresh:
         )
 
         entity = SimpleEntity(id=1, name="Original")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
         entity.name = "Modified"
 
         assert entity.is_dirty is True
@@ -972,7 +972,7 @@ class TestBaseEntityRefresh:
     async def test_refresh_without_id_raises(self, mock_client: Mock) -> None:
         """Test refresh() on unsaved entity raises CiviError."""
         entity = SimpleEntity(name="No ID")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         with pytest.raises(CiviError, match="Cannot refresh entity without ID"):
             await entity.refresh()
@@ -983,7 +983,7 @@ class TestBaseEntityRefresh:
         mock_client.get.return_value = APIResponse(values=[], count=0)
 
         entity = SimpleEntity(id=999, name="Missing")
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         with pytest.raises(CiviNotFoundError):
             await entity.refresh()
@@ -1396,7 +1396,7 @@ class TestEntityIntegration:
 
         # 1. Create new entity
         entity = SimpleEntity(name="Created", value=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         assert entity.is_new is True
 
@@ -1544,7 +1544,7 @@ class TestEdgeCases:
             id: int | None = None
 
         empty_entity = EmptyNameEntity(id=1)
-        object.__setattr__(empty_entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(empty_entity, "_client", mock_client)
 
         with pytest.raises(CiviError, match="has no __entity_name__ defined"):
             await empty_entity.save()

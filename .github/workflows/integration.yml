@@ -22,7 +22,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/civi_py/**'
+      - 'src/civicrm_py/**'
       - 'tests/integration/**'
       - 'docker-compose.yml'
       - '.github/workflows/integration.yml'
@@ -31,7 +31,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'src/civi_py/**'
+      - 'src/civicrm_py/**'
       - 'tests/integration/**'
       - 'docker-compose.yml'
       - '.github/workflows/integration.yml'
@@ -111,8 +111,9 @@ jobs:
           echo "Starting CiviCRM container (version: ${{ env.CIVICRM_VERSION }})..."
           docker run -d \
             --name civi-web \
-            --network host \
-            -e CIVICRM_DB_HOST=127.0.0.1 \
+            --add-host=host.docker.internal:host-gateway \
+            -p 8080:80 \
+            -e CIVICRM_DB_HOST=host.docker.internal \
             -e CIVICRM_DB_PORT=3307 \
             -e CIVICRM_DB_NAME=civicrm \
             -e CIVICRM_DB_USER=civicrm \

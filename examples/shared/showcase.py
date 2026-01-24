@@ -9,10 +9,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from civi_py.core.exceptions import CiviConnectionError, CiviError
+from civicrm_py.core.exceptions import CiviConnectionError, CiviError
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient, SyncCiviClient
+    from civicrm_py.core.client import CiviClient, SyncCiviClient
 
 
 @dataclass

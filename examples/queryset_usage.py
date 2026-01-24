@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import asyncio
 
-from civi_py.core.client import CiviClient
-from civi_py.query.queryset import QuerySet
+from civicrm_py.core.client import CiviClient
+from civicrm_py.query.queryset import QuerySet
 
 
 async def main() -> None:

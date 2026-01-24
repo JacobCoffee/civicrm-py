@@ -44,7 +44,7 @@ class TestSQLSpecPluginConfig:
 
     def test_default_values(self) -> None:
         """Test default configuration values."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
 
         config = SQLSpecPluginConfig()
 
@@ -57,7 +57,7 @@ class TestSQLSpecPluginConfig:
 
     def test_custom_values(self) -> None:
         """Test custom configuration values."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
 
         config = SQLSpecPluginConfig(
             enabled=False,  # Keep disabled for testing without sqlspec
@@ -76,7 +76,7 @@ class TestSQLSpecPluginConfig:
     @pytest.mark.skipif(HAS_SQLSPEC, reason="Test requires sqlspec NOT installed")
     def test_enabled_without_sqlspec_raises(self) -> None:
         """Test that enabling without sqlspec raises ImportError."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
 
         with pytest.raises(ImportError, match="sqlspec is not installed"):
             SQLSpecPluginConfig(enabled=True)
@@ -92,7 +92,7 @@ class TestSQLSpecAvailable:
 
     def test_sqlspec_available_detection(self) -> None:
         """Test that SQLSPEC_AVAILABLE is correctly detected."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSPEC_AVAILABLE
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSPEC_AVAILABLE
 
         # Should match our local detection
         assert SQLSPEC_AVAILABLE == SQLSPEC_AVAILABLE  # Tautology, but tests the import
@@ -108,7 +108,7 @@ class TestSQLSpecState:
 
     def test_state_creation(self) -> None:
         """Test SQLSpecState creation."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecState
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecState
 
         # Create a mock config
         mock_config = MagicMock()
@@ -121,7 +121,7 @@ class TestSQLSpecState:
 
     def test_state_with_repositories(self) -> None:
         """Test SQLSpecState with repositories."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecState
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecState
 
         mock_config = MagicMock()
         mock_repo = MagicMock()
@@ -147,7 +147,7 @@ class TestCorrelationIDUtilities:
 
     def test_generate_correlation_id(self) -> None:
         """Test correlation ID generation."""
-        from civi_py.contrib.litestar.sqlspec_integration import generate_correlation_id
+        from civicrm_py.contrib.litestar.sqlspec_integration import generate_correlation_id
 
         correlation_id = generate_correlation_id()
 
@@ -158,7 +158,7 @@ class TestCorrelationIDUtilities:
 
     def test_generate_unique_correlation_ids(self) -> None:
         """Test that generated correlation IDs are unique."""
-        from civi_py.contrib.litestar.sqlspec_integration import generate_correlation_id
+        from civicrm_py.contrib.litestar.sqlspec_integration import generate_correlation_id
 
         ids = [generate_correlation_id() for _ in range(100)]
 
@@ -167,7 +167,7 @@ class TestCorrelationIDUtilities:
 
     def test_get_set_correlation_id(self) -> None:
         """Test getting and setting correlation ID."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             CORRELATION_ID_KEY,
             get_correlation_id,
             set_correlation_id,
@@ -200,7 +200,7 @@ class TestDependencyProviders:
 
     def test_get_sqlspec_dependency_providers(self) -> None:
         """Test get_sqlspec_dependency_providers returns correct mappings."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             get_sqlspec_dependency_providers,
         )
 
@@ -219,7 +219,7 @@ class TestDependencyProviders:
 
     async def test_provide_contact_repository_missing_state(self) -> None:
         """Test RuntimeError when SQLSpec state is missing."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             provide_contact_repository,
         )
 
@@ -235,7 +235,7 @@ class TestDependencyProviders:
 
     async def test_provide_activity_repository_missing_state(self) -> None:
         """Test RuntimeError when SQLSpec state is missing."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             provide_activity_repository,
         )
 
@@ -250,7 +250,7 @@ class TestDependencyProviders:
 
     async def test_provide_contribution_repository_missing_state(self) -> None:
         """Test RuntimeError when SQLSpec state is missing."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             provide_contribution_repository,
         )
 
@@ -265,7 +265,7 @@ class TestDependencyProviders:
 
     async def test_provide_event_repository_missing_state(self) -> None:
         """Test RuntimeError when SQLSpec state is missing."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             provide_event_repository,
         )
 
@@ -280,7 +280,7 @@ class TestDependencyProviders:
 
     async def test_provide_membership_repository_missing_state(self) -> None:
         """Test RuntimeError when SQLSpec state is missing."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             provide_membership_repository,
         )
 
@@ -304,7 +304,7 @@ class TestSQLSpecPlugin:
 
     def test_plugin_default_config(self) -> None:
         """Test plugin with default config (disabled)."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPlugin
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPlugin
 
         plugin = SQLSpecPlugin()
 
@@ -312,7 +312,7 @@ class TestSQLSpecPlugin:
 
     def test_plugin_config_property(self) -> None:
         """Test plugin config property."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             SQLSpecPlugin,
             SQLSpecPluginConfig,
         )
@@ -324,7 +324,7 @@ class TestSQLSpecPlugin:
 
     def test_plugin_on_app_init_disabled(self) -> None:
         """Test on_app_init does nothing when disabled."""
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPlugin
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPlugin
 
         plugin = SQLSpecPlugin()
 
@@ -352,30 +352,40 @@ class TestLifecycleHandlers:
 
     async def test_cleanup_sqlspec_no_state(self) -> None:
         """Test cleanup_sqlspec handles missing state gracefully."""
-        from civi_py.contrib.litestar.sqlspec_integration import cleanup_sqlspec
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
+            SQLSPEC_STATE_KEY,
+            cleanup_sqlspec,
+        )
 
-        # Create mock app without SQLSpec state
+        # Create mock app without SQLSpec state using spec to restrict attributes
         mock_app = MagicMock()
-        mock_app.state = MagicMock()
-        mock_app.state.__getattr__ = MagicMock(return_value=None)
+        mock_app.state = MagicMock(spec=[])  # Empty spec means hasattr returns False
+        # Explicitly delete the attribute if it exists
+        if hasattr(mock_app.state, SQLSPEC_STATE_KEY):
+            delattr(mock_app.state, SQLSPEC_STATE_KEY)
 
         # Should not raise
         await cleanup_sqlspec(mock_app)
 
     async def test_initialize_sqlspec_disabled(self) -> None:
         """Test initialize_sqlspec does nothing when disabled."""
-        from civi_py.contrib.litestar.sqlspec_integration import (
+        from civicrm_py.contrib.litestar.sqlspec_integration import (
             SQLSPEC_STATE_KEY,
             SQLSpecPluginConfig,
             initialize_sqlspec,
         )
 
+        # Use a real object to track state changes
+        class MockState:
+            pass
+
         mock_app = MagicMock()
+        mock_app.state = MockState()  # Use real object, not MagicMock
         config = SQLSpecPluginConfig(enabled=False)
 
         await initialize_sqlspec(mock_app, config)
 
-        # Should not set state
+        # Should not set state - now hasattr works correctly
         assert not hasattr(mock_app.state, SQLSPEC_STATE_KEY)
 
 
@@ -389,7 +399,7 @@ class TestCiviPluginConfigSQLSpecIntegration:
 
     def test_civi_plugin_config_sqlspec_none_by_default(self) -> None:
         """Test CiviPluginConfig has sqlspec=None by default."""
-        from civi_py.contrib.litestar import CiviPluginConfig
+        from civicrm_py.contrib.litestar import CiviPluginConfig
 
         config = CiviPluginConfig()
 
@@ -397,8 +407,8 @@ class TestCiviPluginConfigSQLSpecIntegration:
 
     def test_civi_plugin_config_with_sqlspec(self) -> None:
         """Test CiviPluginConfig accepts SQLSpecPluginConfig."""
-        from civi_py.contrib.litestar import CiviPluginConfig
-        from civi_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
+        from civicrm_py.contrib.litestar import CiviPluginConfig
+        from civicrm_py.contrib.litestar.sqlspec_integration import SQLSpecPluginConfig
 
         sqlspec_config = SQLSpecPluginConfig(enabled=False)
         config = CiviPluginConfig(sqlspec=sqlspec_config)
@@ -417,7 +427,7 @@ class TestModuleExports:
 
     def test_all_exports_available(self) -> None:
         """Test all __all__ exports are importable."""
-        from civi_py.contrib.litestar import (
+        from civicrm_py.contrib.litestar import (
             CORRELATION_ID_KEY,
             SQLSPEC_AVAILABLE,
             SQLSPEC_STATE_KEY,

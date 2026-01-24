@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from civi_py.core.config import CiviSettings
-from civi_py.core.exceptions import CiviConfigError, CiviIntegrationError
+from civicrm_py.core.config import CiviSettings
+from civicrm_py.core.exceptions import CiviConfigError, CiviIntegrationError
 
 
 class MockRequest:
@@ -32,7 +32,7 @@ class TestCiviMiddleware:
     def setup_method(self) -> None:
         """Reset module-level state before each test."""
         # Clear thread-local storage
-        from civi_py.contrib.django import middleware
+        from civicrm_py.contrib.django import middleware
 
         if hasattr(middleware._local, "client"):
             delattr(middleware._local, "client")
@@ -42,7 +42,7 @@ class TestCiviMiddleware:
 
     def test_init(self) -> None:
         """Test middleware initialization."""
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         def get_response(request: Any) -> MockResponse:
             return MockResponse()
@@ -60,7 +60,7 @@ class TestCiviMiddleware:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         def get_response(request: Any) -> MockResponse:
             # Client should be attached before view is called
@@ -69,7 +69,7 @@ class TestCiviMiddleware:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
             middleware = CiviMiddleware(get_response)
@@ -87,7 +87,7 @@ class TestCiviMiddleware:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         clients: list[Any] = []
 
@@ -96,7 +96,7 @@ class TestCiviMiddleware:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
             middleware = CiviMiddleware(get_response)
@@ -115,14 +115,14 @@ class TestCiviMiddleware:
 
     def test_sync_call_graceful_degradation_on_config_error(self) -> None:
         """Test that sync call handles missing configuration gracefully."""
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         def get_response(request: Any) -> MockResponse:
             # Client should NOT be attached when config is missing
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             side_effect=CiviConfigError("CIVICRM_URL is required"),
         ):
             middleware = CiviMiddleware(get_response)
@@ -137,13 +137,13 @@ class TestCiviMiddleware:
 
     def test_sync_call_graceful_degradation_on_integration_error(self) -> None:
         """Test that sync call handles Django not configured gracefully."""
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         def get_response(request: Any) -> MockResponse:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             side_effect=CiviIntegrationError("Django is not installed"),
         ):
             middleware = CiviMiddleware(get_response)
@@ -161,7 +161,7 @@ class TestCiviMiddleware:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         def get_response(request: Any) -> MockResponse:
             return MockResponse()
@@ -174,7 +174,7 @@ class TestCiviMiddleware:
             return mock_settings
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             side_effect=mock_get_settings,
         ):
             middleware = CiviMiddleware(get_response)
@@ -194,7 +194,7 @@ class TestCiviMiddlewareAsync:
 
     def setup_method(self) -> None:
         """Reset module-level state before each test."""
-        from civi_py.contrib.django import middleware
+        from civicrm_py.contrib.django import middleware
 
         if hasattr(middleware._local, "client"):
             delattr(middleware._local, "client")
@@ -208,7 +208,7 @@ class TestCiviMiddlewareAsync:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         async def get_response(request: Any) -> MockResponse:
             assert hasattr(request, "civi_client")
@@ -216,7 +216,7 @@ class TestCiviMiddlewareAsync:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
             middleware = CiviMiddleware(get_response)
@@ -235,7 +235,7 @@ class TestCiviMiddlewareAsync:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         clients: list[Any] = []
 
@@ -244,7 +244,7 @@ class TestCiviMiddlewareAsync:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
             middleware = CiviMiddleware(get_response)
@@ -260,13 +260,13 @@ class TestCiviMiddlewareAsync:
     @pytest.mark.asyncio
     async def test_async_call_graceful_degradation(self) -> None:
         """Test that async call handles errors gracefully."""
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         async def get_response(request: Any) -> MockResponse:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             side_effect=CiviConfigError("Not configured"),
         ):
             middleware = CiviMiddleware(get_response)
@@ -282,7 +282,7 @@ class TestGetClientFromRequest:
 
     def test_returns_client_when_present(self) -> None:
         """Test that get_client_from_request returns the attached client."""
-        from civi_py.contrib.django.middleware import get_client_from_request
+        from civicrm_py.contrib.django.middleware import get_client_from_request
 
         mock_client = MagicMock()
         request = MockRequest()
@@ -294,7 +294,7 @@ class TestGetClientFromRequest:
 
     def test_raises_attribute_error_when_missing(self) -> None:
         """Test that get_client_from_request raises AttributeError when no client."""
-        from civi_py.contrib.django.middleware import get_client_from_request
+        from civicrm_py.contrib.django.middleware import get_client_from_request
 
         request = MockRequest()
         # Don't set civi_client
@@ -304,7 +304,7 @@ class TestGetClientFromRequest:
 
     def test_raises_attribute_error_when_none(self) -> None:
         """Test that get_client_from_request raises when client is None."""
-        from civi_py.contrib.django.middleware import get_client_from_request
+        from civicrm_py.contrib.django.middleware import get_client_from_request
 
         request = MockRequest()
         request.civi_client = None
@@ -318,7 +318,7 @@ class TestCloseClients:
 
     def setup_method(self) -> None:
         """Reset module-level state before each test."""
-        from civi_py.contrib.django import middleware
+        from civicrm_py.contrib.django import middleware
 
         if hasattr(middleware._local, "client"):
             delattr(middleware._local, "client")
@@ -326,8 +326,8 @@ class TestCloseClients:
 
     def test_close_clients_closes_thread_local_client(self) -> None:
         """Test that close_clients closes the thread-local client."""
-        from civi_py.contrib.django import middleware
-        from civi_py.contrib.django.middleware import close_clients
+        from civicrm_py.contrib.django import middleware
+        from civicrm_py.contrib.django.middleware import close_clients
 
         mock_client = MagicMock()
         middleware._local.client = mock_client
@@ -339,7 +339,7 @@ class TestCloseClients:
 
     def test_close_clients_handles_no_client(self) -> None:
         """Test that close_clients handles case when no client exists."""
-        from civi_py.contrib.django.middleware import close_clients
+        from civicrm_py.contrib.django.middleware import close_clients
 
         # Should not raise
         close_clients()
@@ -347,8 +347,8 @@ class TestCloseClients:
     @pytest.mark.asyncio
     async def test_close_clients_async_closes_async_client(self) -> None:
         """Test that close_clients_async closes the async client."""
-        from civi_py.contrib.django import middleware
-        from civi_py.contrib.django.middleware import close_clients_async
+        from civicrm_py.contrib.django import middleware
+        from civicrm_py.contrib.django.middleware import close_clients_async
 
         mock_client = MagicMock()
 
@@ -366,7 +366,7 @@ class TestCloseClients:
     @pytest.mark.asyncio
     async def test_close_clients_async_handles_no_client(self) -> None:
         """Test that close_clients_async handles case when no client exists."""
-        from civi_py.contrib.django.middleware import close_clients_async
+        from civicrm_py.contrib.django.middleware import close_clients_async
 
         # Should not raise
         await close_clients_async()
@@ -377,7 +377,7 @@ class TestThreadSafety:
 
     def setup_method(self) -> None:
         """Reset module-level state before each test."""
-        from civi_py.contrib.django import middleware
+        from civicrm_py.contrib.django import middleware
 
         if hasattr(middleware._local, "client"):
             delattr(middleware._local, "client")
@@ -390,7 +390,7 @@ class TestThreadSafety:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.middleware import CiviMiddleware
+        from civicrm_py.contrib.django.middleware import CiviMiddleware
 
         thread_clients: dict[str, Any] = {}
         lock = threading.Lock()
@@ -401,7 +401,7 @@ class TestThreadSafety:
             return MockResponse()
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
             middleware_instance = CiviMiddleware(get_response)

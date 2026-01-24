@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-New to civi-py? Start here.
+New to civicrm-py? Start here.
 
 .. toctree::
    :maxdepth: 2

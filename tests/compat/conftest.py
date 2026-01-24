@@ -56,7 +56,7 @@ if TYPE_CHECKING:
 
     import respx
 
-    from civi_py import CiviClient, CiviSettings
+    from civicrm_py import CiviClient, CiviSettings
 
 
 # -----------------------------------------------------------------------------
@@ -318,7 +318,7 @@ async def cassette_client(
     Yields:
         Configured CiviClient.
     """
-    from civi_py import CiviClient
+    from civicrm_py import CiviClient
 
     async with CiviClient(settings=civi_settings) as client:
         yield client
@@ -728,7 +728,7 @@ def activity_schema(production_schema_cache: Any) -> list[dict[str, Any]] | None
 @pytest.fixture
 def contact_entity_class() -> type:
     """Get Contact entity class."""
-    from civi_py.entities import Contact
+    from civicrm_py.entities import Contact
 
     return Contact
 
@@ -736,7 +736,7 @@ def contact_entity_class() -> type:
 @pytest.fixture
 def activity_entity_class() -> type:
     """Get Activity entity class."""
-    from civi_py.entities import Activity
+    from civicrm_py.entities import Activity
 
     return Activity
 
@@ -744,7 +744,7 @@ def activity_entity_class() -> type:
 @pytest.fixture
 def all_entity_classes() -> dict[str, type]:
     """Get all registered entity classes."""
-    from civi_py.entities import (
+    from civicrm_py.entities import (
         Activity,
         Address,
         Contact,

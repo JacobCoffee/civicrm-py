@@ -19,7 +19,7 @@ from examples.shared import CiviShowcase, SampleDataGenerator, SyncCiviShowcase
 from examples.shared.jinja_env import DjangoRequest
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient, SyncCiviClient
+    from civicrm_py.core.client import CiviClient, SyncCiviClient
 
 
 # =============================================================================

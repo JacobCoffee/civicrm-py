@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from civi_py import CiviClient
+from civicrm_py import CiviClient
 
 from .conftest import docker_available
 

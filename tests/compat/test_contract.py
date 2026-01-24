@@ -19,15 +19,15 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from civi_py.core.serialization import (
+from civicrm_py.core.serialization import (
     APIRequest,
     APIResponse,
     decode_response,
     encode,
     to_dict,
 )
-from civi_py.http.transport import BaseTransport
-from civi_py.query.queryset import LOOKUP_OPERATORS, QuerySet
+from civicrm_py.http.transport import BaseTransport
+from civicrm_py.query.queryset import LOOKUP_OPERATORS, QuerySet
 
 from .contracts.fixtures import (
     APIv4FormatReference,

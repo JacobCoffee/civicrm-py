@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from civi_py.contrib.asgi import CiviASGIMiddleware, get_civi_client
-from civi_py.core.client import CiviClient
-from civi_py.core.config import CiviSettings
+from civicrm_py.contrib.asgi import CiviASGIMiddleware, get_civi_client
+from civicrm_py.core.client import CiviClient
+from civicrm_py.core.config import CiviSettings
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Mapping, MutableMapping

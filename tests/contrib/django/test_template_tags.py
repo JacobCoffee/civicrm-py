@@ -1,7 +1,7 @@
 """Tests for Django template tags and filters.
 
 This module tests the template tags, filters, and utility functions
-defined in civi_py.contrib.django.templatetags.civi_tags.
+defined in civicrm_py.contrib.django.templatetags.civi_tags.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from decimal import Decimal
 from typing import Any
 from unittest.mock import MagicMock
 
-from civi_py.contrib.django.templatetags.civi_tags import (
+from civicrm_py.contrib.django.templatetags.civi_tags import (
     _get_client_from_context,
     _get_nested_field,
     _parse_filter_string,

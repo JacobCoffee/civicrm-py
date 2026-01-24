@@ -25,8 +25,8 @@ import pytest
 import respx
 from httpx import Response
 
-from civi_py import CiviClient, CiviSettings
-from civi_py.core.context import (
+from civicrm_py import CiviClient, CiviSettings
+from civicrm_py.core.context import (
     ClientContext,
     client_context,
     get_current_client,

@@ -109,7 +109,7 @@ examples/fastapi_example/
 ### 1. Lifespan Context Manager
 
 ```python
-from civi_py.contrib.fastapi import create_civi_lifespan, CiviFastAPIConfig
+from civicrm_py.contrib.fastapi import create_civi_lifespan, CiviFastAPIConfig
 
 config = CiviFastAPIConfig(
     api_prefix="/api/civi",
@@ -123,7 +123,7 @@ app = FastAPI(lifespan=create_civi_lifespan(config))
 ### 2. Dependency Injection
 
 ```python
-from civi_py.contrib.fastapi import get_civi_client, CiviClientDep
+from civicrm_py.contrib.fastapi import get_civi_client, CiviClientDep
 
 @app.get("/contacts")
 async def list_contacts(client: CiviClientDep):
@@ -134,7 +134,7 @@ async def list_contacts(client: CiviClientDep):
 ### 3. Auto-Generated Router
 
 ```python
-from civi_py.contrib.fastapi import create_civi_router
+from civicrm_py.contrib.fastapi import create_civi_router
 
 router = create_civi_router(config)
 app.include_router(router, prefix="/api/civi")
@@ -143,7 +143,7 @@ app.include_router(router, prefix="/api/civi")
 ### 4. Health Check
 
 ```python
-from civi_py.contrib.fastapi import civi_health_check
+from civicrm_py.contrib.fastapi import civi_health_check
 
 @app.get("/health/civi")
 async def health_check(client: CiviClientDep):

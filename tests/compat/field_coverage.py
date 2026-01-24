@@ -51,8 +51,8 @@ from tests.compat.schema_validator import (
 )
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
-    from civi_py.entities.base import BaseEntity
+    from civicrm_py.core.client import CiviClient
+    from civicrm_py.entities.base import BaseEntity
 
 __all__ = [
     "DeprecatedFieldInfo",
@@ -855,7 +855,7 @@ class FieldCoverageValidator:
         Returns:
             FieldCoverageSummary with aggregate metrics.
         """
-        from civi_py.entities.base import EntityMeta
+        from civicrm_py.entities.base import EntityMeta
 
         if entities is None:
             entities = EntityMeta.get_all_entities()

@@ -49,7 +49,7 @@ from tests.compat.benchmarks import (
 )
 
 if TYPE_CHECKING:
-    from civi_py import CiviClient, CiviSettings
+    from civicrm_py import CiviClient, CiviSettings
 
 # Skip all tests if running in minimal CI mode
 pytestmark = [
@@ -112,7 +112,7 @@ class TestSerializationPerformance:
 
     def test_msgspec_encode_single_record(self, bench: Benchmark) -> None:
         """Benchmark msgspec encoding of single record."""
-        from civi_py.core.serialization import APIRequest
+        from civicrm_py.core.serialization import APIRequest
 
         request = APIRequest(
             select=["id", "display_name"],
@@ -328,7 +328,7 @@ class TestQuerySetPerformance:
         civi_client: CiviClient,
     ) -> None:
         """Benchmark simple QuerySet filter building."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = QuerySet(civi_client, "Contact")
 
@@ -349,7 +349,7 @@ class TestQuerySetPerformance:
         civi_client: CiviClient,
     ) -> None:
         """Benchmark QuerySet with multiple filters."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = QuerySet(civi_client, "Contact")
 
@@ -380,7 +380,7 @@ class TestQuerySetPerformance:
         civi_client: CiviClient,
     ) -> None:
         """Benchmark complex QuerySet with joins and grouping."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = QuerySet(civi_client, "Contact")
 
@@ -415,7 +415,7 @@ class TestQuerySetPerformance:
         civi_client: CiviClient,
     ) -> None:
         """Benchmark QuerySet._build_params() method."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = (
             QuerySet(civi_client, "Contact")
@@ -443,7 +443,7 @@ class TestQuerySetPerformance:
         civi_client: CiviClient,
     ) -> None:
         """Benchmark QuerySet filter lookup parsing."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = QuerySet(civi_client, "Contact")
 
@@ -493,7 +493,7 @@ class TestEntityHydrationPerformance:
 
     def test_contact_from_dict_single(self, bench: Benchmark) -> None:
         """Benchmark Contact.from_dict() for single record."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contact_data = TestDataGenerator.contact_dict(1)
 
@@ -514,7 +514,7 @@ class TestEntityHydrationPerformance:
         medium_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark Contact.from_dict() for 100 records."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         def hydrate_all() -> list[Contact]:
             return [Contact.from_dict(c) for c in medium_contacts]
@@ -539,7 +539,7 @@ class TestEntityHydrationPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark Contact.from_dict() for 1000 records."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         def hydrate_all() -> list[Contact]:
             return [Contact.from_dict(c) for c in large_contacts]
@@ -560,7 +560,7 @@ class TestEntityHydrationPerformance:
 
     def test_contact_to_dict_single(self, bench: Benchmark) -> None:
         """Benchmark Contact.to_dict() for single record."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contact_data = TestDataGenerator.contact_dict(1)
         contact = Contact.from_dict(contact_data)
@@ -582,7 +582,7 @@ class TestEntityHydrationPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark Contact.to_dict() for 1000 records."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contacts = [Contact.from_dict(c) for c in large_contacts]
 
@@ -605,7 +605,7 @@ class TestEntityHydrationPerformance:
 
     def test_dirty_tracking_overhead(self, bench: Benchmark) -> None:
         """Measure overhead of dirty field tracking."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contact_data = TestDataGenerator.contact_dict(1)
 
@@ -645,7 +645,7 @@ class TestEntityHydrationPerformance:
         medium_contacts: list[dict[str, Any]],
     ) -> None:
         """Compare entity hydration vs raw dict operations."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # Baseline: just iterate dicts
         baseline_result = bench.run(
@@ -687,9 +687,9 @@ class TestHTTPTransportPerformance:
         civi_settings: CiviSettings,
     ) -> None:
         """Benchmark API request serialization."""
-        from civi_py.core.auth import AuthProvider
-        from civi_py.core.serialization import APIRequest
-        from civi_py.http.transport import BaseTransport
+        from civicrm_py.core.auth import AuthProvider
+        from civicrm_py.core.serialization import APIRequest
+        from civicrm_py.http.transport import BaseTransport
 
         auth = AuthProvider.from_settings(civi_settings)
         transport = BaseTransport(civi_settings, auth)
@@ -726,7 +726,7 @@ class TestHTTPTransportPerformance:
         medium_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark API response deserialization."""
-        from civi_py.core.serialization import decode_response
+        from civicrm_py.core.serialization import decode_response
 
         response = TestDataGenerator.api_response(medium_contacts)
         encoded = msgspec.json.encode(response)
@@ -750,7 +750,7 @@ class TestHTTPTransportPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark large API response deserialization (1000 records)."""
-        from civi_py.core.serialization import decode_response
+        from civicrm_py.core.serialization import decode_response
 
         response = TestDataGenerator.api_response(large_contacts)
         encoded = msgspec.json.encode(response)
@@ -774,9 +774,9 @@ class TestHTTPTransportPerformance:
         civi_settings: CiviSettings,
     ) -> None:
         """Compare CiviClient transport vs raw httpx (mocked)."""
-        from civi_py.core.auth import AuthProvider
-        from civi_py.core.serialization import APIRequest, to_dict
-        from civi_py.http.transport import AsyncTransport
+        from civicrm_py.core.auth import AuthProvider
+        from civicrm_py.core.serialization import APIRequest, to_dict
+        from civicrm_py.http.transport import AsyncTransport
 
         # Create test response
         response_data = TestDataGenerator.contact_response(10)
@@ -850,7 +850,7 @@ class TestBulkOperationsPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark creating 1000 entity instances."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         result = bench.run(
             "bulk_entity_creation_1000",
@@ -874,7 +874,7 @@ class TestBulkOperationsPerformance:
         xlarge_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark creating 10000 entity instances."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         result = bench.run(
             "bulk_entity_creation_10000",
@@ -898,7 +898,7 @@ class TestBulkOperationsPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Benchmark serializing 1000 entities to dict."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contacts = [Contact.from_dict(c) for c in large_contacts]
 
@@ -928,7 +928,7 @@ class TestMemoryPerformance:
         medium_contacts: list[dict[str, Any]],
     ) -> None:
         """Measure memory for 100 Contact instances."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contacts, memory_mb = measure_memory(
             lambda: [Contact.from_dict(c) for c in medium_contacts],
@@ -947,7 +947,7 @@ class TestMemoryPerformance:
         large_contacts: list[dict[str, Any]],
     ) -> None:
         """Measure memory for 1000 Contact instances."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contacts, memory_mb = measure_memory(
             lambda: [Contact.from_dict(c) for c in large_contacts],
@@ -965,7 +965,7 @@ class TestMemoryPerformance:
         xlarge_contacts: list[dict[str, Any]],
     ) -> None:
         """Measure memory for 10000 Contact instances."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         contacts, memory_mb = measure_memory(
             lambda: [Contact.from_dict(c) for c in xlarge_contacts],
@@ -979,7 +979,7 @@ class TestMemoryPerformance:
 
     def test_memory_queryset_chain(self, civi_client: CiviClient) -> None:
         """Measure memory for QuerySet chain operations."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         def build_chain() -> list[QuerySet]:
             qs = QuerySet(civi_client, "Contact")
@@ -1017,9 +1017,9 @@ class TestBenchmarkReport:
         civi_client: CiviClient,
     ) -> None:
         """Generate full benchmark report with all measurements."""
-        from civi_py.core.serialization import decode_response
-        from civi_py.entities import Contact
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.core.serialization import decode_response
+        from civicrm_py.entities import Contact
+        from civicrm_py.query.queryset import QuerySet
 
         # Serialization benchmarks
         response = TestDataGenerator.api_response(medium_contacts)
@@ -1142,7 +1142,7 @@ class TestCIThresholds:
         civi_client: CiviClient,
     ) -> None:
         """Validate QuerySet building meets CI thresholds."""
-        from civi_py.query.queryset import QuerySet
+        from civicrm_py.query.queryset import QuerySet
 
         qs = QuerySet(civi_client, "Contact")
 
@@ -1179,7 +1179,7 @@ class TestCIThresholds:
         medium_contacts: list[dict[str, Any]],
     ) -> None:
         """Validate entity hydration meets CI thresholds."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # from_dict
         hydrate_result = bench.run(

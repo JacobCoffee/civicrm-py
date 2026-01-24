@@ -7,7 +7,7 @@ Settings and configuration management.
 CiviSettings
 ------------
 
-.. autoclass:: civi_py.CiviSettings
+.. autoclass:: civicrm_py.CiviSettings
    :members:
    :undoc-members:
    :show-inheritance:
@@ -16,4 +16,4 @@ CiviSettings
 get_settings
 ------------
 
-.. autofunction:: civi_py.get_settings
+.. autofunction:: civicrm_py.get_settings

@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from civi_py.core.config import CiviSettings
-from civi_py.core.exceptions import CiviConfigError, CiviIntegrationError
+from civicrm_py.core.config import CiviSettings
+from civicrm_py.core.exceptions import CiviConfigError, CiviIntegrationError
 
 
 class TestGetDjangoSettings:
@@ -19,7 +19,7 @@ class TestGetDjangoSettings:
             # Need to reimport after patching
             import importlib
 
-            from civi_py.contrib.django import settings as django_settings_module
+            from civicrm_py.contrib.django import settings as django_settings_module
 
             importlib.reload(django_settings_module)
 
@@ -34,11 +34,11 @@ class TestGetDjangoSettings:
         with (
             patch.dict("sys.modules", {"django": MagicMock(), "django.conf": MagicMock()}),
             patch(
-                "civi_py.contrib.django.settings._get_django_settings",
+                "civicrm_py.contrib.django.settings._get_django_settings",
                 side_effect=CiviIntegrationError("Django settings are not configured"),
             ),
         ):
-            from civi_py.contrib.django.settings import get_django_settings
+            from civicrm_py.contrib.django.settings import get_django_settings
 
             with pytest.raises(CiviIntegrationError, match="not configured"):
                 get_django_settings()
@@ -53,10 +53,10 @@ class TestGetDjangoSettings:
         del mock_settings.CIVICRM_URL
 
         with patch(
-            "civi_py.contrib.django.settings._get_django_settings",
+            "civicrm_py.contrib.django.settings._get_django_settings",
             return_value=mock_settings,
         ):
-            from civi_py.contrib.django.settings import get_django_settings
+            from civicrm_py.contrib.django.settings import get_django_settings
 
             with pytest.raises(CiviConfigError, match="CIVICRM_URL is required"):
                 get_django_settings()
@@ -83,10 +83,10 @@ class TestGetDjangoSettings:
             delattr(mock_settings, attr)
 
         with patch(
-            "civi_py.contrib.django.settings._get_django_settings",
+            "civicrm_py.contrib.django.settings._get_django_settings",
             return_value=mock_settings,
         ):
-            from civi_py.contrib.django.settings import get_django_settings
+            from civicrm_py.contrib.django.settings import get_django_settings
 
             config = get_django_settings()
 
@@ -116,10 +116,10 @@ class TestGetDjangoSettings:
         mock_settings.CIVICRM_PASSWORD = "test-pass"
 
         with patch(
-            "civi_py.contrib.django.settings._get_django_settings",
+            "civicrm_py.contrib.django.settings._get_django_settings",
             return_value=mock_settings,
         ):
-            from civi_py.contrib.django.settings import get_django_settings
+            from civicrm_py.contrib.django.settings import get_django_settings
 
             config = get_django_settings()
 
@@ -156,10 +156,10 @@ class TestCreateSettings:
         }
 
         with patch(
-            "civi_py.contrib.django.settings.get_django_settings",
+            "civicrm_py.contrib.django.settings.get_django_settings",
             return_value=mock_django_config,
         ):
-            from civi_py.contrib.django.settings import create_settings
+            from civicrm_py.contrib.django.settings import create_settings
 
             settings = create_settings()
 
@@ -194,10 +194,10 @@ class TestGetCiviSettings:
         }
 
         with patch(
-            "civi_py.contrib.django.settings.get_django_settings",
+            "civicrm_py.contrib.django.settings.get_django_settings",
             return_value=mock_django_config,
         ):
-            from civi_py.contrib.django.settings import (
+            from civicrm_py.contrib.django.settings import (
                 clear_settings_cache,
                 get_civi_settings,
             )
@@ -232,10 +232,10 @@ class TestClearSettingsCache:
         }
 
         with patch(
-            "civi_py.contrib.django.settings.get_django_settings",
+            "civicrm_py.contrib.django.settings.get_django_settings",
             return_value=mock_django_config,
         ):
-            from civi_py.contrib.django.settings import (
+            from civicrm_py.contrib.django.settings import (
                 clear_settings_cache,
                 get_civi_settings,
             )
@@ -264,10 +264,10 @@ class TestDjangoIntegration:
         )
 
         with patch(
-            "civi_py.contrib.django.settings.get_civi_settings",
+            "civicrm_py.contrib.django.settings.get_civi_settings",
             return_value=mock_settings,
         ):
-            from civi_py.contrib.django.settings import DjangoIntegration
+            from civicrm_py.contrib.django.settings import DjangoIntegration
 
             integration = DjangoIntegration()
 
@@ -281,7 +281,7 @@ class TestDjangoIntegration:
             api_key="explicit-api-key",
         )
 
-        from civi_py.contrib.django.settings import DjangoIntegration
+        from civicrm_py.contrib.django.settings import DjangoIntegration
 
         integration = DjangoIntegration(settings=settings)
 
@@ -295,7 +295,7 @@ class TestDjangoIntegration:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.settings import DjangoIntegration
+        from civicrm_py.contrib.django.settings import DjangoIntegration
 
         integration = DjangoIntegration(settings=settings, is_async=True)
 
@@ -318,10 +318,10 @@ class TestDjangoIntegration:
         }
 
         with patch(
-            "civi_py.contrib.django.settings.get_django_settings",
+            "civicrm_py.contrib.django.settings.get_django_settings",
             return_value=mock_django_config,
         ):
-            from civi_py.contrib.django.settings import DjangoIntegration
+            from civicrm_py.contrib.django.settings import DjangoIntegration
 
             integration = DjangoIntegration.from_django_settings()
 
@@ -334,7 +334,7 @@ class TestDjangoIntegration:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.settings import DjangoIntegration
+        from civicrm_py.contrib.django.settings import DjangoIntegration
 
         integration = DjangoIntegration(settings=settings)
 
@@ -351,7 +351,7 @@ class TestDjangoIntegration:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.settings import DjangoIntegration
+        from civicrm_py.contrib.django.settings import DjangoIntegration
 
         integration = DjangoIntegration(settings=settings)
 
@@ -376,7 +376,7 @@ class TestDjangoIntegration:
             api_key="test-api-key",
         )
 
-        from civi_py.contrib.django.settings import DjangoIntegration
+        from civicrm_py.contrib.django.settings import DjangoIntegration
 
         with DjangoIntegration(settings=settings) as integration:
             client = integration.get_sync_client()

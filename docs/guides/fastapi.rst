@@ -10,7 +10,7 @@ Install with the FastAPI extra:
 
 .. code-block:: bash
 
-   pip install civi-py[fastapi]
+   pip install civicrm-py[fastapi]
 
 
 Basic Setup
@@ -21,8 +21,8 @@ Use the lifespan context manager and dependency injection:
 .. code-block:: python
 
    from fastapi import FastAPI, Depends
-   from civi_py.core.client import CiviClient
-   from civi_py.contrib.fastapi import civi_lifespan, get_civi_client
+   from civicrm_py.core.client import CiviClient
+   from civicrm_py.contrib.fastapi import civi_lifespan, get_civi_client
 
    app = FastAPI(lifespan=civi_lifespan)
 
@@ -61,8 +61,8 @@ Use ``CiviFastAPIConfig`` for custom settings:
 .. code-block:: python
 
    from fastapi import FastAPI
-   from civi_py.core.config import CiviSettings
-   from civi_py.contrib.fastapi import CiviFastAPIConfig, create_civi_lifespan
+   from civicrm_py.core.config import CiviSettings
+   from civicrm_py.contrib.fastapi import CiviFastAPIConfig, create_civi_lifespan
 
    config = CiviFastAPIConfig(
        settings=CiviSettings(
@@ -122,8 +122,8 @@ Use ``Depends(get_civi_client)`` to inject the client:
 .. code-block:: python
 
    from fastapi import FastAPI, Depends
-   from civi_py.core.client import CiviClient
-   from civi_py.contrib.fastapi import civi_lifespan, get_civi_client
+   from civicrm_py.core.client import CiviClient
+   from civicrm_py.contrib.fastapi import civi_lifespan, get_civi_client
 
    app = FastAPI(lifespan=civi_lifespan)
 
@@ -156,7 +156,7 @@ Use the ``CiviClientDep`` type alias for cleaner code:
 
 .. code-block:: python
 
-   from civi_py.contrib.fastapi import CiviClientDep
+   from civicrm_py.contrib.fastapi import CiviClientDep
 
 
    @app.get("/contacts")
@@ -173,7 +173,7 @@ Create CRUD routes using the router factory:
 .. code-block:: python
 
    from fastapi import FastAPI
-   from civi_py.contrib.fastapi import (
+   from civicrm_py.contrib.fastapi import (
        civi_lifespan,
        create_civi_router,
        CiviFastAPIConfig,
@@ -220,7 +220,7 @@ Create routers for specific entities:
 
 .. code-block:: python
 
-   from civi_py.contrib.fastapi import (
+   from civicrm_py.contrib.fastapi import (
        create_contact_router,
        create_entity_router,
    )
@@ -282,7 +282,7 @@ Custom Health Check Router
 
 .. code-block:: python
 
-   from civi_py.contrib.fastapi import create_health_check_router
+   from civicrm_py.contrib.fastapi import create_health_check_router
 
    app.include_router(
        create_health_check_router(
@@ -302,7 +302,7 @@ Contact Models
 
 .. code-block:: python
 
-   from civi_py.contrib.fastapi import (
+   from civicrm_py.contrib.fastapi import (
        ContactCreate,
        ContactUpdate,
        ContactResponse,
@@ -354,7 +354,7 @@ Complete Example
 
    from fastapi import FastAPI, HTTPException, Query
    from typing import Annotated
-   from civi_py.contrib.fastapi import (
+   from civicrm_py.contrib.fastapi import (
        civi_lifespan,
        CiviClientDep,
        ContactCreate,
@@ -467,8 +467,8 @@ As an alternative to lifespan handlers, use the generic ASGI middleware:
 .. code-block:: python
 
    from fastapi import FastAPI, Request
-   from civi_py.contrib.asgi import CiviASGIMiddleware
-   from civi_py.core.config import CiviSettings
+   from civicrm_py.contrib.asgi import CiviASGIMiddleware
+   from civicrm_py.core.config import CiviSettings
 
    app = FastAPI()
 

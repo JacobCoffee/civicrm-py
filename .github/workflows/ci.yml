@@ -84,7 +84,7 @@ jobs:
         run: |
           uv run pytest tests \
             --ignore=tests/contrib \
-            --cov=src/civi_py \
+            --cov=src/civicrm_py \
             --cov-report=xml \
             --cov-report=term-missing
 

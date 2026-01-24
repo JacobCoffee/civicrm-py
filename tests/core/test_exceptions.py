@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from civi_py.core.exceptions import (
+from civicrm_py.core.exceptions import (
     CiviAPIError,
     CiviAuthError,
     CiviConfigError,

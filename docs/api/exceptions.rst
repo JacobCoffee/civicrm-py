@@ -1,51 +1,51 @@
 Exceptions
 ==========
 
-All exceptions raised by civi-py.
+All exceptions raised by civicrm-py.
 
 
 Base Exception
 --------------
 
-.. autoexception:: civi_py.CiviError
+.. autoexception:: civicrm_py.CiviError
    :show-inheritance:
 
 
 Configuration Errors
 --------------------
 
-.. autoexception:: civi_py.CiviConfigError
+.. autoexception:: civicrm_py.CiviConfigError
    :show-inheritance:
 
 
 Connection Errors
 -----------------
 
-.. autoexception:: civi_py.CiviConnectionError
+.. autoexception:: civicrm_py.CiviConnectionError
    :show-inheritance:
 
-.. autoexception:: civi_py.CiviTimeoutError
+.. autoexception:: civicrm_py.CiviTimeoutError
    :show-inheritance:
 
 
 Authentication Errors
 ---------------------
 
-.. autoexception:: civi_py.CiviAuthError
+.. autoexception:: civicrm_py.CiviAuthError
    :show-inheritance:
 
 
 API Errors
 ----------
 
-.. autoexception:: civi_py.CiviAPIError
+.. autoexception:: civicrm_py.CiviAPIError
    :show-inheritance:
 
-.. autoexception:: civi_py.CiviNotFoundError
+.. autoexception:: civicrm_py.CiviNotFoundError
    :show-inheritance:
 
-.. autoexception:: civi_py.CiviValidationError
+.. autoexception:: civicrm_py.CiviValidationError
    :show-inheritance:
 
-.. autoexception:: civi_py.CiviPermissionError
+.. autoexception:: civicrm_py.CiviPermissionError
    :show-inheritance:

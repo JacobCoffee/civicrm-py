@@ -1,6 +1,6 @@
 """CiviCRM Admin configuration for the demo project.
 
-This file is auto-discovered by civi_py.contrib.django when you call
+This file is auto-discovered by civicrm_py.contrib.django when you call
 autodiscover_entities() or when the app is loaded.
 
 Example admin registrations for CiviCRM entities.
@@ -10,12 +10,12 @@ from __future__ import annotations
 
 from django.contrib import admin
 
-from civi_py.contrib.django.admin import (
+from civicrm_py.contrib.django.admin import (
     CiviInlineAdmin,
     CiviModelAdmin,
     register_entity,
 )
-from civi_py.entities import Activity, Contact, Contribution, Email, Event, Phone
+from civicrm_py.entities import Activity, Contact, Contribution, Email, Event, Phone
 
 # =============================================================================
 # Inline Admins for Related Entities

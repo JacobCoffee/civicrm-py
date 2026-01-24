@@ -1,7 +1,7 @@
 Queries
 =======
 
-CiviCRM API v4 uses a structured query format. civi-py provides convenience parameters that translate to the underlying API.
+CiviCRM API v4 uses a structured query format. civicrm-py provides convenience parameters that translate to the underlying API.
 
 
 Basic Query
@@ -149,7 +149,7 @@ For full control, use the ``request`` method directly:
 
 .. code-block:: python
 
-   from civi_py import APIRequest
+   from civicrm_py import APIRequest
 
    params = APIRequest(
        select=["id", "display_name"],

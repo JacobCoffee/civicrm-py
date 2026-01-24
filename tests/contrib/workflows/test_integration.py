@@ -20,7 +20,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from civi_py.contrib.workflows import WORKFLOWS_AVAILABLE
+from civicrm_py.contrib.workflows import WORKFLOWS_AVAILABLE
 from tests.conftest import skip_without_postgres
 
 if TYPE_CHECKING:
@@ -115,7 +115,7 @@ def workflow_definitions() -> dict[str, Any]:
 
     Returns a dictionary of workflow name to definition.
     """
-    from civi_py.contrib.workflows.templates import (
+    from civicrm_py.contrib.workflows.templates import (
         BulkUpdateWorkflow,
         ContactSyncWorkflow,
         DonationProcessingWorkflow,
@@ -150,7 +150,7 @@ class TestContactSyncWorkflowExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test ContactSyncWorkflow fetch step pulls contacts."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition(
             filters={"is_deleted": False},
@@ -180,7 +180,7 @@ class TestContactSyncWorkflowExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test ContactSyncWorkflow approval transitions correctly."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
 
@@ -212,7 +212,7 @@ class TestContactSyncWorkflowExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test ContactSyncWorkflow sync step executes when approved."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
 
@@ -245,7 +245,7 @@ class TestContactSyncWorkflowExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test complete ContactSyncWorkflow execution."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
         context = mock_context_factory()
@@ -287,7 +287,7 @@ class TestBulkUpdateWorkflowExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test BulkUpdateWorkflow select step fetches entities."""
-        from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+        from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
         definition = BulkUpdateWorkflow.get_definition(
             entity="Contact",
@@ -315,7 +315,7 @@ class TestBulkUpdateWorkflowExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test BulkUpdateWorkflow approval prepares update data."""
-        from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+        from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
         update_fields = {"do_not_email": True, "do_not_mail": True}
         definition = BulkUpdateWorkflow.get_definition(
@@ -355,7 +355,7 @@ class TestBulkUpdateWorkflowExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test BulkUpdateWorkflow execute step applies updates."""
-        from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+        from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
         definition = BulkUpdateWorkflow.get_definition(entity="Contact")
 
@@ -395,7 +395,7 @@ class TestDonationWorkflowSmallAmount:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test donations below threshold skip human approval."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         definition = DonationProcessingWorkflow.get_definition(
             approval_threshold=1000.0,
@@ -437,7 +437,7 @@ class TestDonationWorkflowSmallAmount:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test small donation workflow creates contribution."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         definition = DonationProcessingWorkflow.get_definition(
             approval_threshold=1000.0,
@@ -482,7 +482,7 @@ class TestDonationWorkflowLargeAmount:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test donations at or above threshold require human approval."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         definition = DonationProcessingWorkflow.get_definition(
             approval_threshold=1000.0,
@@ -516,7 +516,7 @@ class TestDonationWorkflowLargeAmount:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test large donation proceeds to contribution creation after approval."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         definition = DonationProcessingWorkflow.get_definition(
             approval_threshold=1000.0,
@@ -562,7 +562,7 @@ class TestHumanTaskApproval:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test completing a human approval task allows workflow to proceed."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
 
@@ -589,7 +589,7 @@ class TestHumanTaskApproval:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test rejecting in a human task stops workflow progression."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
 
@@ -617,7 +617,7 @@ class TestHumanTaskApproval:
         mock_civi_client: AsyncMock,
     ) -> None:
         """Test approval step with required comments on rejection."""
-        from civi_py.contrib.workflows.steps import CiviApprovalStep
+        from civicrm_py.contrib.workflows.steps import CiviApprovalStep
 
         step = CiviApprovalStep(
             name="review_with_comments",
@@ -647,7 +647,7 @@ class TestCiviFetchStepExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test CiviFetchStep handles complex filter conditions."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         step = CiviFetchStep(
             name="fetch_filtered",
@@ -688,7 +688,7 @@ class TestCiviFetchStepExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test CiviFetchStep handles empty API response."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep
 
         # Configure empty response
         empty_response = MagicMock()
@@ -719,7 +719,7 @@ class TestCiviMutateStepExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviMutateStep creates entities."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         context = mock_context_factory(
             {
@@ -753,7 +753,7 @@ class TestCiviMutateStepExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviMutateStep updates entities."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         context = mock_context_factory(
             {
@@ -789,7 +789,7 @@ class TestCiviMutateStepExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviMutateStep deletes entities."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         context = mock_context_factory(
             {
@@ -821,7 +821,7 @@ class TestCiviMutateStepExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviMutateStep handles empty data gracefully."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep
 
         context = mock_context_factory({"empty_data": []})
 
@@ -852,7 +852,7 @@ class TestCiviSyncStepExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test CiviSyncStep syncs data to context when no repository."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         step = CiviSyncStep(
             name="sync_contacts",
@@ -880,7 +880,7 @@ class TestCiviSyncStepExecution:
         mock_context: MagicMock,
     ) -> None:
         """Test CiviSyncStep fetches in batches."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         # Configure responses for batched fetching
         batch1 = MagicMock()
@@ -914,7 +914,7 @@ class TestCiviSyncStepExecution:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviSyncStep syncs data to CiviCRM from cache."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         # Pre-populate cache with data to sync
         context = mock_context_factory(
@@ -960,7 +960,7 @@ class TestWorkflowErrorHandling:
         mock_context: MagicMock,
     ) -> None:
         """Test CiviFetchStep error includes step context."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
 
         # Configure client to raise error
         mock_civi_client.get.side_effect = Exception("API connection failed")
@@ -986,7 +986,7 @@ class TestWorkflowErrorHandling:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviMutateStep raises error for missing data."""
-        from civi_py.contrib.workflows.steps import CiviMutateStep, CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviMutateStep, CiviWorkflowError
 
         context = mock_context_factory()  # No data
 
@@ -1009,7 +1009,7 @@ class TestWorkflowErrorHandling:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test steps raise error when CiviClient not in context."""
-        from civi_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
+        from civicrm_py.contrib.workflows.steps import CiviFetchStep, CiviWorkflowError
 
         # Create context without client
         context = MagicMock()
@@ -1033,7 +1033,7 @@ class TestWorkflowDefinitions:
 
     def test_contact_sync_workflow_structure(self) -> None:
         """Test ContactSyncWorkflow has correct structure."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition()
 
@@ -1058,7 +1058,7 @@ class TestWorkflowDefinitions:
 
     def test_bulk_update_workflow_structure(self) -> None:
         """Test BulkUpdateWorkflow has correct structure."""
-        from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+        from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
         definition = BulkUpdateWorkflow.get_definition(
             entity="Contact",
@@ -1079,7 +1079,7 @@ class TestWorkflowDefinitions:
 
     def test_donation_workflow_structure(self) -> None:
         """Test DonationProcessingWorkflow has correct structure."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         definition = DonationProcessingWorkflow.get_definition(
             approval_threshold=500.0,
@@ -1153,7 +1153,7 @@ class TestWorkflowPersistence:
         mock_context_factory: Callable[..., MagicMock],
     ) -> None:
         """Test CiviSyncStep can use repository for persistence."""
-        from civi_py.contrib.workflows.steps import CiviSyncStep
+        from civicrm_py.contrib.workflows.steps import CiviSyncStep
 
         # Create a mock repository
         mock_repository = AsyncMock()
@@ -1188,7 +1188,7 @@ class TestWorkflowCustomization:
 
     def test_contact_sync_custom_filters(self) -> None:
         """Test ContactSyncWorkflow accepts custom filters."""
-        from civi_py.contrib.workflows.templates import ContactSyncWorkflow
+        from civicrm_py.contrib.workflows.templates import ContactSyncWorkflow
 
         definition = ContactSyncWorkflow.get_definition(
             filters={"contact_type": "Organization", "is_deleted": False},
@@ -1203,7 +1203,7 @@ class TestWorkflowCustomization:
 
     def test_donation_workflow_custom_threshold(self) -> None:
         """Test DonationProcessingWorkflow custom approval threshold."""
-        from civi_py.contrib.workflows.templates import DonationProcessingWorkflow
+        from civicrm_py.contrib.workflows.templates import DonationProcessingWorkflow
 
         # Low threshold
         low_def = DonationProcessingWorkflow.get_definition(approval_threshold=100.0)
@@ -1216,7 +1216,7 @@ class TestWorkflowCustomization:
 
     def test_bulk_update_custom_entity(self) -> None:
         """Test BulkUpdateWorkflow works with different entities."""
-        from civi_py.contrib.workflows.templates import BulkUpdateWorkflow
+        from civicrm_py.contrib.workflows.templates import BulkUpdateWorkflow
 
         # Test with Activity entity
         activity_def = BulkUpdateWorkflow.get_definition(

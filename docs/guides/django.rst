@@ -10,7 +10,7 @@ Install with the Django extra:
 
 .. code-block:: bash
 
-   pip install civi-py[django]
+   pip install civicrm-py[django]
 
 
 Settings Configuration
@@ -58,7 +58,7 @@ Add the Django app to enable template tags and management commands:
 
    INSTALLED_APPS = [
        # ...
-       "civi_py.contrib.django",
+       "civicrm_py.contrib.django",
    ]
 
 
@@ -73,7 +73,7 @@ Add the middleware to attach a CiviCRM client to each request:
        "django.middleware.security.SecurityMiddleware",
        "django.contrib.sessions.middleware.SessionMiddleware",
        # ...
-       "civi_py.contrib.django.middleware.CiviMiddleware",
+       "civicrm_py.contrib.django.middleware.CiviMiddleware",
    ]
 
 The middleware automatically detects sync vs async mode:
@@ -174,7 +174,7 @@ For explicit error handling, use the helper function:
 
 .. code-block:: python
 
-   from civi_py.contrib.django.middleware import get_client_from_request
+   from civicrm_py.contrib.django.middleware import get_client_from_request
 
 
    def my_view(request):
@@ -304,7 +304,7 @@ Add the context processor for automatic ``civi_client`` availability in all temp
        "OPTIONS": {
            "context_processors": [
                # ...
-               "civi_py.contrib.django.templatetags.civi_tags.civi_context_processor",
+               "civicrm_py.contrib.django.templatetags.civi_tags.civi_context_processor",
            ],
        },
    }]
@@ -351,12 +351,12 @@ Create a ``civiadmin.py`` file in your app:
 
    # myapp/civiadmin.py
 
-   from civi_py.contrib.django.admin import (
+   from civicrm_py.contrib.django.admin import (
        CiviModelAdmin,
        register_entity,
        civi_admin_site,
    )
-   from civi_py.entities import Contact
+   from civicrm_py.entities import Contact
 
 
    @register_entity(Contact, site=civi_admin_site)
@@ -373,7 +373,7 @@ Register the admin site in your URLs:
 
    from django.contrib import admin
    from django.urls import path
-   from civi_py.contrib.django.admin import civi_admin_site
+   from civicrm_py.contrib.django.admin import civi_admin_site
 
    urlpatterns = [
        path("admin/", admin.site.urls),
@@ -406,13 +406,13 @@ Example with Inline Admin
 
 .. code-block:: python
 
-   from civi_py.contrib.django.admin import (
+   from civicrm_py.contrib.django.admin import (
        CiviModelAdmin,
        CiviInlineAdmin,
        register_entity,
        civi_admin_site,
    )
-   from civi_py.entities import Contact, Activity
+   from civicrm_py.entities import Contact, Activity
 
 
    class ActivityInline(CiviInlineAdmin):
@@ -438,12 +438,12 @@ Here is a complete example combining middleware, views, and templates.
 
    INSTALLED_APPS = [
        # ...
-       "civi_py.contrib.django",
+       "civicrm_py.contrib.django",
    ]
 
    MIDDLEWARE = [
        # ...
-       "civi_py.contrib.django.middleware.CiviMiddleware",
+       "civicrm_py.contrib.django.middleware.CiviMiddleware",
    ]
 
    CIVICRM_URL = "https://example.org/civicrm/ajax/api4"
@@ -510,7 +510,7 @@ For explicit cleanup (useful in tests), use:
 
 .. code-block:: python
 
-   from civi_py.contrib.django.middleware import close_clients, close_clients_async
+   from civicrm_py.contrib.django.middleware import close_clients, close_clients_async
 
    # In sync code
    close_clients()

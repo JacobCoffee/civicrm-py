@@ -1,7 +1,7 @@
 Installation
 ============
 
-Install civi-py using your preferred package manager.
+Install civicrm-py using your preferred package manager.
 
 .. tab-set::
 
@@ -10,13 +10,13 @@ Install civi-py using your preferred package manager.
 
       .. code-block:: bash
 
-         uv add civi-py
+         uv add civicrm-py
 
    .. tab-item:: pip
 
       .. code-block:: bash
 
-         pip install civi-py
+         pip install civicrm-py
 
 
 Framework Extras
@@ -30,9 +30,9 @@ Install with optional framework integrations to unlock additional features.
 
       .. code-block:: bash
 
-         uv add civi-py[django]
+         uv add civicrm-py[django]
          # or
-         pip install civi-py[django]
+         pip install civicrm-py[django]
 
       Adds middleware, management commands, admin integration, and template tags.
 
@@ -40,9 +40,9 @@ Install with optional framework integrations to unlock additional features.
 
       .. code-block:: bash
 
-         uv add civi-py[litestar]
+         uv add civicrm-py[litestar]
          # or
-         pip install civi-py[litestar]
+         pip install civicrm-py[litestar]
 
       Adds plugin, dependency injection, routes, and health checks.
 
@@ -50,9 +50,9 @@ Install with optional framework integrations to unlock additional features.
 
       .. code-block:: bash
 
-         uv add civi-py[flask]
+         uv add civicrm-py[flask]
          # or
-         pip install civi-py[flask]
+         pip install civicrm-py[flask]
 
       Adds extension and CLI commands.
 
@@ -60,9 +60,9 @@ Install with optional framework integrations to unlock additional features.
 
       .. code-block:: bash
 
-         uv add civi-py[fastapi]
+         uv add civicrm-py[fastapi]
          # or
-         pip install civi-py[fastapi]
+         pip install civicrm-py[fastapi]
 
       Adds dependency injection helpers.
 
@@ -84,6 +84,6 @@ Clone and install for development:
 
 .. code-block:: bash
 
-   git clone https://github.com/JacobCoffee/civi-py
-   cd civi-py
+   git clone https://github.com/JacobCoffee/civicrm-py
+   cd civicrm-py
    uv sync --all-extras

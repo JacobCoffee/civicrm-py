@@ -45,9 +45,9 @@ import httpx
 # Add src to path for development
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from civi_py.core.client import CiviClient
-from civi_py.core.config import CiviSettings
-from civi_py.core.exceptions import CiviAPIError, CiviAuthError
+from civicrm_py.core.client import CiviClient
+from civicrm_py.core.config import CiviSettings
+from civicrm_py.core.exceptions import CiviAPIError, CiviAuthError
 
 # Configure logging
 logging.basicConfig(

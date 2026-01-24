@@ -588,7 +588,7 @@ class TestSchemaValidator:
         minimal_activity_schema: list[dict[str, Any]],
     ) -> None:
         """Test validating multiple entities."""
-        from civi_py.entities import Activity, Contact
+        from civicrm_py.entities import Activity, Contact
 
         # Cache schemas
         schema_validator.cache.save_schema("Contact", minimal_contact_schema)

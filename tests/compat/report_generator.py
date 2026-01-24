@@ -38,7 +38,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
+    from civicrm_py.core.client import CiviClient
 
 from tests.compat.coverage_validator import (
     ActionCoverageReport,
@@ -204,7 +204,7 @@ class AggregateReport:
         validation_report: Schema validation report.
         generated_at: Report generation timestamp.
         civicrm_version: Target CiviCRM version.
-        civi_py_version: civi-py library version.
+        civicrm_py_version: civi-py library version.
         trends: Historical trend data.
     """
 
@@ -214,7 +214,7 @@ class AggregateReport:
     validation_report: ValidationReport | None = None
     generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     civicrm_version: str = "unknown"
-    civi_py_version: str = "unknown"
+    civicrm_py_version: str = "unknown"
     trends: list[TrendData] = field(default_factory=list)
 
     @property
@@ -291,7 +291,7 @@ class AggregateReport:
             "entities_total": self.entities_total,
             "generated_at": self.generated_at.isoformat(),
             "civicrm_version": self.civicrm_version,
-            "civi_py_version": self.civi_py_version,
+            "civicrm_py_version": self.civicrm_py_version,
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -656,7 +656,7 @@ class HTMLReportGenerator:
             <div class="meta">
                 <span>Generated: {summary["generated_at"]}</span>
                 <span>CiviCRM: {summary["civicrm_version"]}</span>
-                <span>civi-py: {summary["civi_py_version"]}</span>
+                <span>civi-py: {summary["civicrm_py_version"]}</span>
             </div>
         </header>
 
@@ -922,7 +922,7 @@ class MarkdownReportGenerator:
 
 Generated: {summary["generated_at"]}
 CiviCRM Version: {summary["civicrm_version"]}
-civi-py Version: {summary["civi_py_version"]}
+civi-py Version: {summary["civicrm_py_version"]}
 
 ## Summary
 
@@ -1117,7 +1117,7 @@ class ReportGenerator:
         Returns:
             AggregateReport with available data.
         """
-        from civi_py.entities import (
+        from civicrm_py.entities import (
             Activity,
             Address,
             Contact,
@@ -1176,16 +1176,16 @@ class ReportGenerator:
         try:
             from importlib.metadata import version as get_version
 
-            civi_py_version = get_version("civi-py")
+            civicrm_py_version = get_version("civi-py")
         except Exception:
-            civi_py_version = "unknown"
+            civicrm_py_version = "unknown"
 
         report = AggregateReport(
             entity_report=entity_report,
             action_reports={},
             field_reports=field_reports,
             civicrm_version="cached",
-            civi_py_version=civi_py_version,
+            civicrm_py_version=civicrm_py_version,
             trends=trends,
         )
 
@@ -1210,7 +1210,7 @@ class ReportGenerator:
         Returns:
             AggregateReport with all coverage data.
         """
-        from civi_py.entities import (
+        from civicrm_py.entities import (
             Activity,
             Address,
             Contact,
@@ -1269,16 +1269,16 @@ class ReportGenerator:
         try:
             from importlib.metadata import version as get_version
 
-            civi_py_version = get_version("civi-py")
+            civicrm_py_version = get_version("civi-py")
         except Exception:
-            civi_py_version = "unknown"
+            civicrm_py_version = "unknown"
 
         report = AggregateReport(
             entity_report=entity_report,
             action_reports=action_reports,
             field_reports=field_reports,
             civicrm_version="5.x",  # Would come from API
-            civi_py_version=civi_py_version,
+            civicrm_py_version=civicrm_py_version,
             trends=trends,
         )
 

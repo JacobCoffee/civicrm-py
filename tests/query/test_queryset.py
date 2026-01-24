@@ -6,9 +6,9 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from civi_py.core.exceptions import CiviAPIError, CiviNotFoundError
-from civi_py.core.serialization import APIResponse
-from civi_py.query.queryset import QuerySet
+from civicrm_py.core.exceptions import CiviAPIError, CiviNotFoundError
+from civicrm_py.core.serialization import APIResponse
+from civicrm_py.query.queryset import QuerySet
 
 
 @pytest.fixture

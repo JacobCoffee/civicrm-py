@@ -4,16 +4,17 @@ from __future__ import annotations
 
 from unittest.mock import AsyncMock, Mock
 
+import msgspec
 import pytest
 
-from civi_py.core.serialization import APIResponse
-from civi_py.entities.activity import Activity
-from civi_py.entities.base import BaseEntity
-from civi_py.entities.contact import Contact
-from civi_py.entities.contribution import Contribution
-from civi_py.entities.event import Event
-from civi_py.entities.participant import Participant
-from civi_py.entities.relationships import (
+from civicrm_py.core.serialization import APIResponse
+from civicrm_py.entities.activity import Activity
+from civicrm_py.entities.base import BaseEntity
+from civicrm_py.entities.contact import Contact
+from civicrm_py.entities.contribution import Contribution
+from civicrm_py.entities.event import Event
+from civicrm_py.entities.participant import Participant
+from civicrm_py.entities.relationships import (
     ForeignKey,
     ForeignKeyAccessor,
     ManyToManyField,
@@ -26,20 +27,20 @@ from civi_py.entities.relationships import (
 )
 
 
-# Test entities for relationship testing
-class TestContact(BaseEntity, kw_only=True):
-    """Test contact entity."""
+# Sample entities for relationship testing (not prefixed with Test to avoid pytest collection)
+class SampleContact(BaseEntity, kw_only=True):
+    """Sample contact entity for testing."""
 
-    __entity_name__ = "TestContact"
+    __entity_name__ = "SampleContact"
     id: int | None = None
     display_name: str | None = None
     employer_id: int | None = None
 
 
-class TestActivity(BaseEntity, kw_only=True):
-    """Test activity entity."""
+class SampleActivity(BaseEntity, kw_only=True):
+    """Sample activity entity for testing."""
 
-    __entity_name__ = "TestActivity"
+    __entity_name__ = "SampleActivity"
     id: int | None = None
     subject: str | None = None
     source_contact_id: int | None = None
@@ -54,40 +55,40 @@ def mock_client() -> Mock:
 
 
 @pytest.fixture
-def contact_with_client(mock_client: Mock) -> TestContact:
-    """Create a TestContact with a mock client bound."""
-    contact = TestContact(id=1, display_name="John Doe")
-    object.__setattr__(contact, "_client", mock_client)
+def contact_with_client(mock_client: Mock) -> SampleContact:
+    """Create a SampleContact with a mock client bound."""
+    contact = SampleContact(id=1, display_name="John Doe")
+    msgspec.Struct.__setattr__(contact, "_client", mock_client)
     return contact
 
 
 @pytest.fixture
-def activity_with_client(mock_client: Mock) -> TestActivity:
-    """Create a TestActivity with a mock client bound."""
-    activity = TestActivity(id=100, subject="Test Activity", source_contact_id=1)
-    object.__setattr__(activity, "_client", mock_client)
+def activity_with_client(mock_client: Mock) -> SampleActivity:
+    """Create a SampleActivity with a mock client bound."""
+    activity = SampleActivity(id=100, subject="Test Activity", source_contact_id=1)
+    msgspec.Struct.__setattr__(activity, "_client", mock_client)
     return activity
 
 
 class TestRelatedManager:
     """Test RelatedManager class."""
 
-    def test_init(self, contact_with_client: TestContact) -> None:
+    def test_init(self, contact_with_client: SampleContact) -> None:
         """Test RelatedManager initialization."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         assert manager._parent is contact_with_client
-        assert manager._related_entity == "TestActivity"
+        assert manager._related_entity == "SampleActivity"
         assert manager._foreign_key == "source_contact_id"
 
-    def test_get_client_success(self, contact_with_client: TestContact) -> None:
+    def test_get_client_success(self, contact_with_client: SampleContact) -> None:
         """Test _get_client() returns bound client."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         client = manager._get_client()
@@ -95,31 +96,31 @@ class TestRelatedManager:
 
     def test_get_client_no_client_raises(self) -> None:
         """Test _get_client() raises when no client bound."""
-        contact = TestContact(id=1, display_name="John Doe")
+        contact = SampleContact(id=1, display_name="John Doe")
         manager = RelatedManager(
             parent=contact,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         with pytest.raises(RuntimeError, match="has no client bound"):
             manager._get_client()
 
-    def test_get_parent_id_success(self, contact_with_client: TestContact) -> None:
+    def test_get_parent_id_success(self, contact_with_client: SampleContact) -> None:
         """Test _get_parent_id() returns parent ID."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         assert manager._get_parent_id() == 1
 
     def test_get_parent_id_no_id_raises(self, mock_client: Mock) -> None:
         """Test _get_parent_id() raises when parent has no ID."""
-        contact = TestContact(display_name="John Doe")
-        object.__setattr__(contact, "_client", mock_client)
+        contact = SampleContact(display_name="John Doe")
+        msgspec.Struct.__setattr__(contact, "_client", mock_client)
         manager = RelatedManager(
             parent=contact,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         with pytest.raises(RuntimeError, match="has no ID"):
@@ -127,12 +128,12 @@ class TestRelatedManager:
 
     def test_filter_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test filter() returns a QuerySet."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.filter(status_id=2)
@@ -140,12 +141,12 @@ class TestRelatedManager:
 
     def test_exclude_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test exclude() returns a QuerySet."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.exclude(is_deleted=True)
@@ -153,12 +154,12 @@ class TestRelatedManager:
 
     def test_select_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test select() returns a QuerySet with field selection."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.select("id", "subject")
@@ -166,12 +167,12 @@ class TestRelatedManager:
 
     def test_order_by_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test order_by() returns a QuerySet with sort order."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.order_by("-created_date")
@@ -179,12 +180,12 @@ class TestRelatedManager:
 
     def test_limit_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test limit() returns a QuerySet with limit."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.limit(10)
@@ -192,12 +193,12 @@ class TestRelatedManager:
 
     def test_offset_returns_queryset(
         self,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test offset() returns a QuerySet with offset."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         qs = manager.offset(20)
@@ -207,7 +208,7 @@ class TestRelatedManager:
     async def test_all_returns_related_entities(
         self,
         mock_client: Mock,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test all() returns list of related entities."""
         mock_client.request.return_value = APIResponse(
@@ -221,7 +222,7 @@ class TestRelatedManager:
 
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         results = await manager.all()
@@ -234,7 +235,7 @@ class TestRelatedManager:
     async def test_first_returns_single_entity(
         self,
         mock_client: Mock,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test first() returns first related entity."""
         mock_client.request.return_value = APIResponse(
@@ -245,7 +246,7 @@ class TestRelatedManager:
 
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         result = await manager.first()
@@ -257,7 +258,7 @@ class TestRelatedManager:
     async def test_count_returns_total(
         self,
         mock_client: Mock,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test count() returns count of related entities."""
         mock_client.request.return_value = APIResponse(
@@ -268,7 +269,7 @@ class TestRelatedManager:
 
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         count = await manager.count()
@@ -279,7 +280,7 @@ class TestRelatedManager:
     async def test_exists_returns_true(
         self,
         mock_client: Mock,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test exists() returns True when entities exist."""
         mock_client.request.return_value = APIResponse(
@@ -290,7 +291,7 @@ class TestRelatedManager:
 
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         result = await manager.exists()
@@ -301,7 +302,7 @@ class TestRelatedManager:
     async def test_exists_returns_false(
         self,
         mock_client: Mock,
-        contact_with_client: TestContact,
+        contact_with_client: SampleContact,
     ) -> None:
         """Test exists() returns False when no entities exist."""
         mock_client.request.return_value = APIResponse(
@@ -312,24 +313,24 @@ class TestRelatedManager:
 
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         result = await manager.exists()
 
         assert result is False
 
-    def test_repr(self, contact_with_client: TestContact) -> None:
+    def test_repr(self, contact_with_client: SampleContact) -> None:
         """Test __repr__() output."""
         manager = RelatedManager(
             parent=contact_with_client,
-            related_entity="TestActivity",
+            related_entity="SampleActivity",
             foreign_key="source_contact_id",
         )
         repr_str = repr(manager)
         assert "RelatedManager" in repr_str
-        assert "TestContact" in repr_str
-        assert "TestActivity" in repr_str
+        assert "SampleContact" in repr_str
+        assert "SampleActivity" in repr_str
 
 
 class TestForeignKey:
@@ -342,7 +343,7 @@ class TestForeignKey:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         assert isinstance(EntityWithFK.related, ForeignKey)
 
@@ -353,17 +354,17 @@ class TestForeignKey:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         accessor = entity.related
         assert isinstance(accessor, ForeignKeyAccessor)
 
     def test_set_name(self) -> None:
         """Test __set_name__() sets attribute name."""
-        fk = ForeignKey["TestContact"]("TestContact", "related_id")
+        fk = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         class Owner:
             my_relation = fk
@@ -372,10 +373,10 @@ class TestForeignKey:
 
     def test_repr(self) -> None:
         """Test __repr__() output."""
-        fk = ForeignKey["TestContact"]("TestContact", "related_id")
+        fk = ForeignKey["SampleContact"]("SampleContact", "related_id")
         repr_str = repr(fk)
         assert "ForeignKey" in repr_str
-        assert "TestContact" in repr_str
+        assert "SampleContact" in repr_str
         assert "related_id" in repr_str
 
 
@@ -389,13 +390,13 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         accessor = entity.related
-        assert accessor._entity_name == "TestContact"
+        assert accessor._entity_name == "SampleContact"
         assert accessor._fk_field == "related_id"
 
     @pytest.mark.asyncio
@@ -406,7 +407,7 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         mock_client.request.return_value = APIResponse(
             values=[{"id": 10, "display_name": "Related Contact"}],
@@ -415,7 +416,7 @@ class TestForeignKeyAccessor:
         )
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         result = await entity.related
         assert result is not None
@@ -429,10 +430,10 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         entity = EntityWithFK(id=1, related_id=None)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         result = await entity.related
         assert result is None
@@ -447,7 +448,7 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         mock_client.request.return_value = APIResponse(
             values=[{"id": 10, "display_name": "Related Contact"}],
@@ -456,7 +457,7 @@ class TestForeignKeyAccessor:
         )
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         # First access
         result1 = await entity.related
@@ -475,7 +476,7 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         mock_client.request.return_value = APIResponse(
             values=[{"id": 10, "display_name": "Related Contact"}],
@@ -484,7 +485,7 @@ class TestForeignKeyAccessor:
         )
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         # First access (cached)
         await entity.related
@@ -503,7 +504,7 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         entity = EntityWithFK(id=1, related_id=10)
 
@@ -517,15 +518,15 @@ class TestForeignKeyAccessor:
             __entity_name__ = "EntityWithFK"
             id: int | None = None
             related_id: int | None = None
-            related = ForeignKey["TestContact"]("TestContact", "related_id")
+            related = ForeignKey["SampleContact"]("SampleContact", "related_id")
 
         entity = EntityWithFK(id=1, related_id=10)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         accessor = entity.related
         repr_str = repr(accessor)
         assert "ForeignKeyAccessor" in repr_str
-        assert "TestContact" in repr_str
+        assert "SampleContact" in repr_str
 
 
 class TestRelatedField:
@@ -537,7 +538,7 @@ class TestRelatedField:
         class EntityWithRelated(BaseEntity, kw_only=True):
             __entity_name__ = "EntityWithRelated"
             id: int | None = None
-            activities = RelatedField("TestActivity", "parent_id")
+            activities = RelatedField("SampleActivity", "parent_id")
 
         assert isinstance(EntityWithRelated.activities, RelatedField)
 
@@ -547,20 +548,20 @@ class TestRelatedField:
         class EntityWithRelated(BaseEntity, kw_only=True):
             __entity_name__ = "EntityWithRelated"
             id: int | None = None
-            activities = RelatedField("TestActivity", "parent_id")
+            activities = RelatedField("SampleActivity", "parent_id")
 
         entity = EntityWithRelated(id=1)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         manager = entity.activities
         assert isinstance(manager, RelatedManager)
 
     def test_repr(self) -> None:
         """Test __repr__() output."""
-        field = RelatedField("TestActivity", "parent_id")
+        field = RelatedField("SampleActivity", "parent_id")
         repr_str = repr(field)
         assert "RelatedField" in repr_str
-        assert "TestActivity" in repr_str
+        assert "SampleActivity" in repr_str
         assert "parent_id" in repr_str
 
 
@@ -596,7 +597,7 @@ class TestManyToManyField:
             )
 
         entity = EntityWithM2M(id=1)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
 
         manager = entity.groups
         assert isinstance(manager, ManyToManyManager)
@@ -633,7 +634,7 @@ class TestManyToManyManager:
             )
 
         entity = EntityWithM2M(id=1)
-        object.__setattr__(entity, "_client", mock_client)
+        msgspec.Struct.__setattr__(entity, "_client", mock_client)
         return entity
 
     @pytest.mark.asyncio

@@ -11,10 +11,10 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
-from civi_py.core.exceptions import CiviError
+from civicrm_py.core.exceptions import CiviError
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient, SyncCiviClient
+    from civicrm_py.core.client import CiviClient, SyncCiviClient
 
 
 # Prefix for external identifiers to track sample data

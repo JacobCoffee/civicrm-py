@@ -133,7 +133,7 @@ This example uses Flask's application factory pattern for better testability:
 
 ```python
 from flask import Flask
-from civi_py.contrib.flask import CiviFlask
+from civicrm_py.contrib.flask import CiviFlask
 
 def create_app(config=None):
     app = Flask(__name__)
@@ -159,7 +159,7 @@ The `CiviFlask` extension provides access to the CiviCRM client via Flask's `g` 
 
 ```python
 from flask import g
-from civi_py.contrib.flask import get_civi_client
+from civicrm_py.contrib.flask import get_civi_client
 
 @app.route('/contacts')
 def list_contacts():

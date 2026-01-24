@@ -1,7 +1,7 @@
 Client
 ======
 
-.. module:: civi_py
+.. module:: civicrm_py
 
 The main entry points for interacting with CiviCRM.
 
@@ -9,7 +9,7 @@ The main entry points for interacting with CiviCRM.
 CiviClient
 ----------
 
-.. autoclass:: civi_py.CiviClient
+.. autoclass:: civicrm_py.CiviClient
    :members:
    :undoc-members:
    :show-inheritance:
@@ -19,7 +19,7 @@ CiviClient
 SyncCiviClient
 --------------
 
-.. autoclass:: civi_py.SyncCiviClient
+.. autoclass:: civicrm_py.SyncCiviClient
    :members:
    :undoc-members:
    :show-inheritance:

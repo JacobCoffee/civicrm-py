@@ -12,15 +12,15 @@ from unittest.mock import Mock, patch
 import httpx
 import pytest
 
-from civi_py.core.auth import APIKeyAuth, BasicAuth, JWTAuth
-from civi_py.core.config import CiviSettings
-from civi_py.core.exceptions import (
+from civicrm_py.core.auth import APIKeyAuth, BasicAuth, JWTAuth
+from civicrm_py.core.config import CiviSettings
+from civicrm_py.core.exceptions import (
     CiviAPIError,
     CiviAuthError,
     CiviConnectionError,
     CiviTimeoutError,
 )
-from civi_py.http.transport import (
+from civicrm_py.http.transport import (
     AsyncTransport,
     BaseTransport,
     SyncTransport,
@@ -47,7 +47,7 @@ class TestConvertParams:
 
     def test_convert_msgspec_struct(self) -> None:
         """Test that msgspec Struct is converted to dict."""
-        from civi_py.core.serialization import APIRequest
+        from civicrm_py.core.serialization import APIRequest
 
         params = APIRequest(select=["id", "name"], limit=10)
         result = _convert_params(params)
@@ -718,7 +718,7 @@ class TestAsyncTransport:
         )
 
         with patch.object(asyncio, "sleep", return_value=None):
-            with patch("civi_py.http.transport.logger") as mock_logger:
+            with patch("civicrm_py.http.transport.logger") as mock_logger:
                 await transport.request("Contact", "get")
                 assert mock_logger.debug.call_count >= 1
 
@@ -745,7 +745,7 @@ class TestAsyncTransport:
         )
 
         with patch.object(asyncio, "sleep", return_value=None):
-            with patch("civi_py.http.transport.logger") as mock_logger:
+            with patch("civicrm_py.http.transport.logger") as mock_logger:
                 await transport.request("Contact", "get")
                 # Check that connection failed debug message was logged
                 debug_calls = [call.args for call in mock_logger.debug.call_args_list]
@@ -1102,7 +1102,7 @@ class TestSyncTransport:
         )
 
         with patch.object(time, "sleep", return_value=None):
-            with patch("civi_py.http.transport.logger") as mock_logger:
+            with patch("civicrm_py.http.transport.logger") as mock_logger:
                 transport.request("Contact", "get")
                 assert mock_logger.debug.call_count >= 1
 
@@ -1129,7 +1129,7 @@ class TestSyncTransport:
         )
 
         with patch.object(time, "sleep", return_value=None):
-            with patch("civi_py.http.transport.logger") as mock_logger:
+            with patch("civicrm_py.http.transport.logger") as mock_logger:
                 transport.request("Contact", "get")
                 # Check that connection failed debug message was logged
                 debug_calls = [call.args for call in mock_logger.debug.call_args_list]

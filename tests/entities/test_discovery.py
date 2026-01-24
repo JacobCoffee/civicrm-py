@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from civi_py.entities.base import BaseEntity, EntityMeta
-from civi_py.entities.discovery import (
+from civicrm_py.entities.base import BaseEntity, EntityMeta
+from civicrm_py.entities.discovery import (
     EntityDiscovery,
     EntityInfo,
     FieldInfo,
@@ -413,7 +413,7 @@ class TestEntityDiscovery:
     @pytest.mark.asyncio
     async def test_get_entity_class_static(self, discovery: EntityDiscovery) -> None:
         """Test getting static entity class from registry when manually registered."""
-        from civi_py.entities import Contact
+        from civicrm_py.entities import Contact
 
         # Manually register Contact since msgspec.Struct doesn't use EntityMeta metaclass
         EntityMeta.register_dynamic_entity("Contact", Contact)

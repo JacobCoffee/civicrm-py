@@ -1,7 +1,7 @@
 Changelog
 =========
 
-See the `GitHub Releases <https://github.com/JacobCoffee/civi-py/releases>`_ for version history.
+See the `GitHub Releases <https://github.com/JacobCoffee/civicrm-py/releases>`_ for version history.
 
 Version 0.1.0 (Unreleased)
 --------------------------

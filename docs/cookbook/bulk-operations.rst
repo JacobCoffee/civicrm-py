@@ -69,7 +69,7 @@ Track successes and failures during import:
 .. code-block:: python
 
    from dataclasses import dataclass
-   from civi_py import CiviAPIError
+   from civicrm_py import CiviAPIError
 
    @dataclass
    class ImportResult:

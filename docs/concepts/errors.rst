@@ -1,13 +1,13 @@
 Error Handling
 ==============
 
-civi-py raises specific exceptions for different error conditions.
+civicrm-py raises specific exceptions for different error conditions.
 
 
 Exception Hierarchy
 -------------------
 
-All civi-py exceptions inherit from ``CiviError``:
+All civicrm-py exceptions inherit from ``CiviError``:
 
 .. code-block:: text
 
@@ -29,7 +29,7 @@ Catch specific exceptions for targeted handling:
 
 .. code-block:: python
 
-   from civi_py import (
+   from civicrm_py import (
        CiviClient,
        CiviConnectionError,
        CiviAuthError,

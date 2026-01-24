@@ -19,12 +19,12 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from civi_py.core.serialization import (
+from civicrm_py.core.serialization import (
     APIResponse,
     decode_response,
     to_dict,
 )
-from civi_py.entities.relationships import (
+from civicrm_py.entities.relationships import (
     ForeignKey,
     ForeignKeyAccessor,
     ManyToManyField,
@@ -35,7 +35,7 @@ from civi_py.entities.relationships import (
     get_reverse_relationships,
     register_relationship,
 )
-from civi_py.query.queryset import QuerySet
+from civicrm_py.query.queryset import QuerySet
 
 # =============================================================================
 # RELATIONSHIP CONTRACT FIXTURES

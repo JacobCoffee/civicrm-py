@@ -1,7 +1,9 @@
 Database Testing
 ================
 
-Real database testing infrastructure for civi-py contributors using pytest-databases.
+Real database testing infrastructure for civicrm-py contributors using pytest-databases.
+
+For full pytest-databases documentation, see `litestar-org.github.io/pytest-databases <https://litestar-org.github.io/pytest-databases/>`_.
 
 This guide covers testing against actual PostgreSQL and SQLite databases for
 contributors who want to verify their changes work with real database operations.
@@ -85,7 +87,7 @@ Run the full integration suite:
    pytest tests/integration/ -v -m "database"
 
    # Run with coverage
-   pytest tests/integration/ -v --cov=civi_py.contrib.sqlspec
+   pytest tests/integration/ -v --cov=civicrm_py.contrib.sqlspec
 
 
 Available Fixtures
@@ -140,7 +142,7 @@ Pre-configured ``CiviSQLSpecConfig`` for each database:
    @pytest.mark.database
    async def test_with_sqlspec_config(sqlspec_config):
        """Test with CiviSQLSpecConfig fixture."""
-       from civi_py.contrib.sqlspec import ContactRepository
+       from civicrm_py.contrib.sqlspec import ContactRepository
 
        repo = ContactRepository(sqlspec_config)
        async with repo.get_session() as session:
@@ -171,7 +173,7 @@ Basic Test Pattern
 .. code-block:: python
 
    import pytest
-   from civi_py.contrib.sqlspec import CiviSQLSpecConfig, ContactRepository
+   from civicrm_py.contrib.sqlspec import CiviSQLSpecConfig, ContactRepository
 
 
    @pytest.fixture
@@ -186,7 +188,7 @@ Basic Test Pattern
 
        async def test_create_and_retrieve(self, contact_repo):
            """Test creating and retrieving a contact."""
-           from civi_py.entities import Contact
+           from civicrm_py.entities import Contact
 
            async with contact_repo.get_session() as session:
                # Create contact
@@ -205,7 +207,7 @@ Basic Test Pattern
 
        async def test_filter_contacts(self, contact_repo):
            """Test filtering contacts."""
-           from civi_py.entities import Contact
+           from civicrm_py.entities import Contact
 
            async with contact_repo.get_session() as session:
                # Create test data
@@ -240,7 +242,7 @@ Testing Migrations
 .. code-block:: python
 
    import pytest
-   from civi_py.contrib.sqlspec import (
+   from civicrm_py.contrib.sqlspec import (
        CiviSQLSpecConfig,
        MigrationConfig,
        upgrade,

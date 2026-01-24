@@ -3,7 +3,7 @@ requires = ["uv_build>=0.7,<0.8"]
 build-backend = "uv_build"
 
 [project]
-name = "civi-py"
+name = "civicrm-py"
 version = "0.1.0"
 description = "Modern Python client for CiviCRM API v4 with web framework integration"
 readme = "README.md"
@@ -40,7 +40,7 @@ Changelog = "https://github.com/JacobCoffee/civi-py/blob/main/CHANGELOG.md"
 [project.optional-dependencies]
 django = ["django>=4.2"]
 flask = ["flask>=2.0"]
-litestar = ["litestar>=2.0"]
+litestar = ["litestar>=2.0", "jinja2>=3.0"]
 fastapi = ["fastapi>=0.115.0"]
 starlette = ["starlette>=0.27.0"]
 workflows = ["litestar-workflows>=0.1.0"]
@@ -132,7 +132,7 @@ ignore = [
     "RUF100",  # Unused noqa directives OK (may be in subagent code)
     "S106",    # Hardcoded passwords OK in tests (test credentials)
 ]
-"src/civi_py/contrib/**/*" = [
+"src/civicrm_py/contrib/**/*" = [
     "INP001", # Implicit namespace packages for contrib
 ]
 "examples/**/*" = [
@@ -145,15 +145,15 @@ ignore = [
     "T201",    # Print statements OK in examples
     "TRY003",  # Long exception messages OK for examples
 ]
-"src/civi_py/query/manager.py" = [
+"src/civicrm_py/query/manager.py" = [
     "ANN401",  # Any in **kwargs is necessary for Django-style lookups
     "PLC0415", # Import inside function to avoid circular imports
     "TRY300",  # Return in try block is valid for get_or_create pattern
 ]
-"src/civi_py/contrib/integration.py" = [
+"src/civicrm_py/contrib/integration.py" = [
     "PLC0415", # Import inside function to avoid circular imports
 ]
-"src/civi_py/contrib/django/*.py" = [
+"src/civicrm_py/contrib/django/*.py" = [
     "ANN401",  # Any types required for Django admin compatibility (formfield, etc.)
     "ARG001",  # Unused args allowed - some functions are stubs for when Django unavailable
     "ARG002",  # Unused args in methods required by Django admin interface
@@ -175,7 +175,7 @@ ignore = [
     "UP031",   # % formatting matches Django admin patterns
     "UP038",   # isinstance tuple style matches Django patterns
 ]
-"src/civi_py/contrib/django/management/commands/*.py" = [
+"src/civicrm_py/contrib/django/management/commands/*.py" = [
     "ANN401",  # Any type hints necessary for Django's handle() signature
     "ARG002",  # Unused *args required by Django's BaseCommand signature
     "C901",    # Complex functions acceptable for management commands
@@ -185,7 +185,7 @@ ignore = [
     "PLR2004", # Magic values acceptable for display formatting
     "SIM108",  # if-else blocks more readable for complex default logic
 ]
-"src/civi_py/contrib/bottle/*.py" = [
+"src/civicrm_py/contrib/bottle/*.py" = [
     "ANN401",  # Any types required for stub classes and flexible interfaces
     "ARG001",  # Unused args in stub __init__ methods
     "ARG002",  # Unused args in stub __init__ methods
@@ -195,16 +195,16 @@ ignore = [
     "RUF022",  # __all__ sorting not required
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/falcon/*.py" = [
+"src/civicrm_py/contrib/falcon/*.py" = [
     "ANN401",  # Any types required for Falcon's middleware interface
     "ARG002",  # Unused args required by Falcon's middleware interface (resp, resource, etc.)
     "FBT001",  # Boolean positional args required by Falcon's middleware interface (req_succeeded)
 ]
-"src/civi_py/contrib/fastapi/*.py" = [
+"src/civicrm_py/contrib/fastapi/*.py" = [
     "EM101",   # String literals in ImportError
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/flask/*.py" = [
+"src/civicrm_py/contrib/flask/*.py" = [
     "ANN401",  # Any types required for stub classes
     "ARG002",  # Unused args in stub methods
     "EM101",   # String literals in ImportError for stubs
@@ -212,7 +212,7 @@ ignore = [
     "PLC0415", # Import inside function for lazy loading
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/quart/*.py" = [
+"src/civicrm_py/contrib/quart/*.py" = [
     "ANN401",  # Any types required for stub classes and flexible interfaces
     "ARG001",  # Unused args in stub __init__ methods
     "ARG002",  # Unused args in stub __init__ methods
@@ -222,7 +222,7 @@ ignore = [
     "RUF022",  # __all__ sorting not required
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/sanic/*.py" = [
+"src/civicrm_py/contrib/sanic/*.py" = [
     "ANN401",  # Any types required for stub classes and flexible interfaces
     "ARG001",  # Unused args in stub __init__ methods
     "ARG002",  # Unused args in stub __init__ methods
@@ -231,26 +231,26 @@ ignore = [
     "RUF022",  # __all__ sorting not required
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/starlette/*.py" = [
+"src/civicrm_py/contrib/starlette/*.py" = [
     "ANN401",  # Any types for stub classes
     "ARG002",  # Unused args in stub __init__ methods
     "EM101",   # String literals in ImportError for stub classes
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/core/exceptions.py" = [
+"src/civicrm_py/core/exceptions.py" = [
     "N818", # DoesNotExist/MultipleObjectsReturned follow Django naming convention
 ]
-"src/civi_py/entities/base.py" = [
+"src/civicrm_py/entities/base.py" = [
     "N804",    # Metaclass uses `mcs` by convention
     "PLC0415", # Import inside function to avoid circular imports
 ]
-"src/civi_py/entities/email.py" = [
+"src/civicrm_py/entities/email.py" = [
     "A005",  # Module name intentional - mirrors CiviCRM entity
 ]
-"src/civi_py/entities/relationships.py" = [
+"src/civicrm_py/entities/relationships.py" = [
     "PLC0415", # Import inside function to avoid circular imports
 ]
-"src/civi_py/contrib/litestar/cli.py" = [
+"src/civicrm_py/contrib/litestar/cli.py" = [
     "BLE001",  # Catch Exception needed for CLI error handling
     "C901",    # Complex functions acceptable for CLI commands
     "FBT001",  # Boolean positional args required by Click decorators
@@ -262,7 +262,7 @@ ignore = [
     "SIM108",  # if-else blocks more readable for CLI logic
     "TC001",   # SyncCiviClient used at runtime
 ]
-"src/civi_py/contrib/litestar/plugin.py" = [
+"src/civicrm_py/contrib/litestar/plugin.py" = [
     "C901",    # Complex on_app_init method handles multiple integrations
     "PLC0415", # Import inside function to avoid circular imports
     "PLR0912", # Many branches for optional feature configuration
@@ -270,7 +270,7 @@ ignore = [
     "S101",    # Assert used for type narrowing after None checks
     "UP038",   # isinstance tuple style for Path union types
 ]
-"src/civi_py/contrib/litestar/webui/*.py" = [
+"src/civicrm_py/contrib/litestar/webui/*.py" = [
     "ANN401",  # Any types required for Litestar Controller's owner parameter
     "ARG002",  # Unused request arg required by Litestar handler signature
     "BLE001",  # Catch Exception needed for API error handling
@@ -279,17 +279,17 @@ ignore = [
     "SIM102",  # Nested if for debug logging clarity
     "TRY300",  # Return in try block needed for action dispatch
 ]
-"src/civi_py/contrib/django/webui/*.py" = [
+"src/civicrm_py/contrib/django/webui/*.py" = [
     "ANN401",  # Any types for flexible view initialization
     "BLE001",  # Catch Exception needed for API error handling
     "PLC0415", # Import inside function for async event loop
 ]
-"src/civi_py/contrib/django/templatetags/*.py" = [
+"src/civicrm_py/contrib/django/templatetags/*.py" = [
     "ARG001",  # Unused args OK for template tag interfaces
     "S308",    # mark_safe intentional for static HTML snippets
     "UP038",   # isinstance tuple style matches Django patterns
 ]
-"src/civi_py/contrib/workflows/*.py" = [
+"src/civicrm_py/contrib/workflows/*.py" = [
     "ANN401",  # Any types for stub classes
     "ARG002",  # Unused args in stub __init__ methods
     "C901",    # Complex workflow steps handle multiple scenarios
@@ -299,7 +299,7 @@ ignore = [
     "PLR0915", # Many statements for workflow definitions
     "TRY003",  # Long exception messages OK for import errors
 ]
-"src/civi_py/contrib/sqlspec/*.py" = [
+"src/civicrm_py/contrib/sqlspec/*.py" = [
     "ANN401",  # Any types for stub methods
     "ARG002",  # Unused method args in stubs
     "ARG004",  # Unused static method args in stubs
@@ -311,20 +311,20 @@ ignore = [
     "S608",    # SQL injection - table names are from config, not user input
     "TC004",   # TYPE_CHECKING imports used in __all__ exports
 ]
-"src/civi_py/contrib/registry.py" = [
+"src/civicrm_py/contrib/registry.py" = [
     "PLC0415", # Import inside function to avoid circular imports
     "SLF001",  # Private member access in singleton __new__
 ]
-"src/civi_py/contrib/litestar/dependencies.py" = [
+"src/civicrm_py/contrib/litestar/dependencies.py" = [
     "PLC0415", # Import inside function for lazy loading
 ]
-"src/civi_py/contrib/litestar/routes.py" = [
+"src/civicrm_py/contrib/litestar/routes.py" = [
     "PLC0415", # Import inside function for lazy loading
 ]
-"src/civi_py/contrib/litestar/sqlspec_integration.py" = [
+"src/civicrm_py/contrib/litestar/sqlspec_integration.py" = [
     "PLC0415", # Import inside function for optional dependency
 ]
-"src/civi_py/contrib/litestar/workflows_integration.py" = [
+"src/civicrm_py/contrib/litestar/workflows_integration.py" = [
     "C901",    # Complex controller methods
     "PLC0415", # Import inside function for optional dependency
     "PLR0912", # Many branches for workflow routing
@@ -375,7 +375,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["civi_py"]
+known-first-party = ["civicrm_py"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -397,17 +397,17 @@ exclude = [
     "examples/**",
     # Framework integrations with optional dependencies
     # These use try/except ImportError patterns that ty doesn't understand
-    "src/civi_py/contrib/bottle/**",
-    "src/civi_py/contrib/django/**",
-    "src/civi_py/contrib/falcon/**",
-    "src/civi_py/contrib/fastapi/**",
-    "src/civi_py/contrib/flask/**",
-    "src/civi_py/contrib/litestar/**",
-    "src/civi_py/contrib/quart/**",
-    "src/civi_py/contrib/sanic/**",
-    "src/civi_py/contrib/sqlspec/**",
-    "src/civi_py/contrib/starlette/**",
-    "src/civi_py/contrib/workflows/**",
+    "src/civicrm_py/contrib/bottle/**",
+    "src/civicrm_py/contrib/django/**",
+    "src/civicrm_py/contrib/falcon/**",
+    "src/civicrm_py/contrib/fastapi/**",
+    "src/civicrm_py/contrib/flask/**",
+    "src/civicrm_py/contrib/litestar/**",
+    "src/civicrm_py/contrib/quart/**",
+    "src/civicrm_py/contrib/sanic/**",
+    "src/civicrm_py/contrib/sqlspec/**",
+    "src/civicrm_py/contrib/starlette/**",
+    "src/civicrm_py/contrib/workflows/**",
 ]
 
 [tool.pytest.ini_options]
@@ -442,7 +442,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["src/civi_py"]
+source = ["src/civicrm_py"]
 omit = ["*/contrib/*"]
 
 [tool.coverage.report]
@@ -460,7 +460,7 @@ show_missing = true
 fail_under = 80
 
 [tool.coverage.paths]
-source = ["src/civi_py", "*/site-packages/civi_py"]
+source = ["src/civicrm_py", "*/site-packages/civicrm_py"]
 
 [tool.git-cliff.changelog]
 header = """

@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from civi_py.core.serialization import (
+from civicrm_py.core.serialization import (
     APIError,
     APIRequest,
     APIResponse,

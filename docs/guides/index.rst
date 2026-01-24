@@ -1,7 +1,7 @@
 Framework Guides
 ================
 
-Integrate civi-py with your web framework.
+Integrate civicrm-py with your web framework.
 
 .. list-table::
    :widths: 20 15 65

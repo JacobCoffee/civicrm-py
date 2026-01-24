@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from civi_py.contrib.django.webui import WebUIConfig, get_urlpatterns
+from civicrm_py.contrib.django.webui import WebUIConfig, get_urlpatterns
 
 from . import (
     civiadmin,  # noqa: F401 - Import to register entity admins with Django admin

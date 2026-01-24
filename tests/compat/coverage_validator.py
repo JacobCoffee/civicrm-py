@@ -42,7 +42,7 @@ from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from civi_py.entities import (
+from civicrm_py.entities import (
     Activity,
     Address,
     Contact,
@@ -61,8 +61,8 @@ from civi_py.entities import (
     Phone,
     Tag,
 )
-from civi_py.entities.base import EntityMeta
-from civi_py.entities.discovery import EntityDiscovery, EntityInfo
+from civicrm_py.entities.base import EntityMeta
+from civicrm_py.entities.discovery import EntityDiscovery, EntityInfo
 from tests.compat.action_mapping import (
     ActionInfo,
     ActionMapping,
@@ -70,7 +70,7 @@ from tests.compat.action_mapping import (
 )
 
 if TYPE_CHECKING:
-    from civi_py.core.client import CiviClient
+    from civicrm_py.core.client import CiviClient
 
 __all__ = [
     "ActionCoverageReport",

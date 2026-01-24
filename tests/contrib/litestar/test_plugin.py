@@ -34,7 +34,7 @@ from litestar.testing import TestClient
 # This is needed because Litestar loads the Pydantic plugin by default
 pytestmark = pytest.mark.filterwarnings("ignore:Core Pydantic V1 functionality:UserWarning")
 
-from civi_py.contrib.litestar import (
+from civicrm_py.contrib.litestar import (
     CIVI_CLIENT_STATE_KEY,
     ActivityController,
     ActivityCreateDTO,
@@ -60,8 +60,8 @@ from civi_py.contrib.litestar import (
     get_health_check_route,
     provide_civi_client,
 )
-from civi_py.core.client import CiviClient
-from civi_py.core.config import CiviSettings
+from civicrm_py.core.client import CiviClient
+from civicrm_py.core.config import CiviSettings
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -478,7 +478,7 @@ class TestContactControllerIntegration:
         )
 
         # Patch CiviClient to return our mock
-        with patch("civi_py.core.client.CiviClient", return_value=mock_civi_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_civi_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],
@@ -717,7 +717,7 @@ class TestHealthCheck:
             health_check_path="/health/civi",
         )
 
-        with patch("civi_py.core.client.CiviClient", return_value=mock_civi_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_civi_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],
@@ -780,7 +780,7 @@ class TestHealthCheck:
             health_check_path="/api/v1/health/civicrm",
         )
 
-        with patch("civi_py.core.client.CiviClient", return_value=mock_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],
@@ -1090,7 +1090,7 @@ class TestEdgeCases:
             include_entities=["Contact"],
         )
 
-        with patch("civi_py.core.client.CiviClient", return_value=mock_civi_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_civi_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],
@@ -1122,7 +1122,7 @@ class TestEdgeCases:
             include_entities=["Contact"],
         )
 
-        with patch("civi_py.core.client.CiviClient", return_value=mock_civi_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_civi_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],
@@ -1162,7 +1162,7 @@ class TestEdgeCases:
             include_entities=["Contact"],
         )
 
-        with patch("civi_py.core.client.CiviClient", return_value=mock_civi_client):
+        with patch("civicrm_py.core.client.CiviClient", return_value=mock_civi_client):
             app = Litestar(
                 route_handlers=[],
                 plugins=[CiviPlugin(config)],

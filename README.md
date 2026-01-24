@@ -1,40 +1,43 @@
-# civi-py
+# civicrm-py
 
-[![CI](https://github.com/JacobCoffee/civi-py/actions/workflows/ci.yml/badge.svg)](https://github.com/JacobCoffee/civi-py/actions/workflows/ci.yml)
-[![PyPI version](https://badge.fury.io/py/civi-py.svg)](https://badge.fury.io/py/civi-py)
-[![Python Version](https://img.shields.io/pypi/pyversions/civi-py.svg)](https://pypi.org/project/civi-py/)
+[![CI](https://github.com/JacobCoffee/civicrm-py/actions/workflows/ci.yml/badge.svg)](https://github.com/JacobCoffee/civicrm-py/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/civicrm-py.svg)](https://badge.fury.io/py/civicrm-py)
+[![Python Version](https://img.shields.io/pypi/pyversions/civicrm-py.svg)](https://pypi.org/project/civicrm-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Documentation](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://civi-py.readthedocs.io)
 
-Modern Python client for CiviCRM API v4.
+A Python client for CiviCRM's API v4. Async by default, with a query interface that'll feel familiar if you've used Django's ORM.
 
-## Features
+## What it does
 
-- **Async-First**: Built on httpx for modern async/await support
-- **Type-Safe**: Full type hints with Pydantic models
-- **Django-ORM-like Queries**: Familiar chainable query interface
-- **Framework Integrations**: Django, Litestar, and FastAPI support
-- **Comprehensive Testing**: High test coverage with pytest
+- Async HTTP via httpx (sync wrappers available)
+- Type-safe models using msgspec
+- Chainable queries: `client.Contact.filter(is_deleted=False).limit(10).all()`
+- Integrations for Django, Litestar, FastAPI, Flask, and others
 
-## Installation
+## Install
 
 ```bash
-pip install civi-py
+pip install civicrm-py
 ```
 
-With framework integrations:
+With a framework:
 
 ```bash
-pip install civi-py[django]    # Django integration
-pip install civi-py[litestar]  # Litestar integration
-pip install civi-py[fastapi]   # FastAPI integration
+pip install civicrm-py[django]
+pip install civicrm-py[litestar]
+pip install civicrm-py[fastapi]
 ```
 
-## Quick Start
+Optional extras:
 
-### Configuration
+```bash
+pip install civicrm-py[sqlspec]    # Local database caching
+pip install civicrm-py[workflows]  # Workflow automation
+```
 
-Set environment variables:
+See docs for [sqlspec](https://civi.scriptr.dev/guides/sqlspec.html), [workflows](https://civi.scriptr.dev/guides/workflows.html), and [pytest-databases](https://civi.scriptr.dev/guides/pytest-databases.html).
+
+## Setup
 
 ```bash
 export CIVI_BASE_URL=https://your-site.org/civicrm/ajax/api4
@@ -42,40 +45,40 @@ export CIVI_API_KEY=your-api-key
 export CIVI_SITE_KEY=your-site-key
 ```
 
-### Basic Usage
+## Usage
 
 ```python
 import asyncio
-from civi import CiviClient
+from civicrm_py import CiviClient
 
 async def main():
     async with CiviClient() as client:
-        # List contacts
+        # Get all active contacts
         contacts = await client.Contact.filter(is_deleted=False).all()
 
-        # Get specific contact
+        # Single contact by ID
         contact = await client.Contact.get(id=123)
 
-        # Create contact
+        # Create
         new_contact = await client.Contact.create(
             first_name="John",
             last_name="Doe",
             contact_type="Individual",
         )
 
-        # Update contact
+        # Update
         await client.Contact.update(id=123, first_name="Jane")
 
-        # Delete contact
+        # Delete
         await client.Contact.delete(id=123)
 
 asyncio.run(main())
 ```
 
-### Query Building
+### Queries
 
 ```python
-# Chain filters
+# Select specific fields, filter, sort, paginate
 contacts = await (
     client.Contact
     .select("id", "display_name", "email_primary.email")
@@ -85,7 +88,7 @@ contacts = await (
     .all()
 )
 
-# Custom operators
+# Operators
 contacts = await (
     client.Contact
     .filter_by("created_date", ">=", "2024-01-01")
@@ -93,23 +96,17 @@ contacts = await (
     .all()
 )
 
-# Pagination
-page1 = await client.Contact.limit(25).offset(0).all()
-page2 = await client.Contact.limit(25).offset(25).all()
-
-# Aggregates
+# Count and exists
 total = await client.Contact.filter(is_deleted=False).count()
 exists = await client.Contact.filter(id=123).exists()
 ```
 
-### Framework Integration
-
-#### Litestar
+### Litestar
 
 ```python
 from litestar import Litestar, get
-from civi import CiviClient
-from civi.contrib.litestar import CiviPlugin
+from civicrm_py import CiviClient
+from civicrm_py.contrib.litestar import CiviPlugin
 
 @get("/contacts")
 async def get_contacts(civi: CiviClient) -> list[dict]:
@@ -121,7 +118,7 @@ app = Litestar(
 )
 ```
 
-#### Django
+### Django
 
 ```python
 # settings.py
@@ -132,7 +129,7 @@ CIVI_SETTINGS = {
 }
 
 # views.py
-from civi.contrib.django import get_civi_client
+from civicrm_py.contrib.django import get_civi_client
 
 async def contact_list(request):
     async with get_civi_client() as client:
@@ -143,24 +140,22 @@ async def contact_list(request):
 ## Development
 
 ```bash
-# Clone repository
-git clone https://github.com/JacobCoffee/civi-py.git
-cd civi-py
+git clone https://github.com/JacobCoffee/civicrm-py.git
+cd civicrm-py
 
-# Install dependencies
-make install
-
-# Run tests
-make test
-
-# Run linting
-make check
+make install  # dependencies
+make test     # tests
+make check    # lint + typecheck
 ```
 
-## Documentation
+## Docs
 
-Full documentation available at [civi-py.readthedocs.io](https://civi-py.readthedocs.io).
+[civi.scriptr.dev](https://civi.scriptr.dev)
+
+## Alternatives
+
+- [civipy](https://github.com/indepndnt/civipy) - Another Python client for CiviCRM. No built-in web framework integrations.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT

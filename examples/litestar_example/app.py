@@ -68,9 +68,9 @@ from litestar.status_codes import (
 )
 from litestar.template import TemplateConfig
 
-from civi_py.contrib.litestar import CiviPlugin, CiviPluginConfig, WebUIConfig
-from civi_py.core.client import CiviClient
-from civi_py.webui import TEMPLATES_DIR as WEBUI_TEMPLATES_DIR
+from civicrm_py.contrib.litestar import CiviPlugin, CiviPluginConfig, WebUIConfig
+from civicrm_py.core.client import CiviClient
+from civicrm_py.webui import TEMPLATES_DIR as WEBUI_TEMPLATES_DIR
 
 # =============================================================================
 # DTOs (msgspec Structs for serialization)

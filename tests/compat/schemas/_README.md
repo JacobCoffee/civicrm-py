@@ -47,7 +47,7 @@ To refresh schemas from a live CiviCRM instance:
 
 ```python
 from tests.compat.schema_validator import SchemaCache
-from civi_py import CiviClient
+from civicrm_py import CiviClient
 
 async def refresh_schemas():
     cache = SchemaCache()

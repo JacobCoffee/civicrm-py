@@ -34,7 +34,7 @@ from examples.shared import SampleDataGenerator, SyncCiviShowcase, create_jinja_
 from examples.shared.jinja_env import TEMPLATES_DIR as SHARED_TEMPLATES_DIR
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 
-from civi_py.contrib.flask import CiviFlask, get_civi_client
+from civicrm_py.contrib.flask import CiviFlask, get_civi_client
 
 if TYPE_CHECKING:
     from flask import Response
