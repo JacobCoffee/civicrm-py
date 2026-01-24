@@ -1,97 +1,162 @@
-name: CD
+name: Publish
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
-  id-token: write
-
-env:
-  FORCE_COLOR: "1"
-  UV_SYSTEM_PYTHON: "1"
 
 jobs:
+  # ==================================================================================== #
+  # BUILD DISTRIBUTION
+  # ==================================================================================== #
   build:
-    name: Build Package
+    name: Build Distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@61cb8a9741eeb8a550a1b8544337180c0fc8476b # v7.2.0
         with:
-          enable-cache: true
+          enable-cache: false  # Disable cache for release builds to prevent cache poisoning
 
-      - name: Set up Python
-        run: uv python install 3.12
-
-      - name: Build package
+      - name: Build
         run: uv build
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload dist
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: dist
+          path: dist/
+          retention-days: 5
+
+  # ==================================================================================== #
+  # SIGN WITH SIGSTORE
+  # ==================================================================================== #
+  sign:
+    name: Sign Distributions
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: dist
           path: dist/
 
+      - name: Sign with Sigstore
+        uses: sigstore/gh-action-sigstore-python@a5caf349bc536fbef3668a10ed7f5cd309a4b53d # v3.2.0
+        with:
+          inputs: |
+            dist/*.tar.gz
+            dist/*.whl
+
+      - name: Upload signed dist
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: dist-signed
+          path: dist/
+          retention-days: 5
+
+  # ==================================================================================== #
+  # CREATE DRAFT RELEASE (before publishing - for immutable releases)
+  # ==================================================================================== #
+  draft-release:
+    name: Create Draft Release
+    needs: sign
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download signed dist
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: dist-signed
+          path: dist/
+
+      - name: Create draft release and upload assets
+        run: |
+          gh release create "${TAG_NAME}" dist/** \
+            --repo "${GITHUB_REPOSITORY}" \
+            --draft \
+            --generate-notes \
+            --title "${TAG_NAME}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+
+  # ==================================================================================== #
+  # PUBLISH TO PYPI
+  # ==================================================================================== #
   publish-pypi:
     name: Publish to PyPI
-    needs: build
+    needs: draft-release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     environment:
       name: pypi
-      url: https://pypi.org/p/civicrm-py
+      url: https://pypi.org/project/civicrm-py/
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+      # IMPORTANT: Use unsigned dist - sigstore files break PyPI upload
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: dist
           path: dist/
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+        with:
+          attestations: true
 
-  publish-github:
-    name: Publish to GitHub Release
-    needs: build
+  # ==================================================================================== #
+  # PUBLISH RELEASE (remove draft status - after PyPI publish)
+  # ==================================================================================== #
+  publish-release:
+    name: Publish GitHub Release
+    needs: [draft-release, publish-pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
+      - name: Publish release (remove draft status)
+        run: |
+          gh release edit "${TAG_NAME}" --repo "${GITHUB_REPOSITORY}" --draft=false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
 
-      - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-
+  # ==================================================================================== #
+  # UPDATE CHANGELOG
+  # ==================================================================================== #
   changelog:
     name: Update Changelog
-    needs: [publish-pypi]
+    needs: publish-pypi
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Install git-cliff
         uses: taiki-e/install-action@git-cliff
 
       - name: Generate changelog
-        run: |
-          git-cliff --output CHANGELOG.md
+        run: git-cliff --output CHANGELOG.md
 
       - name: Commit changelog
         run: |
@@ -100,3 +165,21 @@ jobs:
           git add CHANGELOG.md
           git diff --staged --quiet || git commit -m "chore(release): update changelog"
           git push origin main
+
+  # ==================================================================================== #
+  # CLEANUP DRAFT ON FAILURE
+  # ==================================================================================== #
+  cleanup-draft:
+    name: Cleanup Draft Release on Failure
+    needs: [draft-release, publish-pypi]
+    if: failure() && needs.draft-release.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete draft release
+        run: |
+          gh release delete "${TAG_NAME}" --repo "${GITHUB_REPOSITORY}" --yes || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
