@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "civicrm-py"
-version = "0.1.3"
+version = "0.1.4"
 description = "Modern Python client for CiviCRM API v4 with web framework integration"
 readme = "README.md"
 license = "MIT"
