@@ -82,6 +82,46 @@ class APIResponse(msgspec.Struct, Generic[T]):
         return None
 
 
+class APIv3Response(msgspec.Struct, kw_only=True):
+    """CiviCRM API v3 response structure.
+
+    APIv3 reports errors in-band (HTTP 200 with ``is_error: 1``), and ``values``
+    is keyed by entity ID unless the request set ``sequential: 1``.
+
+    Attributes:
+        is_error: 1 if the call failed, else 0.
+        error_message: Error message if the call failed.
+        error_code: Error code if the call failed.
+        version: API version (always 3).
+        count: Number of returned records.
+        id: ID of the created/affected record, when there is exactly one.
+        values: Records, as an ID-keyed object or (sequential) a list.
+    """
+
+    is_error: int = 0
+    error_message: str | None = None
+    error_code: int | str | None = None
+    version: int | None = None
+    count: int | None = None
+    id: int | str | None = None
+    values: dict[str, Any] | list[Any] | None = None
+
+    @property
+    def records(self) -> list[Any]:
+        """Get values as a list regardless of ``sequential`` mode."""
+        if self.values is None:
+            return []
+        if isinstance(self.values, dict):
+            return list(self.values.values())
+        return self.values
+
+    @property
+    def first(self) -> Any:  # noqa: ANN401  # record shape depends on entity/action
+        """Get first record or None."""
+        records = self.records
+        return records[0] if records else None
+
+
 class FieldMetadata(msgspec.Struct, kw_only=True):
     """Metadata for a CiviCRM entity field.
 
@@ -120,6 +160,7 @@ class EntityMetadata(msgspec.Struct, kw_only=True):
 _encoder = msgspec.json.Encoder()
 _decoder = msgspec.json.Decoder()
 _response_decoder = msgspec.json.Decoder(APIResponse[dict[str, Any]])
+_v3_response_decoder = msgspec.json.Decoder(APIv3Response)
 
 
 def encode(obj: object) -> bytes:
@@ -165,6 +206,20 @@ def decode_response(data: bytes | str) -> APIResponse[dict[str, Any]]:
     return _response_decoder.decode(data)
 
 
+def decode_v3_response(data: bytes | str) -> APIv3Response:
+    """Decode API v3 response JSON.
+
+    Args:
+        data: JSON response bytes or string.
+
+    Returns:
+        Decoded APIv3Response.
+    """
+    if isinstance(data, str):
+        data = data.encode()
+    return _v3_response_decoder.decode(data)
+
+
 def to_dict(obj: msgspec.Struct) -> dict[str, Any]:
     """Convert msgspec Struct to dictionary.
 
@@ -181,10 +236,12 @@ __all__ = [
     "APIError",
     "APIRequest",
     "APIResponse",
+    "APIv3Response",
     "EntityMetadata",
     "FieldMetadata",
     "decode",
     "decode_response",
+    "decode_v3_response",
     "encode",
     "to_dict",
 ]

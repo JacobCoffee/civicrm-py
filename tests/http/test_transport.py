@@ -1285,9 +1285,10 @@ class TestTransportRequestData:
 
 
 class TestRequestHandling:
-    """Tests for write-retry safety and non-JSON responses."""
+    """Tests for APIv3 requests, write-retry safety, and non-JSON responses."""
 
     API4 = "https://example.org/civicrm/ajax/api4"
+    API3 = "https://example.org/civicrm/ajax/rest"
 
     @pytest.fixture
     def settings(self) -> CiviSettings:
@@ -1307,10 +1308,61 @@ class TestRequestHandling:
 
         return SyncTransport(settings, AuthProvider.from_settings(settings))
 
+    def test_v3_request_posts_form_to_rest_endpoint(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+    ) -> None:
+        """Test APIv3 call hits /ajax/rest with entity/action/json fields and decodes id-keyed values."""
+        route = respx_mock.post(self.API3).respond(
+            200,
+            json={"is_error": 0, "version": 3, "count": 1, "id": 42, "values": {"42": {"id": "42"}}},
+        )
+
+        result = transport.request_v3("Order", "create", {"contact_id": 7, "total_amount": 10.5})
+
+        form = dict(httpx.QueryParams(route.calls.last.request.content.decode()))
+        assert form["entity"] == "Order"
+        assert form["action"] == "create"
+        assert json.loads(form["json"]) == {"contact_id": 7, "total_amount": 10.5}
+        sent = route.calls.last.request.headers
+        assert sent["X-Civi-Auth"] == "Bearer test-api-key"
+        assert sent["X-Civi-Key"] == "test-site-key"
+        assert result.id == 42
+        assert result.records == [{"id": "42"}]
+
+    def test_v3_in_band_error_raises(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+    ) -> None:
+        """Test APIv3 HTTP 200 with is_error=1 raises CiviAPIError."""
+        respx_mock.post(self.API3).respond(
+            200,
+            json={"is_error": 1, "error_message": "Mandatory key(s) missing", "error_code": "mandatory_missing"},
+        )
+
+        with pytest.raises(CiviAPIError, match="Mandatory key") as exc_info:
+            transport.request_v3("Order", "create", {})
+
+        assert exc_info.value.error_code == "mandatory_missing"
+
+    def test_v3_requires_api4_base_url(self, respx_mock: respx.MockRouter) -> None:
+        """Test APIv3 refuses to guess an endpoint when base_url is not .../ajax/api4."""
+        from civicrm_py.core.exceptions import CiviConfigError
+
+        settings = CiviSettings(base_url="https://example.org/custom/api", api_key="k")
+        transport = SyncTransport(settings, APIKeyAuth(api_key="k"))
+
+        with pytest.raises(CiviConfigError, match="ajax/api4"):
+            transport.request_v3("Order", "create", {})
+        assert not respx_mock.calls
+
     @pytest.mark.parametrize(
         ("url", "call"),
         [
             (f"{API4}/Contact/create", lambda t: t.request("Contact", "create", {"values": {}})),
+            (API3, lambda t: t.request_v3("Order", "create", {})),
         ],
     )
     def test_write_read_timeout_not_retried(
@@ -1374,3 +1426,14 @@ class TestRequestHandling:
             transport.request("Contact", "get")
 
         assert exc_info.value.details["status_code"] == 502
+
+    async def test_async_v3_request(self, settings: CiviSettings, respx_mock: respx.MockRouter) -> None:
+        """Test the async transport speaks APIv3 too."""
+        from civicrm_py.core.auth import AuthProvider
+
+        respx_mock.post(self.API3).respond(200, json={"is_error": 0, "id": 9, "values": [{"id": 9}]})
+
+        async with AsyncTransport(settings, AuthProvider.from_settings(settings)) as transport:
+            result = await transport.request_v3("MembershipPayment", "create", {"contribution_id": 1})
+
+        assert result.first == {"id": 9}

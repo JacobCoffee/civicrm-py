@@ -56,6 +56,10 @@ get_fields(entity)
 request(entity, action, params)
     Make a raw API request for actions not covered by convenience methods.
 
+request_v3(entity, action, params)
+    Make a legacy APIv3 request, for calls with no APIv4 equivalent (such as ``Order.create``).
+    Returns an ``APIv3Response``. See `Legacy APIv3`_.
+
 
 Response Object
 ---------------
@@ -93,6 +97,35 @@ The values are dictionaries with field names as keys:
        print(contact["id"])
        print(contact["display_name"])
        print(contact.get("email_primary.email"))
+
+
+Legacy APIv3
+------------
+
+Some CiviCRM operations are only exposed through APIv3, most notably ``Order.create``, which
+creates a contribution together with its line items and financial transactions. Use
+``request_v3`` for these:
+
+.. code-block:: python
+
+   with SyncCiviClient() as client:
+       response = client.request_v3("Order", "create", {
+           "contact_id": 42,
+           "total_amount": 25.00,
+           "financial_type_id": 1,
+           "contribution_status_id": 2,  # Pending
+       })
+       contribution_id = response.id
+
+The APIv3 endpoint is derived from ``base_url``: ``https://example.org/civicrm/ajax/api4``
+becomes ``https://example.org/civicrm/ajax/rest``. ``request_v3`` raises ``CiviConfigError``
+if ``base_url`` does not end in ``/ajax/api4``.
+
+``APIv3Response`` differs from ``APIResponse``:
+
+- ``values`` is keyed by record ID unless you pass ``"sequential": 1``; ``records`` always returns a list.
+- ``id`` holds the ID of the created/affected record.
+- APIv3 reports errors inside an HTTP 200 body (``is_error: 1``); these are raised as ``CiviAPIError``.
 
 
 Retries

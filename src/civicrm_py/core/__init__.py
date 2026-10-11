@@ -34,6 +34,7 @@ from civicrm_py.core.serialization import (
     APIError,
     APIRequest,
     APIResponse,
+    APIv3Response,
     EntityMetadata,
     FieldMetadata,
 )
@@ -43,6 +44,7 @@ __all__ = [
     "APIKeyAuth",
     "APIRequest",
     "APIResponse",
+    "APIv3Response",
     "AuthProvider",
     "BasicAuth",
     "CiviAPIError",

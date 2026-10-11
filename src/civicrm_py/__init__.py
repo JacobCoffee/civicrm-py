@@ -30,13 +30,14 @@ from civicrm_py.core.exceptions import (
     CiviTimeoutError,
     CiviValidationError,
 )
-from civicrm_py.core.serialization import APIRequest, APIResponse
+from civicrm_py.core.serialization import APIRequest, APIResponse, APIv3Response
 
 __version__ = "0.1.0"
 
 __all__ = [
     "APIRequest",
     "APIResponse",
+    "APIv3Response",
     "CiviAPIError",
     "CiviAuthError",
     "CiviClient",

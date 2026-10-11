@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Self
 
 from civicrm_py.core.auth import AuthProvider
 from civicrm_py.core.config import CiviSettings
-from civicrm_py.core.serialization import APIRequest, APIResponse
+from civicrm_py.core.serialization import APIRequest, APIResponse, APIv3Response
 from civicrm_py.http.transport import AsyncTransport, SyncTransport
 
 if TYPE_CHECKING:
@@ -218,6 +218,35 @@ class CiviClient:
         """
         return await self.request(entity, "getFields", {})
 
+    async def request_v3(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+    ) -> APIv3Response:
+        """Make a legacy APIv3 request.
+
+        For calls with no APIv4 equivalent (e.g. ``Order.create``). The APIv3
+        endpoint is derived from ``base_url`` (``.../ajax/api4`` -> ``.../ajax/rest``).
+
+        Args:
+            entity: CiviCRM entity name (e.g., 'Order').
+            action: API action (e.g., 'create').
+            params: APIv3 parameters.
+
+        Returns:
+            APIv3 response.
+
+        Raises:
+            CiviConfigError: If base_url does not end in ``/ajax/api4``.
+            CiviConnectionError: On network error.
+            CiviTimeoutError: On request timeout.
+            CiviAuthError: On authentication failure.
+            CiviAPIError: On API error response (``is_error: 1``).
+        """
+        transport = await self._get_transport()
+        return await transport.request_v3(entity, action, params)
+
     async def close(self) -> None:
         """Close the client and release resources."""
         if self._transport is not None:
@@ -368,6 +397,16 @@ class SyncCiviClient:
     ) -> APIResponse[dict[str, Any]]:
         """Get field metadata for an entity."""
         return self.request(entity, "getFields", {})
+
+    def request_v3(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+    ) -> APIv3Response:
+        """Make a legacy APIv3 request. See :meth:`CiviClient.request_v3`."""
+        transport = self._get_transport()
+        return transport.request_v3(entity, action, params)
 
     def close(self) -> None:
         """Close the client and release resources."""

@@ -22,3 +22,13 @@ APIResponse
    :undoc-members:
    :show-inheritance:
    :no-index:
+
+
+APIv3Response
+-------------
+
+.. autoclass:: civicrm_py.APIv3Response
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:

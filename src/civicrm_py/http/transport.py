@@ -27,10 +27,17 @@ import msgspec
 from civicrm_py.core.exceptions import (
     CiviAPIError,
     CiviAuthError,
+    CiviConfigError,
     CiviConnectionError,
     CiviTimeoutError,
 )
-from civicrm_py.core.serialization import APIResponse, decode_response, to_dict
+from civicrm_py.core.serialization import (
+    APIResponse,
+    APIv3Response,
+    decode_response,
+    decode_v3_response,
+    to_dict,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -42,6 +49,9 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 R = TypeVar("R")
+
+_API4_SUFFIX = "/ajax/api4"
+_API3_SUFFIX = "/ajax/rest"
 
 
 def _convert_params(params: APIRequest | dict[str, Any] | None) -> dict[str, Any]:
@@ -88,6 +98,23 @@ class BaseTransport:
         """
         return f"{self.base_url}/{entity}/{action}"
 
+    def _build_v3_url(self) -> str:
+        """Build the APIv3 REST endpoint URL from the APIv4 base URL.
+
+        ``https://example.org/civicrm/ajax/api4`` becomes
+        ``https://example.org/civicrm/ajax/rest``.
+
+        Returns:
+            Full URL for the APIv3 endpoint.
+
+        Raises:
+            CiviConfigError: If base_url does not end in ``/ajax/api4``.
+        """
+        if not self.base_url.endswith(_API4_SUFFIX):
+            msg = f"APIv3 requests require base_url ending in '{_API4_SUFFIX}', got {self.base_url!r}"
+            raise CiviConfigError(msg)
+        return self.base_url[: -len(_API4_SUFFIX)] + _API3_SUFFIX
+
     def _build_headers(self) -> dict[str, str]:
         """Build request headers.
 
@@ -115,6 +142,32 @@ class BaseTransport:
             Form data dict with 'params' key containing JSON string.
         """
         return {"params": json.dumps(params)}
+
+    def _build_v3_request_data(self, entity: str, action: str, params: dict[str, Any]) -> dict[str, str]:
+        """Build form-encoded request data for CiviCRM API v3.
+
+        Args:
+            entity: CiviCRM entity name.
+            action: API action.
+            params: Request parameters dict.
+
+        Returns:
+            Form data dict with 'entity', 'action', and JSON-encoded 'json'.
+        """
+        return {"entity": entity, "action": action, "json": json.dumps(params)}
+
+    def _check_auth(self, response: httpx.Response) -> None:
+        """Raise CiviAuthError on 401/403.
+
+        Raises:
+            CiviAuthError: On 401/403 status.
+        """
+        if response.status_code == HTTPStatus.UNAUTHORIZED:
+            msg = "Authentication failed"
+            raise CiviAuthError(msg)
+        if response.status_code == HTTPStatus.FORBIDDEN:
+            msg = "Permission denied"
+            raise CiviAuthError(msg)
 
     def _decode(self, response: httpx.Response, decoder: Callable[[bytes], R]) -> R:
         """Decode a JSON body, turning non-JSON responses (proxy/HTML error pages) into CiviAPIError.
@@ -144,14 +197,35 @@ class BaseTransport:
             CiviAuthError: On 401/403 status.
             CiviAPIError: On API error response.
         """
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            msg = "Authentication failed"
-            raise CiviAuthError(msg)
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            msg = "Permission denied"
-            raise CiviAuthError(msg)
-
+        self._check_auth(response)
         api_response = self._decode(response, decode_response)
+
+        if api_response.is_error:
+            raise CiviAPIError(
+                api_response.error_message or "Unknown API error",
+                error_code=api_response.error_code,
+                error_message=api_response.error_message,
+            )
+
+        return api_response
+
+    def _handle_v3_response(self, response: httpx.Response) -> APIv3Response:
+        """Process HTTP response from the APIv3 endpoint.
+
+        APIv3 signals errors with ``is_error: 1`` in an HTTP 200 body.
+
+        Args:
+            response: httpx Response object.
+
+        Returns:
+            Decoded APIv3 response.
+
+        Raises:
+            CiviAuthError: On 401/403 status.
+            CiviAPIError: On API error response.
+        """
+        self._check_auth(response)
+        api_response = self._decode(response, decode_v3_response)
 
         if api_response.is_error:
             raise CiviAPIError(
@@ -222,21 +296,14 @@ class AsyncTransport(BaseTransport):
             )
         return self._client
 
-    async def request(
+    async def _send(
         self,
-        entity: str,
+        url: str,
+        form_data: dict[str, str],
         action: str,
-        params: APIRequest | dict[str, Any] | None = None,
-    ) -> APIResponse[dict[str, Any]]:
-        """Make async API request.
-
-        Args:
-            entity: CiviCRM entity name.
-            action: API action.
-            params: Request parameters.
-
-        Returns:
-            API response.
+        handler: Callable[[httpx.Response], R],
+    ) -> R:
+        """POST form data with retries, then decode via handler.
 
         Raises:
             CiviConnectionError: On network error.
@@ -244,17 +311,14 @@ class AsyncTransport(BaseTransport):
             CiviAuthError: On authentication failure.
             CiviAPIError: On API error response.
         """
-        url = self._build_url(entity, action)
         headers = self._build_headers()
-        body = _convert_params(params)
         last_error: CiviConnectionError | None = None
 
         for attempt in range(self.settings.max_retries + 1):
             try:
                 client = await self._get_client()
-                form_data = self._build_request_data(body)
                 response = await client.post(url, data=form_data, headers=headers)
-                return self._handle_response(response)
+                return handler(response)
             except httpx.TransportError as e:
                 last_error, retryable = self._classify_error(e, action)
                 if self.settings.debug:
@@ -272,6 +336,57 @@ class AsyncTransport(BaseTransport):
             raise last_error
         msg = "Request failed after retries"
         raise CiviConnectionError(msg)
+
+    async def request(
+        self,
+        entity: str,
+        action: str,
+        params: APIRequest | dict[str, Any] | None = None,
+    ) -> APIResponse[dict[str, Any]]:
+        """Make async API v4 request.
+
+        Args:
+            entity: CiviCRM entity name.
+            action: API action.
+            params: Request parameters.
+
+        Returns:
+            API response.
+
+        Raises:
+            CiviConnectionError: On network error.
+            CiviTimeoutError: On request timeout.
+            CiviAuthError: On authentication failure.
+            CiviAPIError: On API error response.
+        """
+        form_data = self._build_request_data(_convert_params(params))
+        return await self._send(self._build_url(entity, action), form_data, action, self._handle_response)
+
+    async def request_v3(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+    ) -> APIv3Response:
+        """Make async API v3 request.
+
+        Args:
+            entity: CiviCRM entity name (e.g., 'Order').
+            action: API action (e.g., 'create').
+            params: APIv3 parameters.
+
+        Returns:
+            APIv3 response.
+
+        Raises:
+            CiviConfigError: If base_url cannot be mapped to the APIv3 endpoint.
+            CiviConnectionError: On network error.
+            CiviTimeoutError: On request timeout.
+            CiviAuthError: On authentication failure.
+            CiviAPIError: On API error response.
+        """
+        form_data = self._build_v3_request_data(entity, action, params or {})
+        return await self._send(self._build_v3_url(), form_data, action, self._handle_v3_response)
 
     async def close(self) -> None:
         """Close the HTTP client."""
@@ -319,21 +434,14 @@ class SyncTransport(BaseTransport):
             )
         return self._client
 
-    def request(
+    def _send(
         self,
-        entity: str,
+        url: str,
+        form_data: dict[str, str],
         action: str,
-        params: APIRequest | dict[str, Any] | None = None,
-    ) -> APIResponse[dict[str, Any]]:
-        """Make sync API request.
-
-        Args:
-            entity: CiviCRM entity name.
-            action: API action.
-            params: Request parameters.
-
-        Returns:
-            API response.
+        handler: Callable[[httpx.Response], R],
+    ) -> R:
+        """POST form data with retries, then decode via handler.
 
         Raises:
             CiviConnectionError: On network error.
@@ -341,17 +449,14 @@ class SyncTransport(BaseTransport):
             CiviAuthError: On authentication failure.
             CiviAPIError: On API error response.
         """
-        url = self._build_url(entity, action)
         headers = self._build_headers()
-        body = _convert_params(params)
         last_error: CiviConnectionError | None = None
 
         for attempt in range(self.settings.max_retries + 1):
             try:
                 client = self._get_client()
-                form_data = self._build_request_data(body)
                 response = client.post(url, data=form_data, headers=headers)
-                return self._handle_response(response)
+                return handler(response)
             except httpx.TransportError as e:
                 last_error, retryable = self._classify_error(e, action)
                 if self.settings.debug:
@@ -369,6 +474,57 @@ class SyncTransport(BaseTransport):
             raise last_error
         msg = "Request failed after retries"
         raise CiviConnectionError(msg)
+
+    def request(
+        self,
+        entity: str,
+        action: str,
+        params: APIRequest | dict[str, Any] | None = None,
+    ) -> APIResponse[dict[str, Any]]:
+        """Make sync API v4 request.
+
+        Args:
+            entity: CiviCRM entity name.
+            action: API action.
+            params: Request parameters.
+
+        Returns:
+            API response.
+
+        Raises:
+            CiviConnectionError: On network error.
+            CiviTimeoutError: On request timeout.
+            CiviAuthError: On authentication failure.
+            CiviAPIError: On API error response.
+        """
+        form_data = self._build_request_data(_convert_params(params))
+        return self._send(self._build_url(entity, action), form_data, action, self._handle_response)
+
+    def request_v3(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+    ) -> APIv3Response:
+        """Make sync API v3 request.
+
+        Args:
+            entity: CiviCRM entity name (e.g., 'Order').
+            action: API action (e.g., 'create').
+            params: APIv3 parameters.
+
+        Returns:
+            APIv3 response.
+
+        Raises:
+            CiviConfigError: If base_url cannot be mapped to the APIv3 endpoint.
+            CiviConnectionError: On network error.
+            CiviTimeoutError: On request timeout.
+            CiviAuthError: On authentication failure.
+            CiviAPIError: On API error response.
+        """
+        form_data = self._build_v3_request_data(entity, action, params or {})
+        return self._send(self._build_v3_url(), form_data, action, self._handle_v3_response)
 
     def close(self) -> None:
         """Close the HTTP client."""
