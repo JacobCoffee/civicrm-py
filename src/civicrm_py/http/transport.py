@@ -14,7 +14,7 @@ import json
 import logging
 import time
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Self, TypeVar
 
 import httpx
 import msgspec
@@ -28,11 +28,15 @@ from civicrm_py.core.exceptions import (
 from civicrm_py.core.serialization import APIResponse, decode_response, to_dict
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from civicrm_py.core.auth import AuthProvider
     from civicrm_py.core.config import CiviSettings
     from civicrm_py.core.serialization import APIRequest
 
 logger = logging.getLogger(__name__)
+
+R = TypeVar("R")
 
 
 def _convert_params(params: APIRequest | dict[str, Any] | None) -> dict[str, Any]:
@@ -102,6 +106,21 @@ class BaseTransport:
         """
         return {"params": json.dumps(params)}
 
+    def _decode(self, response: httpx.Response, decoder: Callable[[bytes], R]) -> R:
+        """Decode a JSON body, turning non-JSON responses (proxy/HTML error pages) into CiviAPIError.
+
+        Raises:
+            CiviAPIError: If the body is not a decodable CiviCRM response.
+        """
+        try:
+            return decoder(response.content)
+        except (msgspec.DecodeError, msgspec.ValidationError) as e:
+            msg = f"Unexpected non-API response (HTTP {response.status_code})"
+            raise CiviAPIError(
+                msg,
+                details={"status_code": response.status_code, "body": response.text[:500]},
+            ) from e
+
     def _handle_response(self, response: httpx.Response) -> APIResponse[dict[str, Any]]:
         """Process HTTP response.
 
@@ -122,7 +141,7 @@ class BaseTransport:
             msg = "Permission denied"
             raise CiviAuthError(msg)
 
-        api_response = decode_response(response.content)
+        api_response = self._decode(response, decode_response)
 
         if api_response.is_error:
             raise CiviAPIError(

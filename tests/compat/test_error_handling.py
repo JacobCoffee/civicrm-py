@@ -22,7 +22,6 @@ from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
 import httpx
-import msgspec
 import pytest
 
 from civicrm_py import CiviSettings
@@ -1037,8 +1036,8 @@ class TestMalformedResponses:
             content=b"",
         )
 
-        # Empty response should raise an error (can't decode empty JSON)
-        with pytest.raises(msgspec.DecodeError):
+        # Empty response can't be decoded; surfaced as an API error, not a raw msgspec error
+        with pytest.raises(CiviAPIError, match="non-API response"):
             await async_transport.request("Contact", "get")
 
     async def test_malformed_json_response(
@@ -1052,7 +1051,7 @@ class TestMalformedResponses:
             content=b"{invalid json",
         )
 
-        with pytest.raises(msgspec.DecodeError):
+        with pytest.raises(CiviAPIError, match="non-API response"):
             await async_transport.request("Contact", "get")
 
     async def test_html_error_page_response(
@@ -1069,7 +1068,7 @@ class TestMalformedResponses:
             headers={"Content-Type": "text/html"},
         )
 
-        with pytest.raises((msgspec.DecodeError, CiviAPIError)):
+        with pytest.raises(CiviAPIError, match="HTTP 500"):
             await async_transport.request("Contact", "get")
 
     async def test_partial_json_response(
@@ -1085,7 +1084,7 @@ class TestMalformedResponses:
             content=partial_json,
         )
 
-        with pytest.raises(msgspec.DecodeError):
+        with pytest.raises(CiviAPIError, match="non-API response"):
             await async_transport.request("Contact", "get")
 
     async def test_response_with_unknown_error_code(

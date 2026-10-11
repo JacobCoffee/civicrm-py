@@ -1282,3 +1282,40 @@ class TestTransportRequestData:
         # Decode form data
         body = captured_request.content.decode()
         assert "params=" in body
+
+
+class TestRequestHandling:
+    """Tests for non-JSON responses."""
+
+    API4 = "https://example.org/civicrm/ajax/api4"
+
+    @pytest.fixture
+    def settings(self) -> CiviSettings:
+        """Create test settings with retries enabled."""
+        return CiviSettings(
+            base_url=self.API4,
+            api_key="test-api-key",
+            site_key="test-site-key",
+            auth_flow="xheader",
+            max_retries=2,
+        )
+
+    @pytest.fixture
+    def transport(self, settings: CiviSettings) -> SyncTransport:
+        """Create SyncTransport instance."""
+        from civicrm_py.core.auth import AuthProvider
+
+        return SyncTransport(settings, AuthProvider.from_settings(settings))
+
+    def test_non_json_response_raises_api_error(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+    ) -> None:
+        """Test an HTML proxy error page surfaces as CiviAPIError with the status code."""
+        respx_mock.post(f"{self.API4}/Contact/get").respond(502, text="<html>Bad Gateway</html>")
+
+        with pytest.raises(CiviAPIError, match="HTTP 502") as exc_info:
+            transport.request("Contact", "get")
+
+        assert exc_info.value.details["status_code"] == 502
