@@ -373,6 +373,7 @@ class CiviFlask:
             debug=_get_bool(app.config.get("CIVI_DEBUG"), default=False),
             max_retries=_get_int(app.config.get("CIVI_MAX_RETRIES"), 3),
             auth_type=auth_type,
+            auth_flow=app.config.get("CIVI_AUTH_FLOW", "header"),
             jwt_token=app.config.get("CIVI_JWT_TOKEN"),
             username=app.config.get("CIVI_USERNAME"),
             password=app.config.get("CIVI_PASSWORD"),

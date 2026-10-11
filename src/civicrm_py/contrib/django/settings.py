@@ -95,6 +95,7 @@ def get_django_settings() -> dict[str, Any]:
             - api_key: API key (optional)
             - site_key: Site key (optional)
             - auth_type: Authentication type (default: "api_key")
+            - auth_flow: AuthX flow, "header" or "xheader" (default: "header")
             - timeout: Request timeout (default: 30)
             - verify_ssl: SSL verification (default: True)
             - debug: Debug mode (default: False)
@@ -129,6 +130,7 @@ def get_django_settings() -> dict[str, Any]:
         "api_key": getattr(django_settings, "CIVICRM_API_KEY", None),
         "site_key": getattr(django_settings, "CIVICRM_SITE_KEY", None),
         "auth_type": getattr(django_settings, "CIVICRM_AUTH_TYPE", "api_key"),
+        "auth_flow": getattr(django_settings, "CIVICRM_AUTH_FLOW", "header"),
         "timeout": getattr(django_settings, "CIVICRM_TIMEOUT", 30),
         "verify_ssl": getattr(django_settings, "CIVICRM_VERIFY_SSL", True),
         "debug": getattr(django_settings, "CIVICRM_DEBUG", False),
@@ -166,6 +168,7 @@ def create_settings() -> CiviSettings:
         api_key=config["api_key"],
         site_key=config["site_key"],
         auth_type=config["auth_type"],
+        auth_flow=config["auth_flow"],
         timeout=config["timeout"],
         verify_ssl=config["verify_ssl"],
         debug=config["debug"],

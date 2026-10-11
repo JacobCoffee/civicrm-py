@@ -117,6 +117,7 @@ Cassettes automatically redact sensitive headers:
 - `Authorization`
 - `X-Civi-Api-Key`
 - `X-Civi-Site-Key` / `X-Civi-Key`
+- `X-Civi-Auth`
 - `Cookie` / `Set-Cookie`
 
 Review cassettes before committing to ensure no other sensitive data is present.

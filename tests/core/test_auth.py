@@ -23,18 +23,26 @@ class TestAPIKeyAuth:
         auth = APIKeyAuth(api_key="test-api-key")
         headers = auth.get_headers()
 
-        assert headers["Authorization"] == "Bearer test-api-key"
-        assert headers["X-Requested-With"] == "XMLHttpRequest"
-        assert "X-Civi-Key" not in headers
+        assert headers == {"Authorization": "Bearer test-api-key"}
 
     def test_get_headers_with_site_key(self) -> None:
-        """Test get_headers includes site key when provided."""
+        """Test site key is sent as X-Civi-Key, the header AuthX's site-key guard reads."""
         auth = APIKeyAuth(api_key="test-api-key", site_key="test-site-key")
         headers = auth.get_headers()
 
-        assert headers["Authorization"] == "Bearer test-api-key"
-        assert headers["X-Requested-With"] == "XMLHttpRequest"
-        assert headers["X-Civi-Key"] == "test-site-key"
+        assert headers == {"Authorization": "Bearer test-api-key", "X-Civi-Key": "test-site-key"}
+
+    def test_xheader_flow_uses_x_civi_auth(self) -> None:
+        """Test xheader flow moves the credential to X-Civi-Auth and drops Authorization."""
+        auth = APIKeyAuth(api_key="test-api-key", site_key="test-site-key", flow="xheader")
+        headers = auth.get_headers()
+
+        assert headers == {"X-Civi-Auth": "Bearer test-api-key", "X-Civi-Key": "test-site-key"}
+
+    def test_unknown_flow_raises(self) -> None:
+        """Test an unknown flow is rejected at construction."""
+        with pytest.raises(ValueError, match="Unknown auth_flow"):
+            APIKeyAuth(api_key="test-api-key", flow="param")  # type: ignore[arg-type]
 
     def test_is_valid_with_api_key(self) -> None:
         """Test is_valid returns True when API key is set."""
@@ -239,6 +247,28 @@ class TestAuthProviderFromSettings:
 
         with pytest.raises(ValueError, match="Unknown auth_type: unknown"):
             AuthProvider.from_settings(settings)
+
+    @pytest.mark.parametrize(
+        ("auth_type", "creds"),
+        [
+            ("api_key", {"api_key": "k"}),
+            ("jwt", {"jwt_token": "t"}),
+            ("basic", {"username": "u", "password": "p"}),
+        ],
+    )
+    def test_xheader_flow_applies_to_every_auth_type(self, auth_type: str, creds: dict[str, str]) -> None:
+        """Test auth_flow=xheader sends every credential type via X-Civi-Auth."""
+        settings = CiviSettings(
+            base_url="https://example.org/api4",
+            auth_type=auth_type,  # type: ignore[arg-type]
+            auth_flow="xheader",
+            **creds,
+        )
+
+        headers = AuthProvider.from_settings(settings).get_headers()
+
+        assert "Authorization" not in headers
+        assert headers["X-Civi-Auth"].split(" ", 1)[0] in {"Bearer", "Basic"}
 
 
 class TestAuthProviderABC:

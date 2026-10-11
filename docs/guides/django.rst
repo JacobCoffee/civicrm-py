@@ -28,6 +28,7 @@ Add your CiviCRM credentials to Django settings:
    # Optional settings
    CIVICRM_SITE_KEY = "your-site-key"          # For some auth modes
    CIVICRM_AUTH_TYPE = "api_key"               # api_key, jwt, or basic
+   CIVICRM_AUTH_FLOW = "header"                # header (Authorization) or xheader (X-Civi-Auth)
    CIVICRM_TIMEOUT = 30                        # Request timeout in seconds
    CIVICRM_VERIFY_SSL = True                   # SSL certificate verification
    CIVICRM_DEBUG = False                       # Enable debug logging

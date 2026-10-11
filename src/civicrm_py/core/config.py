@@ -82,6 +82,7 @@ class CiviSettings:
         CIVI_DEBUG: Enable debug logging (default: False)
         CIVI_MAX_RETRIES: Maximum number of retries (default: 3)
         CIVI_AUTH_TYPE: Authentication type (api_key, jwt, basic) (default: api_key)
+        CIVI_AUTH_FLOW: AuthX flow, header (Authorization) or xheader (X-Civi-Auth) (default: header)
     """
 
     base_url: str
@@ -92,6 +93,7 @@ class CiviSettings:
     debug: bool = False
     max_retries: int = 3
     auth_type: Literal["api_key", "jwt", "basic"] = "api_key"
+    auth_flow: Literal["header", "xheader"] = "header"
     jwt_token: str | None = None
     username: str | None = None
     password: str | None = None
@@ -100,6 +102,10 @@ class CiviSettings:
         """Validate settings after initialization."""
         if not self.base_url:
             msg = "base_url is required"
+            raise ValueError(msg)
+
+        if self.auth_flow not in ("header", "xheader"):
+            msg = f"auth_flow must be 'header' or 'xheader', got {self.auth_flow!r}"
             raise ValueError(msg)
 
         # Validate auth credentials based on auth_type
@@ -137,6 +143,7 @@ class CiviSettings:
             debug=get_env_bool("CIVI_DEBUG", default=False),
             max_retries=get_env_int("CIVI_MAX_RETRIES", 3),
             auth_type=get_env("CIVI_AUTH_TYPE", "api_key"),  # type: ignore[arg-type]
+            auth_flow=get_env("CIVI_AUTH_FLOW", "header"),  # type: ignore[arg-type]
             jwt_token=get_env("CIVI_JWT_TOKEN"),
             username=get_env("CIVI_USERNAME"),
             password=get_env("CIVI_PASSWORD"),

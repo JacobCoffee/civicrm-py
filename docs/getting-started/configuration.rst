@@ -38,6 +38,9 @@ Environment Variables
    * - ``CIVI_AUTH_TYPE``
      - No
      - Authentication type: api_key, jwt, or basic (default: api_key)
+   * - ``CIVI_AUTH_FLOW``
+     - No
+     - AuthX flow: ``header`` sends ``Authorization``, ``xheader`` sends ``X-Civi-Auth`` (default: header)
 
 \* Required when using api_key authentication
 
@@ -113,6 +116,22 @@ For installations behind basic auth:
    export CIVI_AUTH_TYPE=basic
    export CIVI_USERNAME=your_username
    export CIVI_PASSWORD=your_password
+
+
+Auth Header Flow
+~~~~~~~~~~~~~~~~
+
+CiviCRM's AuthX extension accepts credentials through either the standard ``Authorization``
+header (``header`` flow) or ``X-Civi-Auth`` (``xheader`` flow). Some hosts, notably
+WordPress behind Apache, strip ``Authorization`` before PHP sees it; use ``xheader`` there:
+
+.. code-block:: bash
+
+   export CIVI_AUTH_FLOW=xheader
+
+Each flow has its own allowed-credentials setting on the CiviCRM side
+(``authx_header_cred`` and ``authx_xheader_cred``), so make sure the flow you pick
+accepts your credential type (for example ``api_key``).
 
 
 Framework Settings

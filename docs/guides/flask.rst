@@ -69,6 +69,7 @@ Set configuration in ``app.config``:
    # Authentication (choose one)
    app.config["CIVI_API_KEY"] = "your-api-key"        # API key auth
    app.config["CIVI_AUTH_TYPE"] = "api_key"           # api_key, jwt, or basic
+   app.config["CIVI_AUTH_FLOW"] = "header"            # header (Authorization) or xheader (X-Civi-Auth)
 
    # For JWT authentication
    app.config["CIVI_AUTH_TYPE"] = "jwt"
