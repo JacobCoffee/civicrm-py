@@ -187,7 +187,7 @@ class TestBaseTransport:
             transport = BaseTransport(settings, api_key_auth)
             headers = transport._build_headers()
             assert headers["Authorization"] == "Bearer test-api-key"
-            assert headers["X-Civi-Site-Key"] == "test-site-key"
+            assert headers["X-Civi-Key"] == "test-site-key"
 
         def test_build_headers_includes_jwt_auth_headers(
             self,

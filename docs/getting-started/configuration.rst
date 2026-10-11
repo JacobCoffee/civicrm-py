@@ -22,7 +22,7 @@ Environment Variables
      - API key for authentication
    * - ``CIVI_SITE_KEY``
      - No
-     - Site key (some installations require this)
+     - Site key, sent as ``X-Civi-Key`` (satisfies AuthX's site-key guard)
    * - ``CIVI_TIMEOUT``
      - No
      - Request timeout in seconds (default: 30)

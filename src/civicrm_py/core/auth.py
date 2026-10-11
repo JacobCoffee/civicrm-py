@@ -83,7 +83,7 @@ class APIKeyAuth(AuthProvider):
 
         Args:
             api_key: CiviCRM API key.
-            site_key: Optional CiviCRM site key (for CMS integrations).
+            site_key: Optional CiviCRM site key, sent as X-Civi-Key (AuthX site-key guard).
         """
         self.api_key = api_key
         self.site_key = site_key
@@ -99,7 +99,7 @@ class APIKeyAuth(AuthProvider):
             "X-Requested-With": "XMLHttpRequest",
         }
         if self.site_key:
-            headers["X-Civi-Site-Key"] = self.site_key
+            headers["X-Civi-Key"] = self.site_key
         return headers
 
     def is_valid(self) -> bool:

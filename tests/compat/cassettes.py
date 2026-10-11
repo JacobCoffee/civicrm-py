@@ -396,6 +396,7 @@ class CassetteRecorder:
             "Authorization",
             "X-Civi-Api-Key",
             "X-Civi-Site-Key",
+            "X-Civi-Key",
             "Cookie",
             "Set-Cookie",
         ]

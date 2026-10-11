@@ -103,6 +103,7 @@ class CassetteRecorder:
         "Authorization",
         "X-Civi-Api-Key",
         "X-Civi-Site-Key",
+        "X-Civi-Key",
         "Cookie",
         "Set-Cookie",
     ]
@@ -177,7 +178,7 @@ class CassetteRecorder:
         if settings.api_key:
             headers["Authorization"] = f"Bearer {settings.api_key}"
         if settings.site_key:
-            headers["X-Civi-Site-Key"] = settings.site_key
+            headers["X-Civi-Key"] = settings.site_key
 
         # Build form data
         form_data = {"params": json.dumps(params or {})}
@@ -235,7 +236,7 @@ class CassetteRecorder:
                                 "Accept": "application/json",
                                 "Authorization": "[REDACTED]",
                                 "Content-Type": "application/x-www-form-urlencoded",
-                                "X-Civi-Site-Key": "[REDACTED]",
+                                "X-Civi-Key": "[REDACTED]",
                                 "X-Requested-With": "XMLHttpRequest",
                             }
                         ),

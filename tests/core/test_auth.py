@@ -25,7 +25,7 @@ class TestAPIKeyAuth:
 
         assert headers["Authorization"] == "Bearer test-api-key"
         assert headers["X-Requested-With"] == "XMLHttpRequest"
-        assert "X-Civi-Site-Key" not in headers
+        assert "X-Civi-Key" not in headers
 
     def test_get_headers_with_site_key(self) -> None:
         """Test get_headers includes site key when provided."""
@@ -34,7 +34,7 @@ class TestAPIKeyAuth:
 
         assert headers["Authorization"] == "Bearer test-api-key"
         assert headers["X-Requested-With"] == "XMLHttpRequest"
-        assert headers["X-Civi-Site-Key"] == "test-site-key"
+        assert headers["X-Civi-Key"] == "test-site-key"
 
     def test_is_valid_with_api_key(self) -> None:
         """Test is_valid returns True when API key is set."""
@@ -273,8 +273,8 @@ class TestEdgeCases:
         auth = APIKeyAuth(api_key="test-key", site_key="")
         headers = auth.get_headers()
 
-        # Empty string is falsy, so X-Civi-Site-Key should not be included
-        assert "X-Civi-Site-Key" not in headers
+        # Empty string is falsy, so X-Civi-Key should not be included
+        assert "X-Civi-Key" not in headers
 
     def test_api_key_with_special_characters(self) -> None:
         """Test APIKeyAuth handles special characters in API key."""

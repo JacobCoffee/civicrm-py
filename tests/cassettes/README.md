@@ -116,7 +116,7 @@ Set `CI=true` or `CIVI_CASSETTE_MODE=replay` in your CI config.
 Cassettes automatically redact sensitive headers:
 - `Authorization`
 - `X-Civi-Api-Key`
-- `X-Civi-Site-Key`
+- `X-Civi-Site-Key` / `X-Civi-Key`
 - `Cookie` / `Set-Cookie`
 
 Review cassettes before committing to ensure no other sensitive data is present.
