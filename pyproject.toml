@@ -42,8 +42,8 @@ Changelog = "https://github.com/JacobCoffee/civicrm-py/blob/main/CHANGELOG.md"
 [project.optional-dependencies]
 django = ["django>=4.2"]
 flask = ["flask>=2.0"]
-litestar = ["litestar>=2.0", "jinja2>=3.0"]
-fastapi = ["fastapi>=0.115.0"]
+litestar = ["litestar>=2.0,<2.20", "jinja2>=3.0"]  # pending test-suite update for litestar's inferred-dependency deprecation (2.20+)
+fastapi = ["fastapi>=0.115.0,<0.129"]  # pending test-suite update for fastapi's lazy router internals (see https://github.com/fastapi/fastapi, 0.129+)
 starlette = ["starlette>=0.27.0"]
 workflows = ["litestar-workflows>=0.1.0"]
 sqlspec = ["sqlspec[asyncpg,aiosqlite]>=0.1.0"]
@@ -62,7 +62,7 @@ docs = [
     "sphinxcontrib-mermaid>=1.0.0",
     "myst-parser>=4.0.0",
 ]
-lint = ["ruff>=0.9.0", "ty>=0.0.1a6"]
+lint = ["ruff==0.14.14", "ty==0.0.13"]
 test = [
     "pytest>=8.3.0",
     "pytest-asyncio>=0.25.0",
@@ -425,7 +425,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 norecursedirs = ["docs", "*.egg-info", ".git", ".tox", ".venv", "__pycache__"]
-filterwarnings = ["error", "ignore::DeprecationWarning:httpx.*:"]
+filterwarnings = ["error", "ignore::DeprecationWarning:httpx.*:", "ignore::DeprecationWarning:starlette.*:"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests requiring live CiviCRM instance",

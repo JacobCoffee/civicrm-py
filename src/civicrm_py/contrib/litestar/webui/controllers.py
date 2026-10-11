@@ -17,7 +17,11 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from litestar import Controller, Request, get
-from litestar.contrib.jinja import JinjaTemplateEngine
+
+try:
+    from litestar.plugins.jinja import JinjaTemplateEngine
+except ImportError:  # litestar < 2.22
+    from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.response import Template
 from litestar.template import TemplateConfig
 
