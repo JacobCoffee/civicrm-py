@@ -32,7 +32,7 @@ from civicrm_py.core.exceptions import (
 )
 from civicrm_py.core.serialization import APIRequest, APIResponse, APIv3Response
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "APIRequest",
