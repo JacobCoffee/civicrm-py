@@ -1,0 +1,23 @@
+# Keep build contexts small when this checkout is used as a Docker build context
+# (e.g. installing civicrm-py from source into a consuming app's image).
+.git
+.venv
+venv
+**/__pycache__
+*.py[cod]
+.coverage
+htmlcov
+.pytest_cache
+.ruff_cache
+.hive-mind
+.claude
+.claude-flow
+docs/_build
+tests
+examples
+scripts
+infra
+docker
+plan.json
+.env
+.env.*
