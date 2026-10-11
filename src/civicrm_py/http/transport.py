@@ -5,6 +5,11 @@ Provides both async and sync HTTP clients with:
 - Retry logic with exponential backoff
 - Timeout handling
 - SSL verification options
+
+Retry policy: failures where the request never reached CiviCRM (connect
+errors, connect/pool timeouts) are retried for every action. Read/write
+timeouts are only retried for read-only actions (``get*``), because the server
+may already have applied a write and a retry would duplicate it.
 """
 
 from __future__ import annotations
@@ -46,6 +51,11 @@ def _convert_params(params: APIRequest | dict[str, Any] | None) -> dict[str, Any
     if isinstance(params, msgspec.Struct):
         return to_dict(params)
     return dict(params)
+
+
+def _is_read_only(action: str) -> bool:
+    """Whether an action is safe to resend after the server may have received it."""
+    return action.lower().startswith("get")
 
 
 class BaseTransport:
@@ -152,6 +162,23 @@ class BaseTransport:
 
         return api_response
 
+    def _classify_error(self, error: httpx.TransportError, action: str) -> tuple[CiviConnectionError, bool]:
+        """Map an httpx transport error to a civi-py error and whether it may be retried.
+
+        Args:
+            error: The httpx exception.
+            action: API action, used to decide whether a resend could duplicate a write.
+
+        Returns:
+            Tuple of (civi-py exception, retryable).
+        """
+        if isinstance(error, httpx.TimeoutException):
+            never_sent = isinstance(error, httpx.ConnectTimeout | httpx.PoolTimeout)
+            return CiviTimeoutError(f"Request timed out: {error}"), never_sent or _is_read_only(action)
+        if isinstance(error, httpx.ConnectError):
+            return CiviConnectionError(f"Connection failed: {error}"), True
+        return CiviConnectionError(f"Request failed: {error}"), _is_read_only(action)
+
     def _calculate_backoff(self, attempt: int) -> float:
         """Calculate exponential backoff delay.
 
@@ -220,7 +247,7 @@ class AsyncTransport(BaseTransport):
         url = self._build_url(entity, action)
         headers = self._build_headers()
         body = _convert_params(params)
-        last_error: Exception | None = None
+        last_error: CiviConnectionError | None = None
 
         for attempt in range(self.settings.max_retries + 1):
             try:
@@ -228,16 +255,12 @@ class AsyncTransport(BaseTransport):
                 form_data = self._build_request_data(body)
                 response = await client.post(url, data=form_data, headers=headers)
                 return self._handle_response(response)
-            except httpx.TimeoutException as e:
-                last_error = CiviTimeoutError(f"Request timed out: {e}")
+            except httpx.TransportError as e:
+                last_error, retryable = self._classify_error(e, action)
                 if self.settings.debug:
-                    logger.debug("Attempt %d timed out: %s", attempt + 1, e)
-            except httpx.ConnectError as e:
-                last_error = CiviConnectionError(f"Connection failed: {e}")
-                if self.settings.debug:
-                    logger.debug("Attempt %d connection failed: %s", attempt + 1, e)
-            except (CiviAuthError, CiviAPIError):
-                raise
+                    logger.debug("Attempt %d failed: %s", attempt + 1, last_error)
+                if not retryable:
+                    raise last_error from e
 
             if attempt < self.settings.max_retries:
                 delay = self._calculate_backoff(attempt)
@@ -321,7 +344,7 @@ class SyncTransport(BaseTransport):
         url = self._build_url(entity, action)
         headers = self._build_headers()
         body = _convert_params(params)
-        last_error: Exception | None = None
+        last_error: CiviConnectionError | None = None
 
         for attempt in range(self.settings.max_retries + 1):
             try:
@@ -329,16 +352,12 @@ class SyncTransport(BaseTransport):
                 form_data = self._build_request_data(body)
                 response = client.post(url, data=form_data, headers=headers)
                 return self._handle_response(response)
-            except httpx.TimeoutException as e:
-                last_error = CiviTimeoutError(f"Request timed out: {e}")
+            except httpx.TransportError as e:
+                last_error, retryable = self._classify_error(e, action)
                 if self.settings.debug:
-                    logger.debug("Attempt %d timed out: %s", attempt + 1, e)
-            except httpx.ConnectError as e:
-                last_error = CiviConnectionError(f"Connection failed: {e}")
-                if self.settings.debug:
-                    logger.debug("Attempt %d connection failed: %s", attempt + 1, e)
-            except (CiviAuthError, CiviAPIError):
-                raise
+                    logger.debug("Attempt %d failed: %s", attempt + 1, last_error)
+                if not retryable:
+                    raise last_error from e
 
             if attempt < self.settings.max_retries:
                 delay = self._calculate_backoff(attempt)

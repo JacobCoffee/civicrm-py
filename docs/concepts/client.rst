@@ -95,6 +95,18 @@ The values are dictionaries with field names as keys:
        print(contact.get("email_primary.email"))
 
 
+Retries
+-------
+
+Requests that never reached CiviCRM (connection refused, connect or pool timeouts) are retried
+up to ``max_retries`` times with exponential backoff, for every action.
+
+Read and write timeouts are only retried for read-only actions (those starting with ``get``).
+For writes such as ``create``, ``update`` or ``Order.create``, the server may already have
+applied the change before the response was lost, so the timeout is raised instead of risking
+a duplicate record.
+
+
 Resource Management
 -------------------
 

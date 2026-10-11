@@ -1285,7 +1285,7 @@ class TestTransportRequestData:
 
 
 class TestRequestHandling:
-    """Tests for non-JSON responses."""
+    """Tests for write-retry safety and non-JSON responses."""
 
     API4 = "https://example.org/civicrm/ajax/api4"
 
@@ -1306,6 +1306,61 @@ class TestRequestHandling:
         from civicrm_py.core.auth import AuthProvider
 
         return SyncTransport(settings, AuthProvider.from_settings(settings))
+
+    @pytest.mark.parametrize(
+        ("url", "call"),
+        [
+            (f"{API4}/Contact/create", lambda t: t.request("Contact", "create", {"values": {}})),
+        ],
+    )
+    def test_write_read_timeout_not_retried(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+        url: str,
+        call: object,
+    ) -> None:
+        """Test a read timeout on a write is raised once, since the server may have applied it."""
+        route = respx_mock.post(url).mock(side_effect=httpx.ReadTimeout("read timed out"))
+
+        with patch.object(time, "sleep"), pytest.raises(CiviTimeoutError):
+            call(transport)  # type: ignore[operator]
+
+        assert route.call_count == 1
+
+    def test_write_connect_error_is_retried(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+    ) -> None:
+        """Test a connect failure on a write is retried, since the request never reached the server."""
+        route = respx_mock.post(f"{self.API4}/Contact/create").mock(
+            side_effect=[
+                httpx.ConnectError("refused"),
+                httpx.Response(200, json={"values": [{"id": 5}]}),
+            ],
+        )
+
+        with patch.object(time, "sleep"):
+            result = transport.request("Contact", "create", {"values": {}})
+
+        assert route.call_count == 2
+        assert result.values == [{"id": 5}]
+
+    def test_read_timeout_on_get_is_retried(
+        self,
+        transport: SyncTransport,
+        respx_mock: respx.MockRouter,
+    ) -> None:
+        """Test read timeouts on read-only actions keep retrying."""
+        route = respx_mock.post(f"{self.API4}/Contact/get").mock(
+            side_effect=[httpx.ReadTimeout("slow"), httpx.Response(200, json={"values": []})],
+        )
+
+        with patch.object(time, "sleep"):
+            transport.request("Contact", "get")
+
+        assert route.call_count == 2
 
     def test_non_json_response_raises_api_error(
         self,
