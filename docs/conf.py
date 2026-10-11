@@ -71,7 +71,7 @@ autosummary_generate = True
 # Intersphinx
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "msgspec": ("https://jcristharif.com/msgspec/", None),
+    "msgspec": ("https://msgspec.dev/", None),
     "litestar": ("https://docs.litestar.dev/latest/", None),
     "django": ("https://docs.djangoproject.com/en/5.0/", "https://docs.djangoproject.com/en/5.0/_objects/"),
 }
