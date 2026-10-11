@@ -42,8 +42,8 @@ Changelog = "https://github.com/JacobCoffee/civicrm-py/blob/main/CHANGELOG.md"
 [project.optional-dependencies]
 django = ["django>=4.2"]
 flask = ["flask>=2.0"]
-litestar = ["litestar>=2.0,<2.20", "jinja2>=3.0"]  # pending test-suite update for litestar's inferred-dependency deprecation (2.20+)
-fastapi = ["fastapi>=0.115.0,<0.129"]  # pending test-suite update for fastapi's lazy router internals (see https://github.com/fastapi/fastapi, 0.129+)
+litestar = ["litestar>=2.0", "jinja2>=3.0"]
+fastapi = ["fastapi>=0.115.0"]
 starlette = ["starlette>=0.27.0"]
 workflows = ["litestar-workflows>=0.1.0"]
 sqlspec = ["sqlspec[asyncpg,aiosqlite]>=0.1.0"]
@@ -78,6 +78,11 @@ test = [
 
 [tool.uv]
 default-groups = ["dev", "lint", "test"]
+# Dev/CI-only caps (not part of published extras): newer fastapi changed
+# APIRouter internals (lazy included sub-routers) and newer litestar
+# deprecated inferred dependency injection, both breaking our test suite.
+# Does not restrict what real users can install.
+constraint-dependencies = ["fastapi<0.129", "litestar<2.20"]
 
 [tool.ruff]
 target-version = "py311"
