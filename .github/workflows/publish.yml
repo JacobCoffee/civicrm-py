@@ -144,6 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write  # dispatch docs.yml; GITHUB_TOKEN pushes don't trigger workflows
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -165,6 +166,11 @@ jobs:
           git add CHANGELOG.md
           git diff --staged --quiet || git commit -m "chore(release): update changelog"
           git push origin main
+
+      - name: Redeploy docs with new changelog
+        run: gh workflow run docs.yml --ref main --repo "${GITHUB_REPOSITORY}"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   # ==================================================================================== #
   # CLEANUP DRAFT ON FAILURE

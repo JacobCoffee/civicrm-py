@@ -1,15 +1,2 @@
-Changelog
-=========
-
-See the `GitHub Releases <https://github.com/JacobCoffee/civicrm-py/releases>`_ for version history.
-
-Version 0.1.0 (Unreleased)
---------------------------
-
-Initial release with:
-
-- Async and sync clients for CiviCRM API v4
-- Full CRUD operations (get, create, update, delete)
-- msgspec serialization
-- Framework integrations (Django, Litestar, Flask, FastAPI)
-- Comprehensive error handling
+.. include:: ../CHANGELOG.md
+   :parser: myst_parser.sphinx_
