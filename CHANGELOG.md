@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-10-28
+
+### Bug Fixes
+
+- Pin lint/type-check tools and cap drifted integration deps (#2) by @JacobCoffee in #2
+- Scope fastapi/litestar version caps to dev tooling, fix dead docs link (#3) by @JacobCoffee in #3
+- **auth:** Send site key as X-Civi-Key by @JacobCoffee
+- **http:** Raise CiviAPIError for non-JSON responses by @JacobCoffee
+- **http:** Don't retry writes after a read timeout by @JacobCoffee
+
+### Features
+
+- **auth:** Add auth_flow to send credentials via X-Civi-Auth by @JacobCoffee
+- Add request_v3 for legacy APIv3 calls by @JacobCoffee
+
+### Miscellaneous
+
+- Add .dockerignore by @JacobCoffee
+- Bump version to 0.2.0 by @JacobCoffee
 ## [0.1.4] - 2026-10-11
 
 ### Features
